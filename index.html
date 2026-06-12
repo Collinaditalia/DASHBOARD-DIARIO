@@ -1,192 +1,415 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel de Atendimentos</title>
-  <style>
-    body {
-      background: #181a25;
-      color: #fff;
-      font-family: 'Inter', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      padding: 32px;
-      max-width: 800px;
-      margin: auto;
-    }
-    .filters-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-    .filters-row label { margin-right: 6px; }
-    .range-row input[type="date"], .filters-row select {
-      background: #272848;
-      color: #fff;
-      border: 1.5px solid #3d4586;
-      border-radius: 7px;
-      padding: 10px 15px;
-      font-size: 1rem;
-      outline: none;
-      min-width: 150px;
-    }
-    .range-row .btn, .filters-row .btn {
-      background: #3d4586;
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      padding: 9px 17px;
-      margin-right: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .range-row .btn:hover, .filters-row .btn:hover {
-      background: #5963c7;
-    }
-    .range-row .sep {
-      margin: 0 6px 0 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Atendimentos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #f0f6fc;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #7d8590;
+            margin-bottom: 2rem;
+        }
+
+        .filters-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        label {
+            color: #f0f6fc;
+            font-weight: 500;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        input[type="date"], select {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            min-width: 140px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="date"]:focus, select:focus {
+            outline: none;
+            border-color: #1f6feb;
+            box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
+        }
+
+        .btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: #30363d;
+            border-color: #8b949e;
+        }
+
+        .btn-primary {
+            background: #238636;
+            border-color: #238636;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #2ea043;
+            border-color: #2ea043;
+        }
+
+        .btn-secondary {
+            background: #1f6feb;
+            border-color: #1f6feb;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #388bfd;
+            border-color: #388bfd;
+        }
+
+        .separator {
+            color: #7d8590;
+            margin: 0 0.25rem;
+        }
+
+        .results-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .status-info {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-info h3 {
+            color: #f0f6fc;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .status-line {
+            color: #7d8590;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #7d8590;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .chart-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .chart-title {
+            color: #f0f6fc;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                justify-content: space-between;
+            }
+
+            input[type="date"], select, .btn {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Painel de Atendimentos</h1>
-    <p>Fonte: <strong>dados.csv</strong></p>
+    <div class="container">
+        <h1>Painel de Atendimentos</h1>
+        <p class="subtitle">Fonte: <strong>dados.csv</strong></p>
 
-    <!-- Período -->
-    <div class="range-row filters-row">
-      <label for="dateStart">PERÍODO</label>
-      <input id="dateStart" type="date" />
-      <span class="sep">a</span>
-      <input id="dateEnd" type="date" />
-      <button class="btn" id="btnHoje" type="button">Hoje</button>
-      <button class="btn" id="btn30" type="button">30 dias</button>
-      <button class="btn" id="btnLimparPeriodo" type="button">Limpar</button>
+        <div class="filters-section">
+            <!-- Filtros de Período -->
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="dateStart">PERÍODO</label>
+                    <input type="date" id="dateStart">
+                    <span class="separator">a</span>
+                    <input type="date" id="dateEnd">
+                </div>
+                <button type="button" class="btn btn-primary" id="btnHoje">Hoje</button>
+                <button type="button" class="btn btn-secondary" id="btn30Dias">30 dias</button>
+                <button type="button" class="btn" id="btnLimparPeriodo">Limpar</button>
+            </div>
+
+            <!-- Outros Filtros -->
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="selectStatus">Status</label>
+                    <select id="selectStatus">
+                        <option value="">Todos</option>
+                        <option value="aberto">Aberto</option>
+                        <option value="em_andamento">Em Andamento</option>
+                        <option value="fechado">Fechado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="selectUF">UF</label>
+                    <select id="selectUF">
+                        <option value="">Todos</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="PR">Paraná</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="BA">Bahia</option>
+                        <option value="GO">Goiás</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="CE">Ceará</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" id="btnResetarTudo">Resetar tudo</button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="status-info">
+                <h3>Filtros Aplicados:</h3>
+                <div class="status-line" id="statusPeriodo">Período: <strong>não definido</strong></div>
+                <div class="status-line" id="statusFiltros">Status: <strong>qualquer</strong> • UF: <strong>qualquer</strong></div>
+            </div>
+
+            <div id="resultadosContainer">
+                <div class="placeholder">
+                    <p>📊 Aqui serão exibidos os dados filtrados, gráficos e estatísticas</p>
+                    <p>Selecione os filtros acima para visualizar os resultados</p>
+                </div>
+            </div>
+
+            <div class="charts-grid" id="chartsContainer" style="display: none;">
+                <div class="chart-card">
+                    <div class="chart-title">Atendimentos por Status</div>
+                    <div id="chartStatus">Gráfico aqui</div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Atendimentos por Estado</div>
+                    <div id="chartUF">Gráfico aqui</div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Evolução Temporal</div>
+                    <div id="chartTempo">Gráfico aqui</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Filtros extras (exemplo: STATUS e UF) -->
-    <div class="filters-row">
-      <label for="statusSel">Status</label>
-      <select id="statusSel">
-        <option value="">Todos</option>
-        <option value="aberto">Aberto</option>
-        <option value="fechado">Fechado</option>
-        <option value="andamento">Em andamento</option>
-      </select>
+    <script>
+        // Utilitários
+        function el(id) { 
+            return document.getElementById(id); 
+        }
 
-      <label for="ufSel">UF</label>
-      <select id="ufSel">
-        <option value="">Todos</option>
-        <option value="SP">SP</option>
-        <option value="RJ">RJ</option>
-        <option value="MG">MG</option>
-        <!-- Adapte conforme seus estados -->
-      </select>
+        function formatarDataISO(data) {
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`;
+        }
 
-      <button class="btn" id="btnResetFiltros" type="button">Resetar tudo</button>
-    </div>
+        function parseDataInput(valor) {
+            if (!valor || !valor.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return null;
+            }
+            const [ano, mes, dia] = valor.split('-');
+            return new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+        }
 
-    <div id="app"></div>
-  </div>
-  <script>
-    function el(id) { return document.getElementById(id); }
-    function fmtISODateLocal(d) {
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return `${y}-${m}-${day}`;
-    }
-    function parseDateOnlyInput(str) {
-      if (!str) return null;
-      if (str.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        const [y, m, d] = str.split("-");
-        return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
-      }
-      // Adapte se você usar outro formato
-      return null;
-    }
+        function formatarDataBR(data) {
+            if (!data) return 'não definido';
+            return data.toLocaleDateString('pt-BR');
+        }
 
-    // SOBRE O ESTADO DOS FILTROS
-    function getFiltros() {
-      return {
-        periodStart: parseDateOnlyInput(el("dateStart").value),
-        periodEnd: parseDateOnlyInput(el("dateEnd").value),
-        status: el("statusSel").value,
-        uf: el("ufSel").value
-      };
-    }
+        // Estado dos filtros
+        function obterFiltros() {
+            return {
+                dataInicio: parseDataInput(el('dateStart').value),
+                dataFim: parseDataInput(el('dateEnd').value),
+                status: el('selectStatus').value,
+                uf: el('selectUF').value
+            };
+        }
 
-    // Handlers dos botões do período
-    el("btnLimparPeriodo").addEventListener("click", () => {
-      el("dateStart").value = "";
-      el("dateEnd").value = "";
-      updateAll();
-    });
-    el("btnHoje").addEventListener("click", () => {
-      const now = new Date();
-      const s = fmtISODateLocal(now);
-      el("dateStart").value = s;
-      el("dateEnd").value = s;
-      updateAll();
-    });
-    el("btn30").addEventListener("click", () => {
-      const now = new Date();
-      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const start = new Date(end);
-      start.setDate(start.getDate() - 29);
-      el("dateStart").value = fmtISODateLocal(start);
-      el("dateEnd").value = fmtISODateLocal(end);
-      updateAll();
-    });
+        // Atualização principal
+        function atualizarPainel() {
+            const filtros = obterFiltros();
+            
+            // Atualizar display dos filtros
+            const textoPeriodo = filtros.dataInicio && filtros.dataFim 
+                ? `${formatarDataBR(filtros.dataInicio)} a ${formatarDataBR(filtros.dataFim)}`
+                : filtros.dataInicio 
+                    ? `A partir de ${formatarDataBR(filtros.dataInicio)}`
+                    : filtros.dataFim 
+                        ? `Até ${formatarDataBR(filtros.dataFim)}`
+                        : 'não definido';
 
-    // Mudança dos filtros de período chama updateAll
-    el("dateStart").addEventListener("change", () => updateAll());
-    el("dateEnd").addEventListener("change", () => updateAll());
-    // Mudança dos selects chama updateAll
-    el("statusSel").addEventListener("change", () => updateAll());
-    el("ufSel").addEventListener("change", () => updateAll());
+            const textoStatus = filtros.status || 'qualquer';
+            const textoUF = filtros.uf || 'qualquer';
 
-    // Botão de reset geral dos filtros
-    el("btnResetFiltros").addEventListener("click", () => {
-      el("dateStart").value = "";
-      el("dateEnd").value = "";
-      el("statusSel").value = "";
-      el("ufSel").value = "";
-      updateAll();
-    });
+            el('statusPeriodo').innerHTML = `Período: <strong>${textoPeriodo}</strong>`;
+            el('statusFiltros').innerHTML = `Status: <strong>${textoStatus}</strong> • UF: <strong>${textoUF}</strong>`;
 
-    // SUA FUNÇÃO CENTRAL DE ATUALIZAÇÃO
-    function updateAll() {
-      const filtros = getFiltros();
-      // Aqui você faz:
-      // - Carregamento/Filtragem do CSV (ou pode ser só filtragem se já carregou antes)
-      // - Atualização de resultados/panéis/gráficos
+            // Aqui você pode adicionar a lógica para:
+            // - Carregar dados do CSV
+            // - Aplicar filtros
+            // - Gerar gráficos
+            // - Atualizar estatísticas
+            
+            console.log('Filtros atualizados:', filtros);
+            
+            // Simular carregamento de dados
+            setTimeout(() => {
+                el('resultadosContainer').innerHTML = `
+                    <div style="padding: 1rem; background: #0d1117; border-radius: 8px; border: 1px solid #30363d;">
+                        <h4 style="color: #2ea043; margin-bottom: 0.5rem;">✅ Filtros aplicados com sucesso!</h4>
+                        <p style="color: #7d8590; font-size: 0.875rem;">
+                            Dados filtrados e prontos para visualização.<br>
+                            Aqui você pode adicionar tabelas, cards de estatísticas, etc.
+                        </p>
+                    </div>
+                `;
+                // el('chartsContainer').style.display = 'grid';
+            }, 100);
+        }
 
-      // Aqui vai só um exemplo visual:
-      el("app").innerHTML = `
-        <p>
-          Período: 
-          <strong>${filtros.periodStart ? filtros.periodStart.toLocaleDateString() : 'não definido'}</strong>
-          a
-          <strong>${filtros.periodEnd ? filtros.periodEnd.toLocaleDateString() : 'não definido'}</strong><br>
-          Status: <strong>${filtros.status || 'qualquer'}</strong> <br>
-          UF: <strong>${filtros.uf || 'qualquer'}</strong>
-        </p>
-        <hr>
-        <p>
-          Aqui você mostra/filtra seus cards, tabelas ou gráficos usando os filtros acima 😉
-        </p>
-      `;
-    }
+        // Event Listeners - Botões de período
+        el('btnLimparPeriodo').addEventListener('click', () => {
+            el('dateStart').value = '';
+            el('dateEnd').value = '';
+            atualizarPainel();
+        });
 
-    // Inicializa vazio ou como preferir
-    updateAll();
-  </script>
+        el('btnHoje').addEventListener('click', () => {
+            const hoje = new Date();
+            const dataFormatada = formatarDataISO(hoje);
+            el('dateStart').value = dataFormatada;
+            el('dateEnd').value = dataFormatada;
+            atualizarPainel();
+        });
+
+        el('btn30Dias').addEventListener('click', () => {
+            const hoje = new Date();
+            const inicio = new Date(hoje);
+            inicio.setDate(hoje.getDate() - 29);
+            
+            el('dateStart').value = formatarDataISO(inicio);
+            el('dateEnd').value = formatarDataISO(hoje);
+            atualizarPainel();
+        });
+
+        el('btnResetarTudo').addEventListener('click', () => {
+            el('dateStart').value = '';
+            el('dateEnd').value = '';
+            el('selectStatus').value = '';
+            el('selectUF').value = '';
+            atualizarPainel();
+        });
+
+        // Event Listeners - Inputs de filtro
+        el('dateStart').addEventListener('change', atualizarPainel);
+        el('dateEnd').addEventListener('change', atualizarPainel);
+        el('selectStatus').addEventListener('change', atualizarPainel);
+        el('selectUF').addEventListener('change', atualizarPainel);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarPainel();
+        });
+    </script>
 </body>
 </html>
