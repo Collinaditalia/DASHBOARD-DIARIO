@@ -221,58 +221,26 @@
     }
     .team-row .mut{ color:var(--muted); font-size:.85rem; font-family:var(--mono); }
 
-    /* Comparativo */
-    .compare-grid{
+    /* Aba nova (supervisores) */
+    .sup-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
+      grid-template-columns:repeat(auto-fit, minmax(380px, 1fr));
       gap:14px;
       margin-top:10px;
     }
-    .compare-card{
+    .sup-card{
       background:var(--card);
       border:1px solid var(--stroke);
       border-radius:var(--radius);
       padding:14px;
       backdrop-filter:blur(10px);
     }
-    .compare-card h3{ margin:0 0 10px; font-size:1.05rem; }
-    .kpi-row{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.03);
-      margin-bottom:10px;
-    }
-    .kpi-top{display:flex; align-items:baseline; justify-content:space-between; gap:12px;}
-    .kpi-name{font-weight:950;}
-    .kpi-delta{
-      font-family:var(--mono);
-      font-weight:950;
-      padding:3px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      min-width:110px;
-      text-align:center;
-    }
-    .kpi-delta.pos{ background:rgba(92,255,176,.12); color:var(--good); border-color:rgba(92,255,176,.28); }
-    .kpi-delta.neg{ background:rgba(255,45,85,.12); color:var(--bad); border-color:rgba(255,45,85,.28); }
-    .kpi-delta.neu{ background:rgba(255,255,255,.06); color:rgba(234,240,255,.85); border-color:rgba(255,255,255,.14); }
-    .kpi-sub{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:10px;
-      color:var(--muted);
-      font-size:.9rem;
-    }
-    .kpi-sub > div{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .kpi-sub b{color:rgba(234,240,255,.88)}
-    .hint{
-      font-size:.9rem;
-      color:var(--muted);
-      line-height:1.45;
+    .sup-card h3{ margin:0 0 6px; font-size:1.08rem; }
+    .sup-sub{ color:var(--muted); font-size:.92rem; margin-bottom:10px; }
+    .divider{
+      height:1px;
+      background:rgba(255,255,255,.10);
+      margin:14px 0;
     }
 
     @media(max-width: 1100px){
@@ -288,7 +256,6 @@
       .chart-wrap{ height: 320px; }
       .tabs{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
       .tab{ justify-content:flex-start; text-align:left; padding:12px 12px; }
-      .kpi-sub{ grid-template-columns: 1fr; }
     }
   </style>
 
@@ -353,7 +320,7 @@
     <div class="tabs-wrap">
       <div class="tabs">
         <div class="tab active" data-tab="resumo">📊 Resumo</div>
-        <div class="tab" data-tab="comparativo">🆚 Comparativo de períodos</div>
+        <div class="tab" data-tab="supervisores">🧭 Supervisores (Promotores)</div>
         <div class="tab" data-tab="curva">📈 Curva de casais e vendas</div>
         <div class="tab" data-tab="cancelamento">❌ Análise de cancelamento</div>
         <div class="tab" data-tab="equipes">🧲 Equipes de captação</div>
@@ -383,58 +350,38 @@
         </div>
       </div>
 
-      <!-- NOVA ABA: Comparativo -->
-      <div id="tab-comparativo" class="tab-content">
+      <!-- NOVA ABA: Supervisores (somente aqui entra a "média por captador") -->
+      <div id="tab-supervisores" class="tab-content">
         <div class="note">
-          <strong>Comparativo entre dois períodos</strong><br>
-          • Período X e Período Y são independentes e respeitam os mesmos filtros (Status, Profissional, Nome e UF).<br>
-          • <strong>Variação %</strong> = $$\frac{X - Y}{Y} \times 100$$ (quando $$Y=0$$, mostramos "—").<br>
-          • Eficiência é calculada como <strong>Vendas ÷ Casais</strong> (fração) e a variação é calculada em cima dessa fração.
+          <strong>Visão por Supervisor (Promotores de Marketing)</strong><br>
+          • Usa as marcações de <strong>Equipes</strong> (Equipe Parque / Equipe Externa) salvas no seu navegador.<br>
+          • <strong>Média de casais por captador</strong> = Casais ÷ quantidade de promotores com pelo menos 1 casal no período (da equipe).
         </div>
 
-        <div class="compare-grid">
-          <div class="compare-card">
-            <h3>Período X</h3>
-            <div class="controls" style="margin:0; justify-content:flex-start">
-              <div class="control-group" style="min-width:330px">
-                <label>Datas (X)</label>
-                <div class="range-row">
-                  <input id="cmpXStart" type="date" />
-                  <span class="sep">a</span>
-                  <input id="cmpXEnd" type="date" />
-                  <button class="btn" id="btnCmpXHoje" type="button">Hoje</button>
-                  <button class="btn" id="btnCmpX30" type="button">30 dias</button>
-                </div>
-              </div>
-            </div>
-            <div class="stats" id="cmpStatsX" style="margin-top:10px"></div>
+        <div class="sup-grid">
+          <div class="sup-card">
+            <h3>Equipe Parque</h3>
+            <div class="sup-sub">Supervisor 1 • Somente Promotores marcados como "Equipe Parque"</div>
+            <div class="stats" id="stats-sup-parque"></div>
           </div>
 
-          <div class="compare-card">
-            <h3>Período Y</h3>
-            <div class="controls" style="margin:0; justify-content:flex-start">
-              <div class="control-group" style="min-width:330px">
-                <label>Datas (Y)</label>
-                <div class="range-row">
-                  <input id="cmpYStart" type="date" />
-                  <span class="sep">a</span>
-                  <input id="cmpYEnd" type="date" />
-                  <button class="btn" id="btnCmpYHoje" type="button">Hoje</button>
-                  <button class="btn" id="btnCmpY30" type="button">30 dias</button>
-                </div>
-              </div>
-            </div>
-            <div class="stats" id="cmpStatsY" style="margin-top:10px"></div>
+          <div class="sup-card">
+            <h3>Equipe Externa</h3>
+            <div class="sup-sub">Supervisor 2 • Somente Promotores marcados como "Equipe Externa"</div>
+            <div class="stats" id="stats-sup-externa"></div>
           </div>
         </div>
 
-        <div class="compare-card" style="margin-top:14px">
-          <h3>Variação percentual (X vs Y)</h3>
-          <div id="cmpMeta" class="hint" style="margin:6px 0 12px">—</div>
-          <div id="cmpDeltas"></div>
-          <div class="note warn" style="margin-top:12px">
-            Dica: para comparar "últimos 30 dias" vs "30 dias anteriores", você pode usar os botões de 30 dias em X e depois ajustar Y manualmente.
-          </div>
+        <div class="divider"></div>
+
+        <div class="sup-card">
+          <h3>Resultado geral (Promotores)</h3>
+          <div class="sup-sub">Soma das duas equipes (Parque + Externa) no período/filtros selecionados</div>
+          <div class="stats" id="stats-sup-geral"></div>
+        </div>
+
+        <div class="note warn" style="margin-top:14px">
+          Observação: promotores <strong>sem equipe marcada</strong> não entram nem no Parque nem no Externa. Se quiser incluir, me peça que adiciono um bloco "Sem equipe" também.
         </div>
       </div>
 
@@ -971,6 +918,60 @@
     `;
   }
 
+  /* ======= NOVO: CARDS ESPECIAIS (somente na aba Supervisores) ======= */
+  function uniquePromotoresWithAtLeastOneRow(rows){
+    const set = new Set();
+    rows.forEach(r => {
+      const p = (r[KEY.promotor] ?? "").toString().trim();
+      if (p) set.add(norm(p));
+    });
+    return set.size;
+  }
+
+  function renderSupervisorCards(containerId, rows){
+    const s = statsFor(rows);
+    const promCount = uniquePromotoresWithAtLeastOneRow(rows);
+    const mediaCasaisPorCaptador = promCount ? (s.casais / promCount) : 0;
+
+    el(containerId).innerHTML = `
+      <div class="stat-card"><div class="stat-value">${s.casais}</div><div class="stat-label">Casais</div></div>
+      <div class="stat-card"><div class="stat-value">${promCount}</div><div class="stat-label">Promotores no período</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtNumberBR(mediaCasaisPorCaptador, 1, 1)}</div><div class="stat-label">Média de casais por captador</div></div>
+
+      <div class="stat-card"><div class="stat-value">${fmtNumberBR(s.mediaCasaisPeriodo, 1, 1)}</div><div class="stat-label">Média de Casais por dia</div></div>
+      <div class="stat-card"><div class="stat-value">${s.vendas}</div><div class="stat-label">Cotas (vendas)</div></div>
+      <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV total</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtMoney(s.ticketMedio)}</div><div class="stat-label">Ticket médio</div></div>
+      <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>
+    `;
+  }
+
+  function rowsForTeamFromRows(rows, teamName){
+    const map = loadTeamMap();
+    return rows.filter(r => {
+      const prom = (r[KEY.promotor] ?? "").toString().trim();
+      const team = prom ? (map[prom] || "") : "";
+      return team === teamName;
+    });
+  }
+
+  function renderSupervisoresTab(){
+    // IMPORTANTÍSSIMO: somente nesta aba usamos a "média por captador".
+    // Base = filtros globais (inclusive período da barra de comando).
+    const baseFiltered = applyFilters(state.rows);
+
+    const parque = rowsForTeamFromRows(baseFiltered, "Equipe Parque");
+    const externa = rowsForTeamFromRows(baseFiltered, "Equipe Externa");
+    const geral = parque.concat(externa);
+
+    renderSupervisorCards("stats-sup-parque", parque);
+    renderSupervisorCards("stats-sup-externa", externa);
+    renderSupervisorCards("stats-sup-geral", geral);
+  }
+
+  /* ======= RESTANTE (curva/cancelamento/equipes/rankings) ======= */
   function effPillClass(effFrac) {
     const pct = (effFrac || 0) * 100;
     if (pct < 15) return "p-bad";
@@ -1494,6 +1495,7 @@
         saveTeamMap(m2);
         renderTeamMappingUI();
         renderEquipesStats();
+        renderSupervisoresTab();
       });
     });
   }
@@ -1509,6 +1511,7 @@
   }
 
   function renderEquipesStats(){
+    // Mantém esta aba como era (sem "média por captador" — exigência sua)
     renderStatsCards("stats-equipe-parque", rowsForTeam("Equipe Parque"));
     renderStatsCards("stats-equipe-externa", rowsForTeam("Equipe Externa"));
     renderStatsCards("stats-equipe-sem", rowsForTeam("__SEM__"));
@@ -1572,100 +1575,6 @@
     `;
   }
 
-  /* =========================
-     COMPARATIVO (NOVA LÓGICA)
-     ========================= */
-
-  function filterRowsByDateRange(rows, startIso, endIso){
-    const d1 = parseDateOnlyInput(startIso);
-    const d2 = parseDateOnlyInput(endIso);
-    if (!d1 && !d2) return rows.slice();
-
-    const start = d1 ? d1.getTime() : -Infinity;
-    const end = d2 ? (new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), 23,59,59,999)).getTime() : Infinity;
-    return rows.filter(r => r._dt && r._dt.getTime() >= start && r._dt.getTime() <= end);
-  }
-
-  function pctVar(x, y){
-    const X = Number(x) || 0;
-    const Y = Number(y) || 0;
-    if (Y === 0) return null; // evita infinito
-    return (X - Y) / Y; // fração (ex: 0.12 = +12%)
-  }
-
-  function fmtVarPct(frac){
-    if (frac === null) return "—";
-    const pct = frac * 100;
-    const sign = pct > 0 ? "+" : "";
-    return sign + new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(pct) + "%";
-  }
-
-  function deltaClass(frac){
-    if (frac === null) return "neu";
-    if (Math.abs(frac) < 0.0000001) return "neu";
-    return frac > 0 ? "pos" : "neg";
-  }
-
-  function renderComparativo(){
-    const base = applyFilters(state.rows); // filtros "globais" (exceto datas)
-    const xStart = el("cmpXStart").value;
-    const xEnd   = el("cmpXEnd").value;
-    const yStart = el("cmpYStart").value;
-    const yEnd   = el("cmpYEnd").value;
-
-    const rowsX = filterRowsByDateRange(base, xStart, xEnd);
-    const rowsY = filterRowsByDateRange(base, yStart, yEnd);
-
-    renderStatsCards("cmpStatsX", rowsX);
-    renderStatsCards("cmpStatsY", rowsY);
-
-    const sX = statsFor(rowsX);
-    const sY = statsFor(rowsY);
-
-    const status = el("statusSelect").value;
-    const profTipo = el("profTipo").value;
-    const profNome = el("profNome").value;
-    const ufSel = el("ufSelect").value;
-
-    el("cmpMeta").textContent = [
-      `Período X: ${xStart ? fmtISOToBR(xStart) : "—"} a ${xEnd ? fmtISOToBR(xEnd) : "—"}`,
-      `Período Y: ${yStart ? fmtISOToBR(yStart) : "—"} a ${yEnd ? fmtISOToBR(yEnd) : "—"}`,
-      `Status: ${status}`,
-      `Prof.: ${profTipo} / ${profNome}`,
-      `UF: ${ufSel}`
-    ].join(" • ");
-
-    const metrics = [
-      { key:"casais", label:"Casais", x:sX.casais, y:sY.casais, fmt:(v)=>String(v|0) },
-      { key:"mediaCasaisPeriodo", label:"Média de Casais/dia", x:sX.mediaCasaisPeriodo, y:sY.mediaCasaisPeriodo, fmt:(v)=>fmtNumberBR(v,1,1) },
-      { key:"vendas", label:"Cotas (vendas)", x:sX.vendas, y:sY.vendas, fmt:(v)=>String(v|0) },
-      { key:"cotasCanceladas", label:"Cotas canceladas", x:sX.cotasCanceladas, y:sY.cotasCanceladas, fmt:(v)=>String(v|0) },
-      { key:"vgvTotal", label:"VGV total", x:sX.vgvTotal, y:sY.vgvTotal, fmt:(v)=>fmtMoney(v) },
-      { key:"eficiencia", label:"Eficiência", x:sX.eficiencia, y:sY.eficiencia, fmt:(v)=>fmtPctBR(v) },
-      { key:"pctCancel", label:"% Cancelamento", x:sX.pctCancel, y:sY.pctCancel, fmt:(v)=>fmtPctBR(v) },
-      { key:"ticketMedio", label:"Ticket médio (por cota)", x:sX.ticketMedio, y:sY.ticketMedio, fmt:(v)=>fmtMoney(v) },
-      { key:"rendaMed", label:"Renda média", x:sX.rendaMed, y:sY.rendaMed, fmt:(v)=>fmtMoney(v) },
-      { key:"noTour", label:"NoTour", x:sX.noTour, y:sY.noTour, fmt:(v)=>String(v|0) },
-    ];
-
-    el("cmpDeltas").innerHTML = metrics.map(m => {
-      const v = pctVar(m.x, m.y);
-      return `
-        <div class="kpi-row">
-          <div class="kpi-top">
-            <div class="kpi-name">${m.label}</div>
-            <div class="kpi-delta ${deltaClass(v)}">${fmtVarPct(v)}</div>
-          </div>
-          <div class="kpi-sub">
-            <div><b>X:</b> ${m.fmt(m.x)}</div>
-            <div><b>Y:</b> ${m.fmt(m.y)}</div>
-            <div><b>Dif.:</b> ${m.fmt((m.x||0)-(m.y||0))}</div>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
   function updateAll() {
     state.filtered = applyFilters(state.rows);
 
@@ -1684,10 +1593,9 @@
     renderSingleProfessionalStats();
     renderCurvaCharts(state.filtered);
     renderCancelamentoAnalysis(state.filtered);
-    renderEquipesStats();
 
-    // novo: atualiza comparativo também
-    renderComparativo();
+    renderEquipesStats();
+    renderSupervisoresTab(); // novo
   }
 
   function setup() {
@@ -1718,26 +1626,6 @@
       updateAll();
     });
 
-    // listeners do comparativo
-    ["cmpXStart","cmpXEnd","cmpYStart","cmpYEnd"].forEach(id => {
-      el(id).addEventListener("change", renderComparativo);
-      el(id).addEventListener("keyup", (e) => { if (e.key === "Enter") renderComparativo(); });
-    });
-
-    function setCmpRange(prefix, daysBack){
-      const now = new Date();
-      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const start = new Date(end); start.setDate(start.getDate() - (daysBack - 1));
-      const toISO = (dt) => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
-      el(prefix+"Start").value = toISO(start);
-      el(prefix+"End").value = toISO(end);
-      renderComparativo();
-    }
-    el("btnCmpXHoje").addEventListener("click", () => setCmpRange("cmpX", 1));
-    el("btnCmpX30").addEventListener("click", () => setCmpRange("cmpX", 30));
-    el("btnCmpYHoje").addEventListener("click", () => setCmpRange("cmpY", 1));
-    el("btnCmpY30").addEventListener("click", () => setCmpRange("cmpY", 30));
-
     el("profTipoSingle").addEventListener("change", () => { updateProfFilters("profTipoSingle","profNomeSingle"); renderSingleProfessionalStats(); });
     el("profNomeSingle").addEventListener("change", () => { renderSingleProfessionalStats(); });
 
@@ -1750,6 +1638,7 @@
       saveTeamMap(map);
       renderTeamMappingUI();
       renderEquipesStats();
+      renderSupervisoresTab();
     });
 
     el("btnLimparEquipes").addEventListener("click", () => {
@@ -1757,6 +1646,7 @@
       saveTeamMap({});
       renderTeamMappingUI();
       renderEquipesStats();
+      renderSupervisoresTab();
     });
 
     document.querySelectorAll(".tab").forEach(t => {
@@ -1792,19 +1682,6 @@
       updateUfFilters();
 
       renderTeamMappingUI();
-
-      // Pré-preenche comparativo: X = últimos 30 dias, Y = 30 dias anteriores
-      const now = new Date();
-      const endX = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const startX = new Date(endX); startX.setDate(startX.getDate() - 29);
-      const endY = new Date(startX); endY.setDate(endY.getDate() - 1);
-      const startY = new Date(endY); startY.setDate(startY.getDate() - 29);
-      const toISO = (dt) => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
-      el("cmpXStart").value = toISO(startX);
-      el("cmpXEnd").value = toISO(endX);
-      el("cmpYStart").value = toISO(startY);
-      el("cmpYEnd").value = toISO(endY);
-
       updateAll();
 
       el("loading").style.display = "none";
