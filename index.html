@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Painel de Atendimentos</title>
+  <title>Painel de Atendimentos (dados.csv)</title>
   <meta name="color-scheme" content="dark light" />
+  <base href="./" />
 
   <style>
     :root{
@@ -14,7 +15,7 @@
       --accent:#7C5CFF; --accent2:#22D3EE;
       --shadow: 0 20px 60px rgba(0,0,0,.55); --radius: 18px; --radius2: 12px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -25,54 +26,33 @@
         radial-gradient(900px 600px at 90% 20%, rgba(34,211,238,.18), transparent 55%),
         radial-gradient(800px 600px at 40% 90%, rgba(92,255,176,.12), transparent 55%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
-      font-family:var(--sans); color:var(--text); overflow-x:hidden;
+      font-family:var(--sans); color:var(--text);
+      overflow-x:hidden;
     }
     .wrap{display:flex;flex-direction:column;min-height:100vh;margin:0 auto;max-width:1500px;padding:0 24px;}
     header{padding:40px 0 18px;text-align:center;}
     h1{
       font-size:3.0rem;font-weight:800;margin:0 0 10px;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;
       background-clip:text;letter-spacing:-0.02em;
     }
     .subtitle{font-size:1.02rem;color:var(--muted);font-weight:450;}
 
-    /* UPLOAD AREA */
-    .upload-area{
-      border:2px dashed rgba(124,92,255,.4);border-radius:var(--radius);
-      padding:40px 24px;text-align:center;cursor:pointer;
-      background:rgba(124,92,255,.04);transition:all .2s ease;margin:20px 0;
-    }
-    .upload-area:hover,.upload-area.dragover{
-      border-color:var(--accent);background:rgba(124,92,255,.1);
-      transform:translateY(-2px);box-shadow:var(--shadow);
-    }
-    .upload-area input{display:none;}
-    .upload-icon{font-size:3rem;margin-bottom:12px;}
-    .upload-title{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
-    .upload-sub{color:var(--muted);font-size:.95rem;}
-    .upload-btn{
-      display:inline-block;margin-top:16px;padding:12px 28px;
-      background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(34,211,238,.2));
-      border:1px solid rgba(124,92,255,.5);border-radius:var(--radius2);
-      font-weight:800;cursor:pointer;transition:all .2s ease;
-    }
-    .upload-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow);}
-
-    /* CONTROLS */
     .controls{
       display:flex;flex-wrap:wrap;gap:16px;margin:22px 0 10px;
       align-items:end;justify-content:center;
     }
     .control-group{display:flex;flex-direction:column;gap:8px;min-width:210px;}
-    .control-group label{font-size:.82rem;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+    .control-group label{font-size:0.82rem;color:var(--muted);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
     select,input{
       padding:12px 14px;border:1px solid var(--stroke);border-radius:var(--radius2);
       background:var(--card);color:var(--text);font-size:1rem;outline:none;
-      transition:all .2s ease;backdrop-filter:blur(10px);
+      transition:all 0.2s ease;backdrop-filter:blur(10px);
     }
     input[type="date"]{color-scheme:dark;cursor:pointer;}
-    select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12);}
+    input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1);cursor:pointer;}
+    select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,0.12);}
     select option{color:#0B1222;background:#EAF0FF;font-weight:700;}
     .range-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
     .range-row .sep{color:var(--muted);font-weight:800;padding:0 2px;white-space:nowrap;}
@@ -82,1341 +62,1296 @@
       cursor:pointer;transition:all .2s ease;font-weight:750;white-space:nowrap;
     }
     .btn:hover{border-color:rgba(255,255,255,.22);transform:translateY(-1px);box-shadow:var(--shadow);}
-    .btn:active{transform:translateY(0);box-shadow:none;}
+    .btn:active{transform:translateY(0px);box-shadow:none;}
     .btn.primary{background:rgba(124,92,255,.18);border-color:rgba(124,92,255,.35);}
-    .btn.danger{background:rgba(255,45,85,.12);border-color:rgba(255,45,85,.3);color:var(--bad);}
+    .btn.danger{background:rgba(255,45,85,.12);border-color:rgba(255,45,85,.30);color:#ffd0db;}
 
-    /* TABS */
     .tabs-wrap{
-      margin:16px 0 12px;background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);border-radius:22px;
-      backdrop-filter:blur(10px);padding:10px;
+      margin:16px 0 12px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:22px;
+      backdrop-filter:blur(10px);
+      padding:10px;
     }
-    .tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;}
+    .tabs{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
     .tab{
-      display:flex;align-items:center;justify-content:center;gap:8px;
-      padding:12px;text-align:center;cursor:pointer;border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);
-      font-weight:800;color:rgba(234,240,255,.86);transition:all .2s ease;
-      user-select:none;min-height:48px;line-height:1.2;font-size:.93rem;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      padding:12px 12px;text-align:center;cursor:pointer;
+      border-radius:16px;border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.04);font-weight:800;
+      color:rgba(234,240,255,.86);transition:all 0.2s ease;
+      user-select:none;white-space:normal;overflow:visible;
+      text-overflow:clip;min-height:48px;line-height:1.15;
     }
-    .tab:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.18);box-shadow:0 16px 40px rgba(0,0,0,.35);}
+    .tab:hover{transform:translateY(-1px);border-color:rgba(255,255,255,0.18);box-shadow:0 16px 40px rgba(0,0,0,.35);}
     .tab.active{
       background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(34,211,238,.18));
-      border-color:rgba(124,92,255,.55);box-shadow:0 20px 60px rgba(0,0,0,.50);color:white;
+      border-color:rgba(124,92,255,.55);
+      box-shadow:0 20px 60px rgba(0,0,0,.50);
+      color:white;
     }
-    .tab-content{display:none;animation:fadeIn .25s ease;}
+    .tab-content{display:none;animation:fadeIn 0.25s ease;}
     .tab-content.active{display:block;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    /* STATS CARDS */
     .stats{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:16px;margin:14px 0;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;margin:10px 0 12px;
     }
     .stat-card{
       background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
       padding:20px 18px;text-align:center;backdrop-filter:blur(10px);
-      position:relative;overflow:hidden;transition:all .25s ease;
+      position:relative;overflow:hidden;transition:all 0.25s ease;
     }
-    .stat-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.18);box-shadow:var(--shadow);}
+    .stat-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.18);box-shadow:var(--shadow);}
     .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
-    .stat-value{font-size:2rem;font-weight:900;margin:0 0 8px;font-family:var(--mono);color:var(--accent2);}
-    .stat-label{font-size:.92rem;color:var(--muted);font-weight:700;}
+    .stat-value{font-size:2.15rem;font-weight:900;margin:0 0 8px;font-family:var(--mono);color:var(--accent2);}
+    .stat-label{font-size:.95rem;color:var(--muted);font-weight:700;letter-spacing:0.2px;}
 
-    /* SECTION DIVIDER */
-    .section-divider{
-      display:flex;align-items:center;gap:14px;margin:28px 0 14px;
-    }
-    .section-divider h2{
-      margin:0;font-size:1.15rem;font-weight:900;white-space:nowrap;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    }
-    .section-divider .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(124,92,255,.4),transparent);}
-
-    /* NOTE */
     .note{
-      background:rgba(124,92,255,.1);border:1px solid rgba(124,92,255,.22);
-      border-radius:var(--radius2);padding:14px 16px;margin:12px 0;
-      font-size:.92rem;color:var(--muted);line-height:1.5;
+      background:rgba(124,92,255,0.1);border:1px solid rgba(124,92,255,0.22);
+      border-radius:var(--radius2);padding:14px 16px;margin:14px 0;font-size:0.92rem;
+      color:var(--muted);line-height:1.5;
     }
     .note.warn{border-color:rgba(255,176,32,.35);background:rgba(255,176,32,.10);}
     .note.bad{border-color:rgba(255,45,85,.35);background:rgba(255,45,85,.10);color:#ffd0db;}
-    .note.good{border-color:rgba(92,255,176,.35);background:rgba(92,255,176,.08);color:#b0fff0;}
+    .note.success{border-color:rgba(92,255,176,.35);background:rgba(92,255,176,.08);color:#b0fff0;}
 
-    /* TABLE */
+    .divider{
+      height:1px;background:rgba(255,255,255,.08);
+      margin:28px 0 22px;border-radius:99px;
+    }
+
+    .section-title{
+      font-size:1.12rem;font-weight:900;
+      color:rgba(234,240,255,.92);margin:0 0 12px;
+      display:flex;align-items:center;gap:10px;
+    }
+    .section-title .pill-tag{
+      font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;
+      background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.35);
+      color:rgba(124,92,255,1);font-family:var(--mono);
+    }
+
     .table-wrap{
       background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
-      overflow:auto;backdrop-filter:blur(10px);margin:12px 0 24px;max-height:70vh;
+      overflow:auto;backdrop-filter:blur(10px);margin:10px 0 26px;
+      max-height:70vh;
     }
-    table{width:100%;border-collapse:separate;border-spacing:0;min-width:820px;}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px;}
     thead th{
-      text-align:left;padding:12px 14px;font-size:.8rem;color:var(--muted);
-      text-transform:uppercase;letter-spacing:.6px;background:rgba(255,255,255,.03);
-      border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:1;white-space:nowrap;
+      text-align:left;padding:12px 14px;font-size:0.8rem;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.6px;background:rgba(255,255,255,0.03);
+      border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:1;white-space:nowrap;
     }
-    thead th.sortable{cursor:pointer;user-select:none;transition:all .2s ease;}
-    thead th.sortable:hover{color:var(--text);background:rgba(255,255,255,.08);}
+    thead th.sortable{cursor:pointer;user-select:none;transition:all 0.2s ease;}
+    thead th.sortable:hover{color:var(--text);background:rgba(255,255,255,0.08);}
     thead th .sort-ind{margin-left:6px;opacity:.9;font-size:.95em;color:var(--accent2);}
-    tbody td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;white-space:nowrap;}
-    tbody tr:hover{background:rgba(255,255,255,.03);}
+    tbody td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.05);vertical-align:middle;white-space:nowrap;}
+    tbody tr:hover{background:rgba(255,255,255,0.03);}
     tbody tr:last-child td{border-bottom:none;}
+    .rank-col{font-family:var(--mono);font-weight:900;width:76px;}
     .num{font-family:var(--mono);text-align:right;}
-    .name-cell{font-weight:900;max-width:300px;overflow:hidden;text-overflow:ellipsis;}
-    .rank-num{
-      font-family:var(--mono);font-weight:900;font-size:1.1rem;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    .name{font-weight:900;max-width:420px;overflow:hidden;text-overflow:ellipsis;}
+    .badge{
+      display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;font-size:.78rem;color:var(--muted);font-family:var(--mono);margin-left:8px;
     }
     .pill{
       display:inline-flex;align-items:center;justify-content:center;
-      min-width:80px;padding:4px 10px;border-radius:999px;
-      font-family:var(--mono);font-weight:900;border:1px solid rgba(255,255,255,.14);
-      font-size:.88rem;
+      min-width:86px;padding:4px 10px;border-radius:999px;font-family:var(--mono);
+      font-weight:900;border:1px solid rgba(255,255,255,.14);
     }
     .p-bad{background:rgba(255,45,85,.12);color:var(--bad);border-color:rgba(255,45,85,.28);}
     .p-med{background:rgba(255,176,32,.12);color:var(--med);border-color:rgba(255,176,32,.28);}
     .p-good{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
 
-    /* CHART */
-    .chart-card{
-      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
-      backdrop-filter:blur(10px);padding:18px;margin:12px 0;
+    /* ── Promotores por equipe ── */
+    .promo-list{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;}
+    .promo-row{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 14px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.03);
+      transition:background .15s;
     }
-    .chart-head{
-      display:flex;flex-wrap:wrap;gap:10px;
-      align-items:baseline;justify-content:space-between;margin-bottom:14px;
+    .promo-row:hover{background:rgba(255,255,255,.06);}
+    .promo-row .pr-name{
+      font-weight:850;font-size:.97rem;
+      flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     }
-    .chart-title{font-weight:950;letter-spacing:.2px;font-size:1.05rem;}
-    .chart-sub{color:var(--muted);font-size:.9rem;}
-    .chart-wrap{height:340px;position:relative;}
-    .chart-wrap.sm{height:280px;}
+    .promo-row .pr-tag{
+      font-size:.78rem;font-family:var(--mono);font-weight:800;
+      padding:3px 10px;border-radius:999px;white-space:nowrap;
+    }
+    .pr-tag.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.38);color:#c4b5ff;}
+    .pr-tag.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
+    .pr-tag.none{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);}
+    .promo-row select.mini-sel{
+      padding:7px 10px;border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);font-size:.9rem;font-weight:750;
+      cursor:pointer;min-width:160px;
+    }
+    .promo-row select.mini-sel:focus{border-color:var(--accent);}
 
-    /* TEAM CARDS (equipes e promotores) */
-    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin:10px 0;}
-    .team-card{
-      background:var(--card);border:1px solid var(--stroke);
-      border-radius:var(--radius);padding:18px;backdrop-filter:blur(10px);
+    /* config panel */
+    .config-panel{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      padding:20px;margin:0 0 18px;
     }
-    .team-card h3{margin:0 0 14px;font-size:1.05rem;}
-    .team-row{
-      display:flex;gap:10px;align-items:center;justify-content:space-between;
-      padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.03);margin-bottom:8px;
-    }
-    .team-row .left{min-width:0;flex:1;}
-    .team-row .nm{
-      font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-      text-transform:capitalize;
-    }
-    .team-row .mut{color:var(--muted);font-size:.82rem;font-family:var(--mono);margin-top:2px;}
-    .team-row .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
-    .mini-sel{
-      padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);color:var(--text);font-size:.88rem;font-weight:700;cursor:pointer;
-    }
-    .mini-sel:focus{outline:none;border-color:var(--accent);}
+    .config-panel h4{margin:0 0 14px;font-size:1rem;font-weight:900;color:rgba(234,240,255,.9);}
 
-    /* COMPARE */
+    /* chart */
+    .chart-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);backdrop-filter:blur(10px);padding:14px 14px 12px;margin:14px 0;}
+    .chart-head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin:2px 2px 10px;}
+    .chart-title{font-weight:950;letter-spacing:.2px;}
+    .chart-sub{color:var(--muted);font-size:.92rem;}
+    .chart-wrap{height:360px;position:relative;}
+    .chart-wrap.small{height:320px;position:relative;}
+    canvas{width:100% !important;height:100% !important;display:block;}
+
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:10px 0 12px;}
+    .team-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:14px;backdrop-filter:blur(10px);}
+    .team-card h3{margin:0 0 10px;font-size:1.05rem;}
+
     .compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-top:10px;}
-    .compare-card{
-      background:var(--card);border:1px solid var(--stroke);
-      border-radius:var(--radius);padding:18px;backdrop-filter:blur(10px);
-    }
-    .compare-card h3{margin:0 0 12px;font-size:1.05rem;}
-    .kpi-row{
-      display:flex;flex-direction:column;gap:6px;padding:12px;
-      border-radius:14px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.03);margin-bottom:10px;
-    }
+    .compare-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:14px;backdrop-filter:blur(10px);}
+    .compare-card h3{margin:0 0 10px;font-size:1.05rem;}
+    .kpi-row{display:flex;flex-direction:column;gap:6px;padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);margin-bottom:10px;}
     .kpi-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;}
     .kpi-name{font-weight:950;}
-    .kpi-delta{
-      font-family:var(--mono);font-weight:950;padding:3px 10px;
-      border-radius:999px;border:1px solid rgba(255,255,255,.14);
-      min-width:110px;text-align:center;font-size:.9rem;
-    }
+    .kpi-delta{font-family:var(--mono);font-weight:950;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);min-width:110px;text-align:center;}
     .kpi-delta.pos{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
     .kpi-delta.neg{background:rgba(255,45,85,.12);color:var(--bad);border-color:rgba(255,45,85,.28);}
     .kpi-delta.neu{background:rgba(255,255,255,.06);color:rgba(234,240,255,.85);border-color:rgba(255,255,255,.14);}
-    .kpi-sub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;color:var(--muted);font-size:.88rem;}
-    .kpi-sub b{color:rgba(234,240,255,.88);}
-
-    /* RENDA FAIXAS */
-    .faixa-bar-wrap{margin:4px 0 0;}
-    .faixa-bar-bg{background:rgba(255,255,255,.07);border-radius:999px;height:6px;overflow:hidden;}
-    .faixa-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
-
-    /* LOADING / ERROR */
-    #mainLoading{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:60px 24px;gap:16px;
-    }
-    .spinner{
-      width:48px;height:48px;border:3px solid rgba(124,92,255,.2);
-      border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
-    #mainError{
-      display:none;background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.3);
-      border-radius:var(--radius2);padding:20px;margin:20px 0;color:var(--bad);
-    }
-
-    /* RENDA PERFIL TABLE extra col */
-    .progress-cell{min-width:120px;}
+    .kpi-sub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;color:var(--muted);font-size:.9rem;}
+    .kpi-sub > div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .kpi-sub b{color:rgba(234,240,255,.88)}
+    .hint{font-size:.9rem;color:var(--muted);line-height:1.45;}
 
     @media(max-width:1100px){.tabs{grid-template-columns:repeat(3,minmax(0,1fr));}}
     @media(max-width:820px){
-      .wrap{padding:0 14px;}
-      h1{font-size:2rem;}
-      .control-group{min-width:unset;width:100%;}
-      .range-row{flex-direction:column;align-items:stretch;}
+      .wrap{padding:0 16px}
+      h1{font-size:2.2rem}
+      .control-group{min-width:unset;width:100%}
+      .range-row{flex-direction:column;align-items:stretch}
       .range-row .sep{display:none;}
+      table{min-width:820px;}
+      .chart-wrap{height:320px;}
       .tabs{grid-template-columns:repeat(2,minmax(0,1fr));}
+      .tab{justify-content:flex-start;text-align:left;padding:12px 12px;}
       .kpi-sub{grid-template-columns:1fr;}
-      table{min-width:700px;}
-      .chart-wrap{height:260px;}
+      .promo-row{flex-wrap:wrap;}
+      .promo-row select.mini-sel{min-width:140px;}
     }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 <div class="wrap">
   <header>
     <h1>Painel de Atendimentos</h1>
-    <p class="subtitle" id="subtitleLine">Carregue um arquivo <strong>dados.csv</strong> para começar</p>
+    <p class="subtitle">Fonte: <strong>dados.csv</strong> (VGV = soma simples da coluna G)</p>
   </header>
 
-  <!-- UPLOAD -->
-  <div class="upload-area" id="uploadArea">
-    <input type="file" id="csvFileInput" accept=".csv,.txt" />
-    <div class="upload-icon">📂</div>
-    <div class="upload-title">Arraste seu arquivo CSV aqui</div>
-    <div class="upload-sub">ou clique para selecionar · separador <strong>;</strong> · encoding UTF-8 ou ANSI</div>
-    <label class="upload-btn" for="csvFileInput">Selecionar arquivo</label>
+  <!-- ═══════════════════ FILTROS GLOBAIS ═══════════════════ -->
+  <div class="controls">
+    <div class="control-group" style="min-width:420px">
+      <label>Período</label>
+      <div class="range-row">
+        <input id="dateStart" type="date" />
+        <span class="sep">a</span>
+        <input id="dateEnd" type="date" />
+        <button class="btn" id="btnHoje" type="button">Hoje</button>
+        <button class="btn" id="btn30"   type="button">30 dias</button>
+        <button class="btn" id="btnLimparPeriodo" type="button">Limpar</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <label>Status do contrato</label>
+      <select id="statusSelect">
+        <option value="todos">Todos</option>
+        <option value="ativo">Ativo</option>
+        <option value="cancelado">Cancelado</option>
+        <option value="sem_status">Sem status</option>
+        <option value="outro">Outro</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Profissional</label>
+      <select id="profTipo">
+        <option value="promotor de marketing">Promotor de marketing</option>
+        <option value="liner">Liner</option>
+        <option value="closer">Closer</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Nome</label>
+      <select id="profNome"><option value="todos">Todos</option></select>
+    </div>
+    <div class="control-group">
+      <label>UF</label>
+      <select id="ufSelect"><option value="todos">Todas</option></select>
+    </div>
   </div>
 
-  <div id="mainError"></div>
-
-  <!-- PAINEL (oculto até CSV ser carregado) -->
-  <div id="mainPanel" style="display:none">
-
-    <div class="controls">
-      <div class="control-group" style="min-width:440px">
-        <label>Período</label>
-        <div class="range-row">
-          <input id="dateStart" type="date" />
-          <span class="sep">a</span>
-          <input id="dateEnd" type="date" />
-          <button class="btn" id="btnHoje">Hoje</button>
-          <button class="btn" id="btn30">30 dias</button>
-          <button class="btn" id="btnLimparPeriodo">Limpar</button>
-        </div>
-      </div>
-      <div class="control-group">
-        <label>Status do contrato</label>
-        <select id="statusSelect">
-          <option value="todos">Todos</option>
-          <option value="ativo">Ativo</option>
-          <option value="cancelado">Cancelado</option>
-          <option value="sem_status">Sem status</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label>Profissional</label>
-        <select id="profTipo">
-          <option value="promotor de marketing">Promotor de marketing</option>
-          <option value="liner">Liner</option>
-          <option value="closer">Closer</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label>Nome</label>
-        <select id="profNome"><option value="todos">Todos</option></select>
-      </div>
-      <div class="control-group">
-        <label>UF</label>
-        <select id="ufSelect"><option value="todos">Todas</option></select>
-      </div>
+  <!-- ═══════════════════ ABAS ═══════════════════ -->
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <div class="tab active"  data-tab="resumo">📊 Resumo</div>
+      <div class="tab" data-tab="comparativo">🆚 Comparativo de períodos</div>
+      <div class="tab" data-tab="curva">📈 Curva de casais e vendas</div>
+      <div class="tab" data-tab="cancelamento">❌ Análise de cancelamento</div>
+      <div class="tab" data-tab="equipes">🧲 Equipes de captação</div>
+      <div class="tab" data-tab="equipes-supervisores">🧑‍✈️ Promotores (2 supervisores)</div>
+      <div class="tab" data-tab="ranking-promotor">🎯 Ranking Promotor</div>
+      <div class="tab" data-tab="ranking-liner">💬 Ranking Liner</div>
+      <div class="tab" data-tab="ranking-closer">🤝 Ranking Closer</div>
+      <div class="tab" data-tab="perfil-renda">💸 Perfil de renda</div>
+      <div class="tab" data-tab="profissionais">👥 Profissionais</div>
     </div>
+  </div>
 
-    <div class="tabs-wrap">
-      <div class="tabs">
-        <div class="tab active"  data-tab="resumo">📊 Resumo</div>
-        <div class="tab" data-tab="comparativo">🆚 Comparativo</div>
-        <div class="tab" data-tab="curva">📈 Curva</div>
-        <div class="tab" data-tab="cancelamento">❌ Cancelamentos</div>
-        <div class="tab" data-tab="equipes">🧲 Equipes</div>
-        <div class="tab" data-tab="promotores">🧑‍✈️ Promotores</div>
-        <div class="tab" data-tab="ranking-promotor">🎯 Rank. Promotor</div>
-        <div class="tab" data-tab="ranking-liner">💬 Rank. Liner</div>
-        <div class="tab" data-tab="ranking-closer">🤝 Rank. Closer</div>
-        <div class="tab" data-tab="perfil-renda">💸 Perfil Renda</div>
-        <div class="tab" data-tab="profissionais">👥 Profissionais</div>
-      </div>
-    </div>
+  <!-- ═══════════════════ CONTEÚDO ═══════════════════ -->
+  <div id="content">
+    <div id="loading" class="note">Carregando dados...</div>
+    <div id="error"   class="note bad" style="display:none"></div>
 
-    <!-- ========== RESUMO ========== -->
+    <!-- ── RESUMO ── -->
     <div id="tab-resumo" class="tab-content active">
-      <div class="stats" id="statsResumo"></div>
+      <div class="stats" id="stats"></div>
       <div class="note">
-        <strong>Critérios:</strong> Casais = total de linhas − NoTour · Cotas contadas por tokens na coluna "Status do contrato" (separados por #) · VGV = soma da coluna G · Eficiência = Vendas ÷ Casais · NoTour = linhas com Status atendimento = "NoTour"
-      </div>
-      <div class="chart-card">
-        <div class="chart-head"><span class="chart-title">Atendimentos por dia</span><span class="chart-sub" id="curvaRangeLabel"></span></div>
-        <div class="chart-wrap"><canvas id="chartResumo"></canvas></div>
+        <strong>Critérios</strong><br>
+        • Casais = linhas (com ajuste: Total − NoTour).<br>
+        • NoTour = linhas com <strong>Status atendimento</strong> = "NoTour".<br>
+        • Cotas ativas/canceladas = tokens na coluna "Status do contrato".<br>
+        • <strong>VGV total = Σ(coluna G)</strong> (soma simples).<br>
+        • VGV ativo/cancelado: rateio proporcional pelos tokens ATIVO/CANCELADO da linha.<br>
+        • <strong>Eficiência = (Cotas ÷ Casais) × 100</strong>.<br>
+        • <strong>Média de Casais/dia</strong> = total ÷ dias do período (inclusivo).
       </div>
     </div>
 
-    <!-- ========== COMPARATIVO ========== -->
+    <!-- ── COMPARATIVO ── -->
     <div id="tab-comparativo" class="tab-content">
-      <div class="note">Compare dois períodos lado a lado. Preencha os campos e clique em <strong>Comparar</strong>.</div>
-      <div class="controls" style="justify-content:flex-start">
-        <div class="control-group">
-          <label>Período A — início</label>
-          <input type="date" id="compA1"/>
+      <div class="note">
+        <strong>Comparativo entre dois períodos</strong><br>
+        Período X e Y respeitam os filtros globais (Status, Profissional, Nome, UF).<br>
+        <strong>Variação %</strong> = (X − Y) / Y × 100. Quando Y = 0, mostra "—".
+      </div>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h3>Período X</h3>
+          <div class="controls" style="margin:0;justify-content:flex-start">
+            <div class="control-group" style="min-width:330px">
+              <label>Datas (X)</label>
+              <div class="range-row">
+                <input id="cmpXStart" type="date" /><span class="sep">a</span><input id="cmpXEnd" type="date" />
+                <button class="btn" id="btnCmpXHoje" type="button">Hoje</button>
+                <button class="btn" id="btnCmpX30"   type="button">30 dias</button>
+              </div>
+            </div>
+          </div>
+          <div class="stats" id="cmpStatsX" style="margin-top:10px"></div>
         </div>
-        <div class="control-group">
-          <label>Período A — fim</label>
-          <input type="date" id="compA2"/>
-        </div>
-        <div class="control-group">
-          <label>Período B — início</label>
-          <input type="date" id="compB1"/>
-        </div>
-        <div class="control-group">
-          <label>Período B — fim</label>
-          <input type="date" id="compB2"/>
-        </div>
-        <div class="control-group">
-          <label>&nbsp;</label>
-          <button class="btn primary" id="btnComparar">Comparar</button>
+        <div class="compare-card">
+          <h3>Período Y</h3>
+          <div class="controls" style="margin:0;justify-content:flex-start">
+            <div class="control-group" style="min-width:330px">
+              <label>Datas (Y)</label>
+              <div class="range-row">
+                <input id="cmpYStart" type="date" /><span class="sep">a</span><input id="cmpYEnd" type="date" />
+                <button class="btn" id="btnCmpYHoje" type="button">Hoje</button>
+                <button class="btn" id="btnCmpY30"   type="button">30 dias</button>
+              </div>
+            </div>
+          </div>
+          <div class="stats" id="cmpStatsY" style="margin-top:10px"></div>
         </div>
       </div>
-      <div id="comparativoResult"></div>
+      <div class="compare-card" style="margin-top:14px">
+        <h3>Variação percentual (X vs Y)</h3>
+        <div id="cmpMeta" class="hint" style="margin:6px 0 12px">—</div>
+        <div id="cmpDeltas"></div>
+        <div class="note warn" style="margin-top:12px">
+          Dica: use "30 dias" em X e ajuste Y manualmente para comparar períodos consecutivos.
+        </div>
+      </div>
     </div>
 
-    <!-- ========== CURVA ========== -->
+    <!-- ── CURVA ── -->
     <div id="tab-curva" class="tab-content">
-      <div class="stats" id="statsCurva"></div>
+      <div class="stats" id="stats-curva"></div>
+      <div class="note">
+        Respeita os filtros globais.<br>
+        • <strong>Casais/dia</strong> = linhas no dia.<br>
+        • <strong>Vendas/dia</strong> = soma de cotas no dia.<br>
+        • <strong>Eficiência</strong> = Vendas ÷ Casais.
+      </div>
       <div class="chart-card">
-        <div class="chart-head"><span class="chart-title">Casais e vendas por dia</span></div>
+        <div class="chart-head">
+          <div class="chart-title">Curva diária (Casais × Vendas)</div>
+          <div class="chart-sub" id="curva-meta">—</div>
+        </div>
         <div class="chart-wrap"><canvas id="chartCurva"></canvas></div>
       </div>
       <div class="chart-card">
-        <div class="chart-head"><span class="chart-title">Distribuição por dia da semana</span></div>
-        <div class="chart-wrap sm"><canvas id="chartSemana"></canvas></div>
+        <div class="chart-head">
+          <div class="chart-title">Performance por dia da semana</div>
+          <div class="chart-sub">Vendas, VGV, Casais, Eficiência e Média de Casais/dia da semana</div>
+        </div>
+        <div class="chart-wrap small"><canvas id="chartSemana"></canvas></div>
       </div>
     </div>
 
-    <!-- ========== CANCELAMENTOS ========== -->
+    <!-- ── CANCELAMENTO ── -->
     <div id="tab-cancelamento" class="tab-content">
-      <div class="stats" id="statsCancelamento"></div>
-      <div class="chart-card">
-        <div class="chart-head"><span class="chart-title">Cancelamentos por mês</span></div>
-        <div class="chart-wrap sm"><canvas id="chartCancel"></canvas></div>
+      <div class="note">
+        <strong>Análise de cancelamento por quantidade de cotas vendidas</strong><br>
+        % Cancelamento = (cotas canceladas ÷ cotas totais) × 100.
       </div>
-      <div class="section-divider"><h2>Por profissional</h2><div class="line"></div></div>
-      <div class="table-wrap"><table id="tableCancelamento"><thead></thead><tbody></tbody></table></div>
+      <div class="chart-card">
+        <div class="chart-head">
+          <div class="chart-title">% Cancelamento por qtd de cotas vendidas</div>
+          <div class="chart-sub" id="cancel-meta">—</div>
+        </div>
+        <div class="chart-wrap"><canvas id="chartCancelamento"></canvas></div>
+      </div>
+      <div id="cancelamento-table"></div>
     </div>
 
-    <!-- ========== EQUIPES ========== -->
+    <!-- ── EQUIPES DE CAPTAÇÃO ── -->
     <div id="tab-equipes" class="tab-content">
-      <!-- ===== CARDS NO TOPO ===== -->
-      <div class="section-divider"><h2>📍 Equipe Parque — KPIs</h2><div class="line"></div></div>
-      <div class="stats" id="statsEquipeParque"></div>
-
-      <div class="section-divider"><h2>🌐 Equipe Externa — KPIs</h2><div class="line"></div></div>
-      <div class="stats" id="statsEquipeExterna"></div>
-
-      <div class="section-divider"><h2>❓ Sem equipe definida — KPIs</h2><div class="line"></div></div>
-      <div class="stats" id="statsEquipeSem"></div>
-
-      <!-- ===== SELEÇÃO DE EQUIPES EMBAIXO ===== -->
-      <div class="section-divider"><h2>⚙️ Definir equipe de cada promotor</h2><div class="line"></div></div>
-      <div class="note">As marcações são salvas no navegador (localStorage).</div>
+      <div class="note">
+        <strong>Equipes de captação</strong> — marque a equipe de cada Promotor de marketing.
+        A associação fica salva no seu navegador (localStorage).
+      </div>
+      <h3 style="margin:10px 0 6px">Equipe Parque</h3>
+      <div class="stats" id="stats-equipe-parque"></div>
+      <h3 style="margin:16px 0 6px">Equipe Externa</h3>
+      <div class="stats" id="stats-equipe-externa"></div>
+      <div class="note warn">Promotores sem equipe marcada entram em <strong>Sem equipe</strong>.</div>
+      <h3 style="margin:10px 0 6px">Sem equipe</h3>
+      <div class="stats" id="stats-equipe-sem"></div>
+      <div class="note" style="margin-top:18px">
+        <strong>Configurar promotores</strong><br>
+        Se o nome mudar no CSV, será tratado como novo promotor.
+      </div>
       <div class="team-grid">
         <div class="team-card">
-          <h3>Atribuição rápida</h3>
-          <div class="controls" style="margin:0;justify-content:flex-start;gap:12px">
-            <div class="control-group" style="min-width:240px">
+          <h3>Marcar equipe</h3>
+          <div class="controls" style="margin:0;justify-content:flex-start">
+            <div class="control-group" style="min-width:260px">
               <label>Promotor</label>
-              <select id="eqPromSelect"><option value="">Selecione...</option></select>
+              <select id="teamPromotorSelect"><option value="">Carregando...</option></select>
             </div>
-            <div class="control-group" style="min-width:200px">
+            <div class="control-group" style="min-width:220px">
               <label>Equipe</label>
-              <select id="eqTeamSelect">
+              <select id="teamEquipeSelect">
                 <option value="Equipe Parque">Equipe Parque</option>
                 <option value="Equipe Externa">Equipe Externa</option>
               </select>
             </div>
-            <div class="control-group">
+            <div class="control-group" style="min-width:160px">
               <label>&nbsp;</label>
-              <button class="btn primary" id="btnSalvarEq">Salvar</button>
+              <button class="btn primary" id="btnSalvarEquipe" type="button">Salvar</button>
             </div>
-            <div class="control-group">
+            <div class="control-group" style="min-width:180px">
               <label>&nbsp;</label>
-              <button class="btn danger" id="btnLimparEq">Limpar tudo</button>
+              <button class="btn danger" id="btnLimparEquipes" type="button">Limpar marcações</button>
             </div>
           </div>
         </div>
-      </div>
-      <div class="team-card" style="margin-top:12px">
-        <h3>Lista de promotores</h3>
-        <div id="eqMappingList"></div>
-      </div>
-    </div>
-
-    <!-- ========== PROMOTORES (2 supervisores) ========== -->
-    <div id="tab-promotores" class="tab-content">
-      <!-- ===== CARDS NO TOPO ===== -->
-      <div class="section-divider"><h2>📍 Equipe Parque — KPIs</h2><div class="line"></div></div>
-      <div class="stats" id="statsPromoParque"></div>
-
-      <div class="section-divider"><h2>🌐 Equipe Externa — KPIs</h2><div class="line"></div></div>
-      <div class="stats" id="statsPromoExterna"></div>
-
-      <div class="section-divider"><h2>🏆 Resultado Geral (Parque + Externa)</h2><div class="line"></div></div>
-      <div class="stats" id="statsPromoGeral"></div>
-
-      <!-- ===== SELEÇÃO DE EQUIPES EMBAIXO ===== -->
-      <div class="section-divider"><h2>⚙️ Definir equipe de cada promotor</h2><div class="line"></div></div>
-      <div class="note">As marcações são salvas no navegador (localStorage) e compartilhadas com a aba <strong>Equipes</strong>.</div>
-      <div class="team-grid">
         <div class="team-card">
-          <h3>Atribuição rápida</h3>
-          <div class="controls" style="margin:0;justify-content:flex-start;gap:12px">
-            <div class="control-group" style="min-width:240px">
-              <label>Promotor</label>
-              <select id="supPromSelect"><option value="">Selecione...</option></select>
-            </div>
-            <div class="control-group" style="min-width:200px">
-              <label>Equipe</label>
-              <select id="supTeamSelect">
-                <option value="Equipe Parque">Equipe Parque</option>
-                <option value="Equipe Externa">Equipe Externa</option>
-              </select>
-            </div>
-            <div class="control-group">
-              <label>&nbsp;</label>
-              <button class="btn primary" id="btnSalvarSup">Salvar</button>
-            </div>
-            <div class="control-group">
-              <label>&nbsp;</label>
-              <button class="btn danger" id="btnLimparSup">Limpar tudo</button>
-            </div>
-          </div>
+          <h3>Marcações atuais</h3>
+          <div id="teamMappingList"></div>
         </div>
-      </div>
-      <div class="team-card" style="margin-top:12px">
-        <h3>Lista completa de promotores</h3>
-        <div id="supMappingList"></div>
       </div>
     </div>
 
-    <!-- ========== RANKING PROMOTOR ========== -->
+    <!-- ══════════════════════════════════════════════════
+         ABA: PROMOTORES (2 SUPERVISORES)
+         ① Cards de KPIs no TOPO
+         ② Configuração de equipes EMBAIXO
+    ══════════════════════════════════════════════════ -->
+    <div id="tab-equipes-supervisores" class="tab-content">
+
+      <!-- ① KPIs — TOPO -->
+      <div class="note">
+        <strong>Promotores de Marketing — 2 Supervisores</strong><br>
+        KPIs de cada equipe no período filtrado. Para configurar quem pertence a cada equipe, use o painel no final desta aba.
+      </div>
+
+      <div class="section-title">
+        Equipe Parque <span class="pill-tag">KPIs</span>
+      </div>
+      <div class="stats" id="stats-super-parque"></div>
+
+      <div class="section-title" style="margin-top:22px">
+        Equipe Externa <span class="pill-tag">KPIs</span>
+      </div>
+      <div class="stats" id="stats-super-externa"></div>
+
+      <div class="section-title" style="margin-top:22px">
+        Resultado Geral <span class="pill-tag">Parque + Externa</span>
+      </div>
+      <div class="stats" id="stats-super-geral"></div>
+
+      <div class="note warn" style="margin-top:6px">
+        Promotores <strong>sem equipe definida</strong> não entram nos cards acima.
+      </div>
+
+      <!-- divisor visual -->
+      <div class="divider"></div>
+
+      <!-- ② CONFIGURAÇÃO — EMBAIXO -->
+      <div class="section-title">
+        Configurar promotores <span class="pill-tag">Definir equipe</span>
+      </div>
+
+      <div class="config-panel">
+        <h4>Seleção rápida</h4>
+        <div class="controls" style="margin:0;justify-content:flex-start;flex-wrap:wrap">
+          <div class="control-group" style="min-width:260px">
+            <label>Promotor</label>
+            <select id="supPromotorSelect"><option value="">Carregando...</option></select>
+          </div>
+          <div class="control-group" style="min-width:200px">
+            <label>Equipe</label>
+            <select id="supEquipeSelect">
+              <option value="Equipe Parque">Equipe Parque</option>
+              <option value="Equipe Externa">Equipe Externa</option>
+            </select>
+          </div>
+          <div class="control-group" style="min-width:150px">
+            <label>&nbsp;</label>
+            <button class="btn primary" id="btnSalvarEquipeSup" type="button">💾 Salvar</button>
+          </div>
+          <div class="control-group" style="min-width:180px">
+            <label>&nbsp;</label>
+            <button class="btn danger" id="btnLimparEquipesSup" type="button">🗑 Limpar tudo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-panel" style="margin-top:0">
+        <h4>Lista completa — altere diretamente</h4>
+        <div id="supMappingList" class="promo-list"></div>
+      </div>
+
+    </div><!-- /tab-equipes-supervisores -->
+
+    <!-- ── RANKING PROMOTOR ── -->
     <div id="tab-ranking-promotor" class="tab-content">
-      <div class="stats" id="statsRankPromotor"></div>
-      <div class="table-wrap"><table id="tableRankPromotor"><thead></thead><tbody></tbody></table></div>
+      <div class="note">Ranking por <span class="badge">Promotor de marketing</span>. Clique nos cabeçalhos para ordenar.</div>
+      <div id="ranking-promotor"></div>
     </div>
 
-    <!-- ========== RANKING LINER ========== -->
+    <!-- ── RANKING LINER ── -->
     <div id="tab-ranking-liner" class="tab-content">
-      <div class="stats" id="statsRankLiner"></div>
-      <div class="table-wrap"><table id="tableRankLiner"><thead></thead><tbody></tbody></table></div>
+      <div class="note">Ranking por <span class="badge">Liner</span>. Clique nos cabeçalhos para ordenar.</div>
+      <div id="ranking-liner"></div>
     </div>
 
-    <!-- ========== RANKING CLOSER ========== -->
+    <!-- ── RANKING CLOSER ── -->
     <div id="tab-ranking-closer" class="tab-content">
-      <div class="stats" id="statsRankCloser"></div>
-      <div class="table-wrap"><table id="tableRankCloser"><thead></thead><tbody></tbody></table></div>
+      <div class="note">Ranking por <span class="badge">Closer</span>. Clique nos cabeçalhos para ordenar.</div>
+      <div id="ranking-closer"></div>
     </div>
 
-    <!-- ========== PERFIL RENDA ========== -->
+    <!-- ── PERFIL DE RENDA ── -->
     <div id="tab-perfil-renda" class="tab-content">
-      <div class="stats" id="statsRenda"></div>
-      <div class="chart-card">
-        <div class="chart-head"><span class="chart-title">Distribuição por faixa de renda</span></div>
-        <div class="chart-wrap sm"><canvas id="chartRenda"></canvas></div>
-      </div>
-      <div class="table-wrap"><table id="tableRenda"><thead></thead><tbody></tbody></table></div>
+      <div class="note">Performance por faixa de renda. Clique nos cabeçalhos para ordenar.</div>
+      <div id="perfil-renda"></div>
     </div>
 
-    <!-- ========== PROFISSIONAIS ========== -->
+    <!-- ── PROFISSIONAIS ── -->
     <div id="tab-profissionais" class="tab-content">
-      <div class="controls" style="justify-content:flex-start">
+      <div class="note">Selecione um profissional para ver o detalhe individual no período filtrado.</div>
+      <div class="controls" style="margin-top:10px">
         <div class="control-group">
-          <label>Tipo</label>
-          <select id="profTabTipo">
+          <label>Área (individual)</label>
+          <select id="profTipoSingle">
             <option value="promotor de marketing">Promotor de marketing</option>
             <option value="liner">Liner</option>
             <option value="closer">Closer</option>
           </select>
         </div>
+        <div class="control-group">
+          <label>Nome (individual)</label>
+          <select id="profNomeSingle"><option value="">Selecione...</option></select>
+        </div>
       </div>
-      <div class="stats" id="statsProfissionais"></div>
-      <div class="table-wrap"><table id="tableProfissionais"><thead></thead><tbody></tbody></table></div>
+      <div class="stats" id="stats-single" style="margin-top:10px"></div>
+      <div class="note" style="margin-top:8px">Tabela por profissional (respeita os filtros globais):</div>
+      <div id="profissionais-table"></div>
     </div>
 
-  </div><!-- /mainPanel -->
+  </div><!-- /content -->
 </div><!-- /wrap -->
 
 <script>
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════════
    UTILITÁRIOS
-───────────────────────────────────────────── */
-const el = id => document.getElementById(id);
-const norm = s => (s ?? "").toString().toLowerCase().trim().replace(/\s+/g, " ");
-const toISODate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const fmtMoney = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v||0);
-const fmtPct  = f => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}).format((f||0)*100)+"%";
-const fmtNum  = (v,d=1) => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d}).format(v||0);
-const cap     = s => s ? s.charAt(0).toUpperCase()+s.slice(1) : s;
-
-const KEY = {
-  data:      norm("data de atendimento"),
-  contrato:  norm("status do contrato"),
-  atend:     norm("status atendimento"),
-  renda:     norm("renda"),
-  uf:        norm("uf"),
-  promotor:  norm("promotor de marketing"),
-  liner:     norm("liner"),
-  closer:    norm("closer"),
-};
+═══════════════════════════════════════════════ */
+const el   = id => document.getElementById(id);
+const norm = s  => (s ?? "").toString().toLowerCase().trim().replace(/\s+/g," ");
 
 const CLIENT_NAME_HEADERS = [
-  norm("nome do cliente"), norm("cliente"), norm("nome"),
-  norm("casal"), norm("nome completo"), norm("nome do casal")
+  norm("nome do cliente"),norm("cliente"),norm("nome"),norm("casal"),
+  norm("nome completo"),norm("nome do casal"),
 ];
-
-const TEAM_KEY = "painel_equipes_v2";
-const loadTeamMap = () => { try{ return JSON.parse(localStorage.getItem(TEAM_KEY)||"{}"); }catch(e){return{};} };
-const saveTeamMap = m => localStorage.setItem(TEAM_KEY, JSON.stringify(m||{}));
-
-/* ─────────────────────────────────────────────
-   ESTADO GLOBAL
-───────────────────────────────────────────── */
-const S = {
-  rows: [],
-  filtered: [],
-  vgvColKey: null,
-  firstColKey: null,
-  charts: {},
-  sortState: {},
+const KEY = {
+  dataAtendimento  : norm("data de atendimento"),
+  statusContrato   : norm("status do contrato"),
+  statusAtendimento: norm("status atendimento"),
+  renda   : norm("renda"),
+  uf      : norm("uf"),
+  promotor: norm("promotor de marketing"),
+  liner   : norm("liner"),
+  closer  : norm("closer"),
 };
 
-/* ─────────────────────────────────────────────
-   PARSE CSV
-───────────────────────────────────────────── */
-function parseCSV(text) {
-  const lines = text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(l=>l.trim());
-  if(!lines.length) throw new Error("CSV vazio");
+const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null } };
+const charts  = { curva:null, semana:null, cancelamento:null };
+const sortState = {
+  "ranking-promotor"   :{ key:"vendas",    dir:"desc" },
+  "ranking-liner"      :{ key:"vendas",    dir:"desc" },
+  "ranking-closer"     :{ key:"vendas",    dir:"desc" },
+  "profissionais-table":{ key:"vendas",    dir:"desc" },
+  "perfil-renda"       :{ key:"vgvTotal",  dir:"desc" },
+  "cancelamento-table" :{ key:"cotasTotal",dir:"desc" },
+};
 
-  const parseLine = line => {
-    const out=[]; let cur="", inQ=false;
+/* ── localStorage de equipes ── */
+const TEAM_KEY    = "painel_equipes_promotores_v1";
+const loadTeamMap = () => { try{ const r=localStorage.getItem(TEAM_KEY); const o=r?JSON.parse(r):{}; return(o&&typeof o==="object")?o:{}; }catch(e){return{};} };
+const saveTeamMap = m  => localStorage.setItem(TEAM_KEY, JSON.stringify(m||{}));
+
+/* ═══════════════════════════════════════════════
+   PARSE CSV
+═══════════════════════════════════════════════ */
+function parseDelimited(text, delimiter=";"){
+  const lines=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(l=>l.trim());
+  if(!lines.length) return [];
+  const parseLine=line=>{
+    const out=[]; let cur="",inQ=false;
     for(let i=0;i<line.length;i++){
       const ch=line[i];
       if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
-      else if(ch===';'&&!inQ){ out.push(cur); cur=""; }
+      else if(ch===delimiter&&!inQ){out.push(cur);cur="";}
       else cur+=ch;
     }
     out.push(cur);
-    return out.map(v=>v.trim().replace(/^"|"$/g,""));
+    return out.map(v=>v.trim());
   };
-
-  const headers = parseLine(lines[0]);
-  const normH   = headers.map(norm);
-  const keys    = headers.map((h,i) => ({ raw:h, norm:normH[i] }));
-
-  S.firstColKey = keys[0]?.norm || null;
-  S.vgvColKey   = keys[6]?.norm || null;
-  if(!S.vgvColKey) throw new Error("O CSV precisa ter ao menos 7 colunas (VGV na coluna G).");
-
-  const clientKey = CLIENT_NAME_HEADERS.find(c => normH.includes(c)) || null;
-
-  const rows = [];
+  const headers=parseLine(lines[0]).map(h=>h.replace(/^"|"$/g,""));
+  const data=[];
   for(let i=1;i<lines.length;i++){
-    const vals = parseLine(lines[i]);
-    if(vals.length !== headers.length) continue;
-    const row = {};
-    keys.forEach((k,idx) => { row[k.norm] = vals[idx] ?? ""; });
-    row._dt            = parseDT(row[KEY.data]) || parseDT(row[S.firstColKey]);
-    row._vgv           = parseMoney(row[S.vgvColKey]);
-    row._renda         = parseMoney(row[KEY.renda]);
-    row._quotas        = parseQuotas(row[KEY.contrato]);
-    row._bucket        = bucketContrato(row[KEY.contrato]);
-    row._atend         = norm(row[KEY.atend] || "");
-    row._clientName    = clientKey ? (row[clientKey]||"").trim() : "";
-    rows.push(row);
+    const vals=parseLine(lines[i]).map(v=>v.replace(/^"|"$/g,""));
+    if(vals.length!==headers.length) continue;
+    const row={}; headers.forEach((h,idx)=>row[norm(h)]=vals[idx]??""); data.push(row);
   }
-  return rows;
+  const keys=Object.keys(data[0]||{});
+  state.meta.firstColKey=keys[0]||null;
+  state.meta.vgvColKey  =keys[6]||null;
+  if(!state.meta.vgvColKey) throw new Error("CSV precisa ter pelo menos 7 colunas (VGV na coluna G).");
+  return data;
 }
 
-function parseDT(s){
-  if(!s||typeof s!=="string") return null;
-  s=s.trim(); if(!s) return null;
-  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-  if(m) return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||0),+(m[5]||0),+(m[6]||0));
-  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-  if(m) return new Date(+m[1],+m[2]-1,+m[3],+(m[4]||0),+(m[5]||0),+(m[6]||0));
-  return null;
-}
-
-function parseDateInput(s){
-  if(!s) return null;
-  const m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  return m ? new Date(+m[1],+m[2]-1,+m[3]) : null;
-}
-
-function parseMoney(s){
-  if(!s||typeof s!=="string") return 0;
-  const c=s.replace(/[^\d,.-]/g,"");
-  if(!c) return 0;
+/* ═══════════════════════════════════════════════
+   HELPERS DE VALOR
+═══════════════════════════════════════════════ */
+function parseMoneyBR(str){
+  if(!str||typeof str!=="string") return 0;
+  const c=str.replace(/[^\d,.-]/g,""); if(!c) return 0;
   if(c.includes(",")&&c.includes(".")){
-    const lc=c.lastIndexOf(","),ld=c.lastIndexOf(".");
-    return lc>ld ? parseFloat(c.replace(/\./g,"").replace(",","."))||0 : parseFloat(c.replace(/,/g,""))||0;
+    const lC=c.lastIndexOf(","),lD=c.lastIndexOf(".");
+    return lC>lD?parseFloat(c.replace(/\./g,"").replace(",","."))||0:parseFloat(c.replace(/,/g,""))||0;
   }
   if(c.includes(",")) return parseFloat(c.replace(",","."))||0;
   return parseFloat(c)||0;
 }
+const fmtMoney = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v||0);
+const fmtPctBR = f => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}).format((f||0)*100)+"%";
+const fmtNumBR = (v,mn=1,mx=1) => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:mn,maximumFractionDigits:mx}).format(v||0);
 
-function parseQuotas(s){
-  const toks=(s||"").split("#").map(t=>t.trim()).filter(Boolean);
-  let a=0,c=0,o=0;
-  toks.forEach(t=>{
-    const n=norm(t);
-    if(n.includes("cancel")) c++;
-    else if(n.includes("ativo")) a++;
-    else o++;
-  });
-  return {ativo:a,cancelado:c,outro:o,total:a+c+o};
+function parseBRDateTime(str){
+  if(!str||typeof str!=="string") return null;
+  const s=str.trim(); if(!s) return null;
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+  if(m){ const[,d,mo,y,hh,mm,ss]=m; return new Date(+y,+mo-1,+d,hh?+hh:0,mm?+mm:0,ss?+ss:0); }
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+  if(m){ const[,y,mo,d,hh,mm,ss]=m; return new Date(+y,+mo-1,+d,hh?+hh:0,mm?+mm:0,ss?+ss:0); }
+  return null;
 }
+function parseDateOnlyInput(s){
+  if(!s) return null;
+  const m=String(s).trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+  const d2=parseBRDateTime(s); if(!d2) return null;
+  return new Date(d2.getFullYear(),d2.getMonth(),d2.getDate());
+}
+const toISO = dt => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+const fmtBR = iso => { const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m?`${m[3]}/${m[2]}/${m[1]}`:iso; };
 
-function bucketContrato(s){
-  const n=norm(s||"");
-  if(!n) return "sem_status";
+/* ═══════════════════════════════════════════════
+   STATUS / COTAS
+═══════════════════════════════════════════════ */
+function countQuotas(s){
+  let a=0,c=0,o=0;
+  ((s??"")+""  ).trim().split("#").map(x=>x.trim()).filter(Boolean).forEach(t=>{
+    const k=norm(t);
+    if(k.includes("cancel"))c++; else if(k.includes("ativo"))a++; else o++;
+  });
+  return{ativo:a,cancelado:c,outro:o,total:a+c+o};
+}
+function contractBucket(s){
+  const n=norm(s); if(!n) return "sem_status";
   if(n.includes("cancel")) return "cancelado";
   if(n.includes("ativo"))  return "ativo";
   return "outro";
 }
 
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════════
+   BUILD OBJECTS
+═══════════════════════════════════════════════ */
+function buildObjects(rows){
+  if(!rows.length) throw new Error("CSV vazio.");
+  const cnk=(()=>{ const ks=Object.keys(rows[0]); for(const c of CLIENT_NAME_HEADERS) if(ks.includes(c)) return c; return null; })();
+  return rows.map(r=>{
+    const o={...r};
+    o._dt        =parseBRDateTime(o[KEY.dataAtendimento])||parseBRDateTime(o[state.meta.firstColKey]);
+    o._valorVgv  =parseMoneyBR(o[state.meta.vgvColKey]);
+    o._renda     =parseMoneyBR(o[KEY.renda]);
+    o._quotas    =countQuotas(o[KEY.statusContrato]);
+    o._bucket    =contractBucket(o[KEY.statusContrato]);
+    o._clientName=cnk?(o[cnk]??"").toString().trim():"";
+    o._statusAt  =norm(o[KEY.statusAtendimento]??"");
+    return o;
+  });
+}
+
+/* ═══════════════════════════════════════════════
    FILTROS
-───────────────────────────────────────────── */
+═══════════════════════════════════════════════ */
 function applyFilters(rows){
-  const status  = el("statusSelect").value;
-  const profTipo= norm(el("profTipo").value);
-  const profNome= el("profNome").value;
-  const ufSel   = el("ufSelect").value;
-  const d1      = parseDateInput(el("dateStart").value);
-  const d2      = parseDateInput(el("dateEnd").value);
-
-  return rows.filter(r=>{
-    if(d1||d2){
-      if(!r._dt) return false;
-      const t=r._dt.getTime();
-      if(d1 && t < d1.getTime()) return false;
-      if(d2 && t > new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime()) return false;
-    }
-    if(status!=="todos" && r._bucket!==status) return false;
-    if(ufSel !=="todos" && (r[KEY.uf]||"").trim()!==ufSel) return false;
-    if(profNome!=="todos" && norm(r[profTipo]||"")!==norm(profNome)) return false;
-    return true;
-  });
+  const status  =el("statusSelect").value;
+  const profTipo=norm(el("profTipo").value);
+  const profNome=el("profNome").value;
+  const ufSel   =el("ufSelect").value;
+  const d1=parseDateOnlyInput(el("dateStart").value);
+  const d2=parseDateOnlyInput(el("dateEnd").value);
+  let f=rows.slice();
+  if(d1||d2){
+    const s=d1?d1.getTime():-Infinity;
+    const e=d2?new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime():Infinity;
+    f=f.filter(r=>r._dt&&r._dt.getTime()>=s&&r._dt.getTime()<=e);
+  }
+  if(status!=="todos")   f=f.filter(r=>r._bucket===status);
+  if(ufSel !=="todos")   f=f.filter(r=>(r[KEY.uf]??"").toString().trim()===ufSel);
+  if(profNome!=="todos") f=f.filter(r=>norm(r[profTipo]??"")=== norm(profNome));
+  return f;
 }
 
-/* ─────────────────────────────────────────────
-   STATS CORE
-───────────────────────────────────────────── */
-function calcStats(rows){
-  const noTour   = rows.filter(r=>r._atend==="notour"||r._atend==="no tour").length;
-  const casais   = Math.max(0, rows.length - noTour);
-  let vendas=0, canceladas=0, vgvTotal=0, rendaSum=0, rendaCount=0;
+/* ═══════════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════════ */
+function sumVGV(rows){
+  return rows.reduce((a,r)=>{
+    const v=r._valorVgv??0,at=r._quotas?.ativo??0,ca=r._quotas?.cancelado??0,t=at+ca;
+    a.total+=v; if(t>0){a.ativo+=v*(at/t);a.cancelado+=v*(ca/t);} return a;
+  },{ativo:0,cancelado:0,total:0});
+}
+function avgRenda(rows){ if(!rows.length) return 0; return rows.reduce((s,r)=>s+(r._renda??0),0)/rows.length; }
+function daysInclusive(){
+  const d1=parseDateOnlyInput(el("dateStart").value);
+  const d2=parseDateOnlyInput(el("dateEnd").value);
+  if(!d1||!d2) return null;
+  const diff=new Date(d2.getFullYear(),d2.getMonth(),d2.getDate()).getTime()-new Date(d1.getFullYear(),d1.getMonth(),d1.getDate()).getTime();
+  return diff<0?0:Math.floor(diff/86400000)+1;
+}
+function distinctDays(rows){ const s=new Set(); rows.forEach(r=>{if(r._dt)s.add(`${r._dt.getFullYear()}-${r._dt.getMonth()}-${r._dt.getDate()}`);}); return s.size; }
+function avgCasais(rows){ const tot=rows.length; const days=daysInclusive(); const d=days??distinctDays(rows); return d?tot/d:0; }
 
-  rows.forEach(r=>{
-    vendas    += r._quotas.ativo + r._quotas.outro;
-    canceladas+= r._quotas.cancelado;
-    vgvTotal  += r._vgv;
-    if(r._renda>0){ rendaSum+=r._renda; rendaCount++; }
-  });
-
-  const datas = rows.map(r=>r._dt).filter(Boolean).map(d=>d.getTime());
-  let dias=1;
-  if(datas.length>1){
-    const mn=Math.min(...datas), mx=Math.max(...datas);
-    dias=Math.max(1,Math.round((mx-mn)/(86400000))+1);
-  }
-
-  return {
-    total:rows.length, noTour, casais,
-    vendas, canceladas, vgvTotal,
-    eficiencia: casais>0 ? vendas/casais : 0,
-    rendaMed: rendaCount>0 ? rendaSum/rendaCount : 0,
-    ticketMedio: vendas>0 ? vgvTotal/vendas : 0,
-    mediaDia: rows.length/dias, dias
+function statsFor(rows){
+  const q  =rows.reduce((a,r)=>({ativo:a.ativo+(r._quotas?.ativo??0),cancelado:a.cancelado+(r._quotas?.cancelado??0),outro:a.outro+(r._quotas?.outro??0),total:a.total+(r._quotas?.total??0)}),{ativo:0,cancelado:0,outro:0,total:0});
+  const vgv=sumVGV(rows);
+  const noTour=rows.filter(r=>r._statusAt==="notour").length;
+  const casais=Math.max(0,rows.length-noTour);
+  const eff=casais?(q.total/casais):0;
+  return{
+    totalLinhas:rows.length,noTour,casais,
+    vendas:q.total,cotasCanceladas:q.cancelado,
+    vgvTotal:vgv.total,vgvAtivo:vgv.ativo,vgvCancelado:vgv.cancelado,
+    eficiencia:eff,pctCancel:q.total?(q.cancelado/q.total):0,
+    ticketMedio:q.total?(vgv.total/q.total):0,
+    rendaMed:avgRenda(rows),mediaCasaisPeriodo:avgCasais(rows),
   };
 }
 
-/* ─────────────────────────────────────────────
-   RENDER STAT CARDS
-───────────────────────────────────────────── */
-function renderCards(containerId, rows, extra=[]){
-  const s = calcStats(rows);
-  const base = [
-    {v:s.total,          l:"Total de linhas"},
-    {v:s.noTour,         l:"NoTour"},
-    {v:s.casais,         l:"Casais atendidos"},
-    {v:fmtNum(s.mediaDia),l:"Média casais/dia"},
-    {v:s.vendas,         l:"Cotas vendidas"},
-    {v:s.canceladas,     l:"Cotas canceladas"},
-    {v:fmtPct(s.eficiencia),l:"Eficiência"},
-    {v:fmtMoney(s.vgvTotal),l:"VGV total"},
-    {v:fmtMoney(s.ticketMedio),l:"Ticket médio"},
-    {v:fmtMoney(s.rendaMed), l:"Renda média"},
-    ...extra
-  ];
-  el(containerId).innerHTML = base.map(c=>`
-    <div class="stat-card">
-      <div class="stat-value">${c.v}</div>
-      <div class="stat-label">${c.l}</div>
-    </div>`).join("");
+/* ═══════════════════════════════════════════════
+   RENDER CARDS
+═══════════════════════════════════════════════ */
+function renderCards(cid,rows){
+  const s=statsFor(rows);
+  el(cid).innerHTML=`
+    <div class="stat-card"><div class="stat-value">${s.casais}</div><div class="stat-label">Casais</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtNumBR(s.mediaCasaisPeriodo,1,1)}</div><div class="stat-label">Média de Casais/dia</div></div>
+    <div class="stat-card"><div class="stat-value">${s.vendas}</div><div class="stat-label">Cotas (vendas totais)</div></div>
+    <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV total (Σ col G)</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.rendaMed)}</div><div class="stat-label">Renda média</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.ticketMedio)}</div><div class="stat-label">Ticket médio (cota)</div></div>
+    <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
 }
 
-/* ─────────────────────────────────────────────
-   CHART HELPERS
-───────────────────────────────────────────── */
-const CHART_COLORS = {
-  purple:"rgba(124,92,255,1)",   purpleA:"rgba(124,92,255,0.25)",
-  cyan:  "rgba(34,211,238,1)",   cyanA:  "rgba(34,211,238,0.2)",
-  green: "rgba(92,255,176,1)",   greenA: "rgba(92,255,176,0.18)",
-  red:   "rgba(255,45,85,1)",    redA:   "rgba(255,45,85,0.2)",
-  orange:"rgba(255,176,32,1)",   orangeA:"rgba(255,176,32,0.2)",
-};
-
-const chartDefaults = {
-  responsive:true, maintainAspectRatio:false,
-  plugins:{ legend:{labels:{color:"rgba(234,240,255,.72)",font:{weight:"bold"}}} },
-  scales:{
-    x:{ticks:{color:"rgba(234,240,255,.5)"},grid:{color:"rgba(255,255,255,.04)"}},
-    y:{ticks:{color:"rgba(234,240,255,.5)"},grid:{color:"rgba(255,255,255,.06)"}}
-  }
-};
-
-function destroyChart(key){ if(S.charts[key]){S.charts[key].destroy();S.charts[key]=null;} }
-
-function makeChart(key, canvasId, config){
-  destroyChart(key);
-  const ctx = el(canvasId).getContext("2d");
-  S.charts[key] = new Chart(ctx, config);
+function renderCardsComCaptador(cid,rows){
+  const s=statsFor(rows);
+  const caps=new Set(); rows.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)caps.add(norm(p));});
+  const nc=caps.size; const med=nc?(s.casais/nc):0;
+  el(cid).innerHTML=`
+    <div class="stat-card"><div class="stat-value">${s.casais}</div><div class="stat-label">Casais</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtNumBR(med,1,1)}</div><div class="stat-label">Média casal/captador</div></div>
+    <div class="stat-card"><div class="stat-value">${nc}</div><div class="stat-label">Captadores</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtNumBR(s.mediaCasaisPeriodo,1,1)}</div><div class="stat-label">Média de Casais/dia</div></div>
+    <div class="stat-card"><div class="stat-value">${s.vendas}</div><div class="stat-label">Cotas (vendas totais)</div></div>
+    <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV total (Σ col G)</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.rendaMed)}</div><div class="stat-label">Renda média</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.ticketMedio)}</div><div class="stat-label">Ticket médio (cota)</div></div>
+    <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
 }
 
-/* ─────────────────────────────────────────────
-   ABA RESUMO
-───────────────────────────────────────────── */
-function renderResumo(){
-  renderCards("statsResumo", S.filtered);
+/* ═══════════════════════════════════════════════
+   RANKING TABLE
+═══════════════════════════════════════════════ */
+function groupRanking(rows,fieldKey){
+  const map=new Map();
+  rows.forEach(r=>{ const n=(r[fieldKey]??"").toString().trim(); if(!n) return; if(!map.has(n)) map.set(n,[]); map.get(n).push(r); });
+  return Array.from(map.entries()).map(([name,list])=>{
+    const s=statsFor(list);
+    return{name,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed};
+  }).sort((a,b)=>(b.vendas-a.vendas)||(b.vgvTotal-a.vgvTotal)||a.name.localeCompare(b.name));
+}
 
-  // agrupamento por dia
-  const byDay = {};
-  S.filtered.forEach(r=>{
-    if(!r._dt) return;
-    const k=toISODate(r._dt);
-    if(!byDay[k]) byDay[k]={casais:0,vendas:0};
-    if(r._atend!=="notour"&&r._atend!=="no tour") byDay[k].casais++;
-    byDay[k].vendas += r._quotas.ativo + r._quotas.outro;
+function setSort(tid,key){ const c=sortState[tid]||{key,dir:"desc"}; if(c.key===key)c.dir=c.dir==="desc"?"asc":"desc"; else{c.key=key;c.dir="desc";} sortState[tid]=c; }
+function sortInd(tid,key){ const c=sortState[tid]; if(!c||c.key!==key) return ""; return `<span class="sort-ind">${c.dir==="desc"?"▼":"▲"}</span>`; }
+function sortedList(list,tid,defKey="vendas"){
+  const s=sortState[tid]||{key:defKey,dir:"desc"};
+  return list.slice().sort((a,b)=>{
+    const cmp=(x,y,k,d)=>{ const va=x?.[k],vb=y?.[k]; if(va==null&&vb==null)return 0; if(va==null)return 1; if(vb==null)return-1; if(typeof va==="number"&&typeof vb==="number")return d==="asc"?va-vb:vb-va; return d==="asc"?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va)); };
+    return cmp(a,b,s.key,s.dir)||cmp(a,b,"vgvTotal","desc")||cmp(a,b,"vendas","desc");
   });
-  const labels = Object.keys(byDay).sort();
-  makeChart("resumo","chartResumo",{
+}
+
+const effPill = f => { const p=(f||0)*100; return p<15?"p-bad":p<25?"p-med":"p-good"; };
+const canPill = f => { const p=(f||0)*100; return p<20?"p-good":p<=30?"p-med":"p-bad"; };
+
+function renderRanking(list,cid,badge){
+  const c=el(cid);
+  if(!list.length){c.innerHTML='<div class="note">Nenhum dado para o filtro.</div>';return;}
+  const ord=sortedList(list,cid,"vendas");
+  c.innerHTML=`
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th style="width:84px">#</th>
+        <th class="sortable" data-sort="name">Profissional${badge?`<span class="badge">${badge}</span>`:""} ${sortInd(cid,"name")}</th>
+        <th class="num sortable" data-sort="casais">Casais ${sortInd(cid,"casais")}</th>
+        <th class="num sortable" data-sort="vendas">Cotas ${sortInd(cid,"vendas")}</th>
+        <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd(cid,"cotasCanceladas")}</th>
+        <th class="num sortable" data-sort="vgvTotal">VGV ${sortInd(cid,"vgvTotal")}</th>
+        <th class="num sortable" data-sort="eficiencia">Eficiência ${sortInd(cid,"eficiencia")}</th>
+        <th class="num sortable" data-sort="pctCancel">%Cancel ${sortInd(cid,"pctCancel")}</th>
+        <th class="num sortable" data-sort="ticketMedio">Ticket ${sortInd(cid,"ticketMedio")}</th>
+        <th class="num sortable" data-sort="rendaMed">Renda ${sortInd(cid,"rendaMed")}</th>
+      </tr></thead>
+      <tbody>${ord.map((it,i)=>{
+        const p=i+1,tr=p===1?"🥇":p===2?"🥈":p===3?"🥉":"";
+        return`<tr>
+          <td class="rank-col">${tr} ${p}°</td>
+          <td class="name" title="${it.name}">${it.name}</td>
+          <td class="num">${it.casais}</td>
+          <td class="num">${it.vendas}</td>
+          <td class="num">${it.cotasCanceladas}</td>
+          <td class="num">${fmtMoney(it.vgvTotal)}</td>
+          <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
+          <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
+          <td class="num">${fmtMoney(it.ticketMedio)}</td>
+          <td class="num">${fmtMoney(it.rendaMed)}</td>
+        </tr>`;}).join("")}
+      </tbody>
+    </table></div>`;
+  c.querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
+    th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderRanking(list,cid,badge); });
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   PERFIL DE RENDA
+═══════════════════════════════════════════════ */
+function rendaBucket(v){
+  const x=v||0;
+  if(x<9000)   return "Abaixo de R$ 9 mil";
+  if(x<10000)  return "R$ 9 mil a R$ 9,9 mil";
+  if(x<=11900) return "R$ 10 mil a R$ 11,9 mil";
+  if(x<=14900) return "R$ 12 mil a R$ 14,9 mil";
+  if(x<=19900) return "R$ 15 mil a R$ 19,9 mil";
+  if(x<=50000) return "R$ 20 mil a R$ 50 mil";
+  return "Acima de R$ 50,1 mil";
+}
+function renderPerfilRenda(rows,cid){
+  const order=["Abaixo de R$ 9 mil","R$ 9 mil a R$ 9,9 mil","R$ 10 mil a R$ 11,9 mil","R$ 12 mil a R$ 14,9 mil","R$ 15 mil a R$ 19,9 mil","R$ 20 mil a R$ 50 mil","Acima de R$ 50,1 mil"];
+  const map=new Map(order.map(k=>[k,[]]));
+  rows.forEach(r=>{ const b=rendaBucket(r._renda); if(map.has(b)) map.get(b).push(r); });
+  const list=order.map(k=>{ const s=statsFor(map.get(k)||[]); return{faixa:k,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed}; });
+  const ord=sortedList(list,cid,"vgvTotal");
+  const c=el(cid);
+  c.innerHTML=`
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th class="sortable" data-sort="faixa">Faixa ${sortInd(cid,"faixa")}</th>
+        <th class="num sortable" data-sort="casais">Casais ${sortInd(cid,"casais")}</th>
+        <th class="num sortable" data-sort="vendas">Cotas ${sortInd(cid,"vendas")}</th>
+        <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd(cid,"cotasCanceladas")}</th>
+        <th class="num sortable" data-sort="vgvTotal">VGV ${sortInd(cid,"vgvTotal")}</th>
+        <th class="num sortable" data-sort="eficiencia">Eficiência ${sortInd(cid,"eficiencia")}</th>
+        <th class="num sortable" data-sort="pctCancel">%Cancel ${sortInd(cid,"pctCancel")}</th>
+        <th class="num sortable" data-sort="ticketMedio">Ticket ${sortInd(cid,"ticketMedio")}</th>
+        <th class="num sortable" data-sort="rendaMed">Renda ${sortInd(cid,"rendaMed")}</th>
+      </tr></thead>
+      <tbody>${ord.map(it=>`<tr>
+        <td class="name">${it.faixa}</td>
+        <td class="num">${it.casais}</td><td class="num">${it.vendas}</td>
+        <td class="num">${it.cotasCanceladas}</td>
+        <td class="num">${fmtMoney(it.vgvTotal)}</td>
+        <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
+        <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
+        <td class="num">${fmtMoney(it.ticketMedio)}</td>
+        <td class="num">${fmtMoney(it.rendaMed)}</td>
+      </tr>`).join("")}
+      </tbody>
+    </table></div>`;
+  c.querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
+    th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderPerfilRenda(rows,cid); });
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   GRÁFICOS
+═══════════════════════════════════════════════ */
+function destroyChart(ch){ try{ch?.destroy?.();}catch(e){} }
+
+function renderCurva(rows){
+  el("curva-meta").textContent=[
+    (el("dateStart").value||el("dateEnd").value)?`Período: ${fmtBR(el("dateStart").value)||"—"} a ${fmtBR(el("dateEnd").value)||"—"}`:"Período: (sem filtro)",
+    `Status: ${el("statusSelect").value}`,`Nome: ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
+  ].join(" • ");
+
+  const map=new Map();
+  rows.forEach(r=>{ if(!r._dt) return; const iso=toISO(r._dt); if(!map.has(iso)) map.set(iso,{c:0,v:0}); map.get(iso).c++; map.get(iso).v+=(r._quotas?.total??0); });
+  const ks=[...map.keys()].sort();
+
+  destroyChart(charts.curva);
+  charts.curva=new Chart(el("chartCurva").getContext("2d"),{
     type:"line",
-    data:{
-      labels,
-      datasets:[
-        {label:"Casais",data:labels.map(k=>byDay[k].casais),
-         borderColor:CHART_COLORS.cyan,backgroundColor:CHART_COLORS.cyanA,
-         fill:true,tension:.35,pointRadius:3},
-        {label:"Vendas",data:labels.map(k=>byDay[k].vendas),
-         borderColor:CHART_COLORS.purple,backgroundColor:CHART_COLORS.purpleA,
-         fill:true,tension:.35,pointRadius:3},
-      ]
-    },
-    options:{...chartDefaults}
-  });
-}
-
-/* ─────────────────────────────────────────────
-   ABA CURVA
-───────────────────────────────────────────── */
-function renderCurva(){
-  renderCards("statsCurva", S.filtered);
-
-  const byDay={};
-  S.filtered.forEach(r=>{
-    if(!r._dt) return;
-    const k=toISODate(r._dt);
-    if(!byDay[k]) byDay[k]={c:0,v:0};
-    if(r._atend!=="notour"&&r._atend!=="no tour") byDay[k].c++;
-    byDay[k].v += r._quotas.ativo+r._quotas.outro;
-  });
-  const labels=Object.keys(byDay).sort();
-
-  makeChart("curva","chartCurva",{
-    type:"bar",
-    data:{
-      labels,
-      datasets:[
-        {label:"Casais",data:labels.map(k=>byDay[k].c),backgroundColor:CHART_COLORS.cyanA,borderColor:CHART_COLORS.cyan,borderWidth:1.5,borderRadius:4},
-        {label:"Vendas",data:labels.map(k=>byDay[k].v),backgroundColor:CHART_COLORS.purpleA,borderColor:CHART_COLORS.purple,borderWidth:1.5,borderRadius:4},
-      ]
-    },
-    options:{...chartDefaults,barPercentage:.8}
-  });
-
-  const semDia=[0,0,0,0,0,0,0];
-  S.filtered.forEach(r=>{ if(r._dt) semDia[r._dt.getDay()]++; });
-  const semLabels=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-  makeChart("semana","chartSemana",{
-    type:"bar",
-    data:{labels:semLabels,datasets:[{label:"Atendimentos",data:semDia,backgroundColor:CHART_COLORS.purpleA,borderColor:CHART_COLORS.purple,borderWidth:1.5,borderRadius:6}]},
-    options:{...chartDefaults}
-  });
-}
-
-/* ─────────────────────────────────────────────
-   ABA CANCELAMENTOS
-───────────────────────────────────────────── */
-function renderCancelamento(){
-  const rows = S.filtered;
-  const total = rows.reduce((a,r)=>a+r._quotas.total,0);
-  const ativas = rows.reduce((a,r)=>a+r._quotas.ativo,0);
-  const cancel = rows.reduce((a,r)=>a+r._quotas.cancelado,0);
-  const txCancel = total>0 ? cancel/total : 0;
-
-  el("statsCancelamento").innerHTML = [
-    {v:total,   l:"Cotas totais"},
-    {v:ativas,  l:"Cotas ativas"},
-    {v:cancel,  l:"Cotas canceladas"},
-    {v:fmtPct(txCancel), l:"Taxa de cancelamento"},
-  ].map(c=>`<div class="stat-card"><div class="stat-value">${c.v}</div><div class="stat-label">${c.l}</div></div>`).join("");
-
-  // por mês
-  const byMes={};
-  rows.forEach(r=>{
-    if(!r._dt||r._quotas.cancelado===0) return;
-    const k=`${r._dt.getFullYear()}-${String(r._dt.getMonth()+1).padStart(2,"0")}`;
-    byMes[k]=(byMes[k]||0)+r._quotas.cancelado;
-  });
-  const mesLabels=Object.keys(byMes).sort();
-  makeChart("cancel","chartCancel",{
-    type:"bar",
-    data:{labels:mesLabels,datasets:[{label:"Cancelamentos",data:mesLabels.map(k=>byMes[k]),backgroundColor:CHART_COLORS.redA,borderColor:CHART_COLORS.red,borderWidth:1.5,borderRadius:6}]},
-    options:{...chartDefaults}
-  });
-
-  // tabela por profissional
-  const map={};
-  ["promotor de marketing","liner","closer"].forEach(tipo=>{
-    const k=norm(tipo);
-    rows.forEach(r=>{
-      const nome=norm(r[k]||""); if(!nome) return;
-      if(!map[nome]) map[nome]={nome:cap(nome),tipo:cap(tipo),total:0,ativas:0,cancel:0,vgv:0};
-      map[nome].total  += r._quotas.total;
-      map[nome].ativas += r._quotas.ativo;
-      map[nome].cancel += r._quotas.cancelado;
-      map[nome].vgv    += r._vgv;
-    });
-  });
-  const list=Object.values(map).sort((a,b)=>b.cancel-a.cancel);
-  renderSortableTable("tableCancelamento","cancelamento-table",
-    [{k:"nome",l:"Profissional",cls:"name-cell"},{k:"tipo",l:"Tipo"},{k:"total",l:"Cotas",num:true},{k:"ativas",l:"Ativas",num:true},{k:"cancel",l:"Canceladas",num:true},{k:"vgv",l:"VGV",num:true,money:true}],
-    list,"cancel"
-  );
-}
-
-/* ─────────────────────────────────────────────
-   RENDER SORTABLE TABLE
-───────────────────────────────────────────── */
-function renderSortableTable(tableId, sortId, cols, data, defaultKey){
-  if(!S.sortState[sortId]) S.sortState[sortId]={key:defaultKey||cols[0].k,dir:"desc"};
-  const ss = S.sortState[sortId];
-
-  const sorted = data.slice().sort((a,b)=>{
-    const va=a[ss.key], vb=b[ss.key];
-    if(typeof va==="number"&&typeof vb==="number") return ss.dir==="desc"?vb-va:va-vb;
-    return ss.dir==="desc"?String(vb).localeCompare(String(va),"pt-BR"):String(va).localeCompare(String(vb),"pt-BR");
-  });
-
-  const t=el(tableId);
-  t.querySelector("thead").innerHTML=`<tr>${cols.map(c=>`
-    <th class="sortable${c.num?" num":""}" data-k="${c.k}">
-      ${c.l}${ss.key===c.k?`<span class="sort-ind">${ss.dir==="desc"?"▼":"▲"}</span>`:""}
-    </th>`).join("")}</tr>`;
-  t.querySelector("tbody").innerHTML=sorted.map((row,i)=>`<tr>${cols.map((c,ci)=>{
-    let v=row[c.k];
-    if(c.money) v=fmtMoney(v);
-    else if(c.pct) v=fmtPct(v);
-    const cls=(c.num?"num ":"")+(c.cls||"");
-    if(ci===0) return `<td class="${cls}"><span class="rank-num">${i+1}</span>&nbsp;&nbsp;${v}</td>`;
-    return `<td class="${cls}">${v}</td>`;
-  }).join("")}</tr>`).join("");
-
-  t.querySelectorAll("thead th.sortable").forEach(th=>{
-    th.addEventListener("click",()=>{
-      const k=th.dataset.k;
-      if(ss.key===k) ss.dir=ss.dir==="desc"?"asc":"desc";
-      else{ss.key=k;ss.dir="desc";}
-      renderSortableTable(tableId,sortId,cols,data,defaultKey);
-    });
-  });
-}
-
-/* ─────────────────────────────────────────────
-   RANKING GENÉRICO
-───────────────────────────────────────────── */
-function renderRanking(statsId, tableId, sortId, colKey){
-  const map={};
-  S.filtered.forEach(r=>{
-    const nome=norm(r[colKey]||""); if(!nome) return;
-    if(!map[nome]) map[nome]={nome:cap(nome),casais:0,vendas:0,canceladas:0,vgvTotal:0,rendaSum:0,rendaCount:0};
-    const e=map[nome];
-    if(r._atend!=="notour"&&r._atend!=="no tour") e.casais++;
-    e.vendas    += r._quotas.ativo+r._quotas.outro;
-    e.canceladas+= r._quotas.cancelado;
-    e.vgvTotal  += r._vgv;
-    if(r._renda>0){e.rendaSum+=r._renda;e.rendaCount++;}
-  });
-  const list=Object.values(map).map(e=>({
-    ...e,
-    eficiencia: e.casais>0?e.vendas/e.casais:0,
-    rendaMed: e.rendaCount>0?e.rendaSum/e.rendaCount:0,
-    ticketMedio: e.vendas>0?e.vgvTotal/e.vendas:0,
-  }));
-
-  renderCards(statsId, S.filtered.filter(r=>norm(r[colKey]||"")!==""));
-
-  renderSortableTable(tableId, sortId, [
-    {k:"nome",l:"Nome",cls:"name-cell"},
-    {k:"casais",l:"Casais",num:true},
-    {k:"vendas",l:"Vendas",num:true},
-    {k:"canceladas",l:"Canceladas",num:true},
-    {k:"eficiencia",l:"Eficiência",num:true,pct:true},
-    {k:"vgvTotal",l:"VGV",num:true,money:true},
-    {k:"ticketMedio",l:"Ticket médio",num:true,money:true},
-    {k:"rendaMed",l:"Renda média",num:true,money:true},
-  ], list, "vendas");
-}
-
-/* ─────────────────────────────────────────────
-   ABA PERFIL DE RENDA
-───────────────────────────────────────────── */
-function renderPerfilRenda(){
-  const faixas=[
-    {l:"Até R$2k",    min:0,     max:2000},
-    {l:"R$2k–R$4k",  min:2000,  max:4000},
-    {l:"R$4k–R$6k",  min:4000,  max:6000},
-    {l:"R$6k–R$10k", min:6000,  max:10000},
-    {l:"R$10k–R$20k",min:10000, max:20000},
-    {l:"Acima R$20k", min:20000, max:Infinity},
-    {l:"Sem renda",   min:-1,    max:-1},
-  ];
-  const map={}; faixas.forEach(f=>{ map[f.l]={faixa:f.l,count:0,vgvTotal:0,vendas:0}; });
-  S.filtered.forEach(r=>{
-    const renda=r._renda;
-    let faixa=faixas.find(f=>f.min===-1); // sem renda
-    if(renda>0) faixa=faixas.find(f=>renda>=f.min&&renda<f.max) || faixas[faixas.length-2];
-    const k=(renda>0||faixa.l==="Sem renda") ? faixa.l : "Sem renda";
-    if(map[k]){
-      map[k].count++;
-      map[k].vgvTotal+=r._vgv;
-      map[k].vendas+=r._quotas.ativo+r._quotas.outro;
+    data:{labels:ks.map(fmtBR),datasets:[
+      {label:"Casais",data:ks.map(k=>map.get(k).c),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.15)",tension:.25,pointRadius:2.5,yAxisID:"yC"},
+      {label:"Vendas (cotas)",data:ks.map(k=>map.get(k).v),borderColor:"rgba(92,255,176,1)",backgroundColor:"rgba(92,255,176,.12)",tension:.25,pointRadius:2.5,yAxisID:"yV"},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}}},
+      scales:{
+        x:{ticks:{color:"rgba(234,240,255,.7)",maxRotation:0,autoSkip:true},grid:{color:"rgba(255,255,255,.05)"}},
+        yC:{position:"left",ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"},title:{display:true,text:"Casais",color:"rgba(234,240,255,.7)"}},
+        yV:{position:"right",ticks:{color:"rgba(234,240,255,.7)"},grid:{drawOnChartArea:false},title:{display:true,text:"Vendas",color:"rgba(234,240,255,.7)"}},
+      }
     }
   });
-  const list=Object.values(map).filter(x=>x.count>0);
-  const maxCount=Math.max(...list.map(x=>x.count),1);
 
-  renderCards("statsRenda", S.filtered);
+  const ORDER=[1,2,3,4,5,6,0],LBLS=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+  const raw=Array.from({length:7},()=>({c:0,v:0,vgv:0,ds:new Set()}));
+  rows.forEach(r=>{ if(!r._dt) return; const i=r._dt.getDay(); raw[i].c++; raw[i].v+=(r._quotas?.total??0); raw[i].vgv+=(r._valorVgv??0); raw[i].ds.add(toISO(r._dt)); });
+  const agg=ORDER.map(i=>raw[i]);
+  const meanC=agg.map(x=>x.ds.size?(x.c/x.ds.size):0);
 
-  makeChart("renda","chartRenda",{
+  destroyChart(charts.semana);
+  charts.semana=new Chart(el("chartSemana").getContext("2d"),{
+    data:{labels:LBLS,datasets:[
+      {type:"bar", label:"Casais", data:agg.map(x=>x.c),backgroundColor:"rgba(124,92,255,.25)",borderColor:"rgba(124,92,255,.65)",borderWidth:1,yAxisID:"yN"},
+      {type:"bar", label:"Vendas", data:agg.map(x=>x.v),backgroundColor:"rgba(92,255,176,.18)",borderColor:"rgba(92,255,176,.65)",borderWidth:1,yAxisID:"yN"},
+      {type:"line",label:"VGV",    data:agg.map(x=>x.vgv),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.10)",tension:.25,pointRadius:2.2,yAxisID:"yM"},
+      {type:"line",label:"Eficiência",data:agg.map(x=>x.c?(x.v/x.c)*100:0),borderColor:"rgba(255,176,32,1)",backgroundColor:"rgba(255,176,32,.10)",tension:.25,pointRadius:2.2,yAxisID:"yP"},
+      {type:"line",label:"Média Casais/dia",data:meanC,borderColor:"rgba(234,240,255,.75)",backgroundColor:"rgba(234,240,255,.08)",borderDash:[6,6],tension:0,pointRadius:2,yAxisID:"yN"},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}},
+        tooltip:{callbacks:{label:ctx=>{ const d=ctx.dataset.label||"",v=ctx.parsed.y??0; if(d.includes("VGV")) return`${d}: ${fmtMoney(v)}`; if(d.includes("Eficiência")) return`${d}: ${fmtNumBR(v,1,1)}%`; if(d.includes("Média")) return`${d}: ${fmtNumBR(v,1,1)}`; return`${d}: ${v}`; }}}},
+      scales:{
+        x:{ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"}},
+        yN:{position:"left",ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"}},
+        yM:{position:"right",ticks:{color:"rgba(234,240,255,.7)",callback:v=>{const n=Number(v)||0;if(Math.abs(n)>=1e6)return`R$${(n/1e6).toFixed(1)}M`;if(Math.abs(n)>=1e3)return`R$${(n/1e3).toFixed(0)}k`;return`R$${n.toFixed(0)}`;}},grid:{drawOnChartArea:false}},
+        yP:{position:"right",min:0,max:100,ticks:{color:"rgba(234,240,255,.7)",callback:v=>`${v}%`},grid:{drawOnChartArea:false}},
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   CANCELAMENTO
+═══════════════════════════════════════════════ */
+function renderCancelamento(rows){
+  el("cancel-meta").textContent=[
+    (el("dateStart").value||el("dateEnd").value)?`Período: ${fmtBR(el("dateStart").value)||"—"} a ${fmtBR(el("dateEnd").value)||"—"}`:"Período: (sem filtro)",
+    `Status: ${el("statusSelect").value}`,`Nome: ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
+  ].join(" • ");
+
+  const map=new Map();
+  rows.forEach(r=>{ const qt=r._quotas?.total??0; if(qt<=0) return; if(!map.has(qt)) map.set(qt,{cas:0,can:0,tot:0,rs:0}); const it=map.get(qt); it.cas++; it.can+=(r._quotas?.cancelado??0); it.tot+=qt; it.rs+=(r._renda??0); });
+  const ana=[...map.entries()].map(([cv,d])=>({cotasVendidas:cv,casais:d.cas,cotasTotal:d.tot,cotasCanceladas:d.can,pctCancelamento:d.tot?(d.can/d.tot):0,rendaMed:d.cas?(d.rs/d.cas):0})).sort((a,b)=>a.cotasVendidas-b.cotasVendidas);
+
+  if(!ana.length){el("cancelamento-table").innerHTML='<div class="note">Nenhum dado para análise.</div>';destroyChart(charts.cancelamento);return;}
+
+  destroyChart(charts.cancelamento);
+  const pcts=ana.map(i=>i.pctCancelamento*100);
+  charts.cancelamento=new Chart(el("chartCancelamento").getContext("2d"),{
     type:"bar",
-    data:{labels:list.map(x=>x.faixa),datasets:[{label:"Casais",data:list.map(x=>x.count),backgroundColor:CHART_COLORS.purpleA,borderColor:CHART_COLORS.purple,borderWidth:1.5,borderRadius:6}]},
-    options:{...chartDefaults,indexAxis:"y"}
+    data:{labels:ana.map(i=>`${i.cotasVendidas} cota${i.cotasVendidas>1?"s":""}`),datasets:[{
+      label:"% Cancelamento",data:pcts,
+      backgroundColor:pcts.map(p=>p<20?"rgba(92,255,176,.25)":p<=30?"rgba(255,176,32,.25)":"rgba(255,45,85,.25)"),
+      borderColor:pcts.map(p=>p<20?"rgba(92,255,176,.8)":p<=30?"rgba(255,176,32,.8)":"rgba(255,45,85,.8)"),
+      borderWidth:2
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}},
+        tooltip:{callbacks:{label:(ctx)=>{const it=ana[ctx.dataIndex];return[`% Cancel: ${fmtNumBR(ctx.parsed.y,1,1)}%`,`Casais: ${it.casais}`,`Cotas cancel.: ${it.cotasCanceladas}`,`Renda média: ${fmtMoney(it.rendaMed)}`];}}}},
+      scales:{
+        x:{ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"}},
+        y:{min:0,max:100,ticks:{color:"rgba(234,240,255,.7)",callback:v=>`${v}%`},grid:{color:"rgba(255,255,255,.05)"}},
+      }
+    }
   });
 
-  renderSortableTable("tableRenda","perfil-renda",[
-    {k:"faixa",l:"Faixa de renda"},
-    {k:"count",l:"Casais",num:true},
-    {k:"vendas",l:"Vendas",num:true},
-    {k:"vgvTotal",l:"VGV",num:true,money:true},
-  ],list,"count");
-}
-
-/* ─────────────────────────────────────────────
-   ABA PROFISSIONAIS
-───────────────────────────────────────────── */
-function renderProfissionais(){
-  const tipo=norm(el("profTabTipo").value);
-  const map={};
-  S.filtered.forEach(r=>{
-    const nome=norm(r[tipo]||""); if(!nome) return;
-    if(!map[nome]) map[nome]={nome:cap(nome),casais:0,vendas:0,canceladas:0,vgvTotal:0,rendaSum:0,rendaCount:0};
-    const e=map[nome];
-    if(r._atend!=="notour"&&r._atend!=="no tour") e.casais++;
-    e.vendas    +=r._quotas.ativo+r._quotas.outro;
-    e.canceladas+=r._quotas.cancelado;
-    e.vgvTotal  +=r._vgv;
-    if(r._renda>0){e.rendaSum+=r._renda;e.rendaCount++;}
-  });
-  const list=Object.values(map).map(e=>({
-    ...e,
-    eficiencia:e.casais>0?e.vendas/e.casais:0,
-    rendaMed:e.rendaCount>0?e.rendaSum/e.rendaCount:0,
-    ticketMedio:e.vendas>0?e.vgvTotal/e.vendas:0,
-  }));
-
-  renderCards("statsProfissionais",S.filtered);
-  renderSortableTable("tableProfissionais","profissionais-table",[
-    {k:"nome",l:"Nome",cls:"name-cell"},
-    {k:"casais",l:"Casais",num:true},
-    {k:"vendas",l:"Vendas",num:true},
-    {k:"canceladas",l:"Canceladas",num:true},
-    {k:"eficiencia",l:"Eficiência",num:true,pct:true},
-    {k:"vgvTotal",l:"VGV",num:true,money:true},
-    {k:"ticketMedio",l:"Ticket médio",num:true,money:true},
-    {k:"rendaMed",l:"Renda média",num:true,money:true},
-  ],list,"vendas");
-}
-
-/* ─────────────────────────────────────────────
-   EQUIPES + PROMOTORES — LÓGICA COMPARTILHADA
-───────────────────────────────────────────── */
-function allPromotores(){
-  const set=new Set();
-  S.rows.forEach(r=>{ const p=norm(r[KEY.promotor]||""); if(p) set.add(p); });
-  return Array.from(set).sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
-}
-
-function rowsByEquipe(equipe){
-  const m=loadTeamMap();
-  return S.filtered.filter(r=>{
-    const p=norm(r[KEY.promotor]||"");
-    return p && (m[p]||"")=== equipe;
+  const cid="cancelamento-table";
+  const ord=sortedList(ana,cid,"cotasTotal");
+  el(cid).innerHTML=`
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th class="num sortable" data-sort="cotasVendidas">Cotas vendidas ${sortInd(cid,"cotasVendidas")}</th>
+        <th class="num sortable" data-sort="casais">Casais ${sortInd(cid,"casais")}</th>
+        <th class="num sortable" data-sort="cotasTotal">Cotas totais ${sortInd(cid,"cotasTotal")}</th>
+        <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd(cid,"cotasCanceladas")}</th>
+        <th class="num sortable" data-sort="rendaMed">Renda média ${sortInd(cid,"rendaMed")}</th>
+        <th class="num sortable" data-sort="pctCancelamento">% Cancelamento ${sortInd(cid,"pctCancelamento")}</th>
+      </tr></thead>
+      <tbody>${ord.map(it=>`<tr>
+        <td class="num">${it.cotasVendidas}</td><td class="num">${it.casais}</td>
+        <td class="num">${it.cotasTotal}</td><td class="num">${it.cotasCanceladas}</td>
+        <td class="num">${fmtMoney(it.rendaMed)}</td>
+        <td class="num"><span class="pill ${canPill(it.pctCancelamento)}">${fmtPctBR(it.pctCancelamento)}</span></td>
+      </tr>`).join("")}
+      </tbody>
+    </table></div>`;
+  el(cid).querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
+    th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderCancelamento(rows); });
   });
 }
 
-function rowsSemEquipe(){
-  const m=loadTeamMap();
-  return S.filtered.filter(r=>{
-    const p=norm(r[KEY.promotor]||"");
-    return p && !m[p];
-  });
-}
-
-function renderCardsEquipe(containerId, rows){
-  const s=calcStats(rows);
-  const captadores=new Set(rows.map(r=>norm(r[KEY.promotor]||"")).filter(Boolean));
-  const n=captadores.size;
-  const mediaCaptador=n>0?s.casais/n:0;
-  el(containerId).innerHTML=[
-    {v:s.casais,              l:"Casais"},
-    {v:fmtNum(mediaCaptador), l:"Média por captador"},
-    {v:n,                     l:"Captadores"},
-    {v:fmtNum(s.mediaDia),    l:"Média casais/dia"},
-    {v:s.vendas,              l:"Cotas vendidas"},
-    {v:s.canceladas,          l:"Cotas canceladas"},
-    {v:fmtMoney(s.vgvTotal),  l:"VGV total"},
-    {v:fmtPct(s.eficiencia),  l:"Eficiência"},
-    {v:fmtMoney(s.rendaMed),  l:"Renda média"},
-    {v:fmtMoney(s.ticketMedio),l:"Ticket médio"},
-    {v:s.noTour,              l:"NoTour"},
-  ].map(c=>`<div class="stat-card"><div class="stat-value">${c.v}</div><div class="stat-label">${c.l}</div></div>`).join("");
-}
-
-/* ─────────────────────────────────────────────
-   ABA EQUIPES — render
-───────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   EQUIPES DE CAPTAÇÃO
+═══════════════════════════════════════════════ */
 function renderEquipes(){
-  renderCardsEquipe("statsEquipeParque",  rowsByEquipe("Equipe Parque"));
-  renderCardsEquipe("statsEquipeExterna", rowsByEquipe("Equipe Externa"));
-  renderCardsEquipe("statsEquipeSem",     rowsSemEquipe());
-  renderMappingList("eqMappingList","eqPromSelect",()=>{ renderEquipes(); renderPromotores(); });
+  const map=loadTeamMap();
+  renderCards("stats-equipe-parque",  state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; }));
+  renderCards("stats-equipe-externa", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; }));
+  renderCards("stats-equipe-sem",     state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return !map[p]; }));
 }
 
-/* ─────────────────────────────────────────────
-   ABA PROMOTORES — render
-───────────────────────────────────────────── */
-function renderPromotores(){
-  const parque  = rowsByEquipe("Equipe Parque");
-  const externa = rowsByEquipe("Equipe Externa");
-  const geral   = [...parque,...externa];
-
-  renderCardsEquipe("statsPromoParque",  parque);
-  renderCardsEquipe("statsPromoExterna", externa);
-  renderCardsEquipe("statsPromoGeral",   geral);
-  renderMappingList("supMappingList","supPromSelect",()=>{ renderEquipes(); renderPromotores(); });
+function listAllPromos(){
+  const s=new Set();
+  state.rows.forEach(r=>{ const n=(r[KEY.promotor]??"").toString().trim(); if(n) s.add(n); });
+  return [...s].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
 }
 
-/* ─────────────────────────────────────────────
-   MAPPING LIST (shared)
-───────────────────────────────────────────── */
-function renderMappingList(listId, selectId, onchange){
-  const promotores=allPromotores();
-  const m=loadTeamMap();
-
-  // preenche select de atribuição rápida
-  const sel=el(selectId);
-  if(sel){
-    const cur=sel.value;
-    sel.innerHTML=`<option value="">Selecione...</option>`+
-      promotores.map(p=>`<option value="${p}" ${p===cur?"selected":""}>${cap(p)}</option>`).join("");
-  }
-
-  const container=el(listId);
-  if(!container) return;
-  if(!promotores.length){
-    container.innerHTML=`<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
-    return;
-  }
-
-  container.innerHTML=promotores.map(p=>{
-    const cur=m[p]||"";
-    return `<div class="team-row">
-      <div class="left">
-        <div class="nm">${cap(p)}</div>
-        <div class="mut">${cur||"— sem equipe"}</div>
+function renderTeamMappingUI(){
+  const promos=listAllPromos();
+  const sel=el("teamPromotorSelect");
+  sel.innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
+  const map=loadTeamMap();
+  const entries=Object.entries(map).filter(([k,v])=>k&&v).sort((a,b)=>a[0].localeCompare(b[0],"pt-BR",{sensitivity:"base"}));
+  el("teamMappingList").innerHTML=entries.length?entries.map(([p,t])=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);margin-bottom:8px">
+      <div>
+        <div style="font-weight:850">${p}</div>
+        <div style="color:var(--muted);font-size:.82rem">${t}</div>
       </div>
-      <div class="right">
-        <select class="mini-sel" data-p="${encodeURIComponent(p)}">
-          <option value="">— sem equipe —</option>
-          <option value="Equipe Parque"  ${cur==="Equipe Parque" ?"selected":""}>Equipe Parque</option>
-          <option value="Equipe Externa" ${cur==="Equipe Externa"?"selected":""}>Equipe Externa</option>
-        </select>
-      </div>
+      <button class="btn" type="button" data-rm="${encodeURIComponent(p)}">Remover</button>
+    </div>`).join(""):`<div class="note" style="margin:0">Nenhuma marcação salva.</div>`;
+  el("teamMappingList").querySelectorAll("button[data-rm]").forEach(btn=>{
+    btn.addEventListener("click",()=>{ const m=loadTeamMap(); delete m[decodeURIComponent(btn.dataset.rm)]; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores(); });
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   ABA SUPERVISORES
+   ① Cards (KPIs) no TOPO
+   ② Lista de promotores com seleção EMBAIXO
+═══════════════════════════════════════════════ */
+function renderSupervisores(){
+  const map=loadTeamMap();
+  const parque  = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
+  const externa = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
+  const geral   = parque.concat(externa);
+
+  /* ① KPIs — topo */
+  renderCardsComCaptador("stats-super-parque",  parque);
+  renderCardsComCaptador("stats-super-externa", externa);
+  renderCardsComCaptador("stats-super-geral",   geral);
+
+  /* ② Lista de promotores — embaixo */
+  const promos=listAllPromos();
+  el("supPromotorSelect").innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
+
+  el("supMappingList").innerHTML=promos.length?promos.map(p=>{
+    const cur=map[p]||"";
+    const tagCls=cur==="Equipe Parque"?"parque":cur==="Equipe Externa"?"externa":"none";
+    const tagLbl=cur||"Sem equipe";
+    return`<div class="promo-row">
+      <span class="pr-name" title="${p}">${p}</span>
+      <span class="pr-tag ${tagCls}">${tagLbl}</span>
+      <select class="mini-sel" data-promo="${encodeURIComponent(p)}">
+        <option value="">— sem equipe —</option>
+        <option value="Equipe Parque"  ${cur==="Equipe Parque" ?"selected":""}>Equipe Parque</option>
+        <option value="Equipe Externa" ${cur==="Equipe Externa"?"selected":""}>Equipe Externa</option>
+      </select>
     </div>`;
-  }).join("");
+  }).join(""):`<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
 
-  container.querySelectorAll("select[data-p]").forEach(s=>{
-    s.addEventListener("change",()=>{
-      const p=decodeURIComponent(s.dataset.p);
-      const mm=loadTeamMap();
-      if(s.value) mm[p]=s.value; else delete mm[p];
-      saveTeamMap(mm);
-      onchange();
+  el("supMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
+    sel.addEventListener("change",()=>{
+      const p=decodeURIComponent(sel.dataset.promo);
+      const m=loadTeamMap();
+      if(sel.value) m[p]=sel.value; else delete m[p];
+      saveTeamMap(m);
+      renderSupervisores();
+      renderEquipes();
+      renderTeamMappingUI();
     });
   });
 }
 
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════════
+   PROFISSIONAL INDIVIDUAL
+═══════════════════════════════════════════════ */
+function renderSingle(){
+  const tipo=norm(el("profTipoSingle").value);
+  const nome=el("profNomeSingle").value;
+  if(!nome){el("stats-single").innerHTML="";return;}
+  const mine=state.filtered.filter(r=>norm(r[tipo]??"")=== norm(nome));
+  const s=statsFor(mine);
+  el("stats-single").innerHTML=`
+    <div class="stat-card"><div class="stat-value">${nome}</div><div class="stat-label">Profissional</div></div>
+    <div class="stat-card"><div class="stat-value">${s.casais}</div><div class="stat-label">Casais</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtNumBR(s.mediaCasaisPeriodo,1,1)}</div><div class="stat-label">Média Casais/dia</div></div>
+    <div class="stat-card"><div class="stat-value">${s.vendas}</div><div class="stat-label">Cotas</div></div>
+    <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.pctCancel)}</div><div class="stat-label">% Cancelamento</div></div>
+    <div class="stat-card"><div class="stat-value">${fmtMoney(s.ticketMedio)}</div><div class="stat-label">Ticket médio</div></div>
+    <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
+}
+
+/* ═══════════════════════════════════════════════
    COMPARATIVO
-───────────────────────────────────────────── */
+═══════════════════════════════════════════════ */
+function filterByRange(rows,s,e){
+  const d1=parseDateOnlyInput(s),d2=parseDateOnlyInput(e);
+  if(!d1&&!d2) return rows.slice();
+  const st=d1?d1.getTime():-Infinity;
+  const en=d2?new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime():Infinity;
+  return rows.filter(r=>r._dt&&r._dt.getTime()>=st&&r._dt.getTime()<=en);
+}
+function pctVar(x,y){ const X=Number(x)||0,Y=Number(y)||0; if(Y===0) return null; return(X-Y)/Y; }
+function fmtVar(f){ if(f===null) return "—"; const p=f*100,sg=p>0?"+":""; return sg+fmtNumBR(p,1,1)+"%"; }
+function deltaClass(f){ if(f===null||Math.abs(f)<1e-9) return "neu"; return f>0?"pos":"neg"; }
+
 function renderComparativo(){
-  const a1=parseDateInput(el("compA1").value);
-  const a2=parseDateInput(el("compA2").value);
-  const b1=parseDateInput(el("compB1").value);
-  const b2=parseDateInput(el("compB2").value);
-  const div=el("comparativoResult");
-  if(!a1||!a2||!b1||!b2){ div.innerHTML=`<div class="note warn">Preencha os quatro campos de data para comparar.</div>`; return; }
-
-  const filterPeriod=(d1,d2)=>{
-    const s=d1.getTime(), e=new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime();
-    return S.rows.filter(r=>r._dt&&r._dt.getTime()>=s&&r._dt.getTime()<=e);
-  };
-  const rA=filterPeriod(a1,a2), rB=filterPeriod(b1,b2);
-  const sA=calcStats(rA), sB=calcStats(rB);
-
-  const delta=(va,vb,fmtFn,higherBetter=true)=>{
-    if(vb===0&&va===0) return {cls:"neu",txt:"= "+fmtFn(0)};
-    const diff=va-vb;
-    const pct=vb!==0?diff/Math.abs(vb):null;
-    const better=(higherBetter&&diff>0)||(!higherBetter&&diff<0);
-    const sign=diff>0?"+":"";
-    const pctStr=pct!==null?` (${sign}${fmtPct(pct)})`:"";
-    return {cls:diff===0?"neu":better?"pos":"neg", txt:`${sign}${fmtFn(diff)}${pctStr}`};
-  };
-
-  const kpis=[
-    {l:"Total de linhas",  kA:sA.total,      kB:sB.total,      fmt:v=>v,          higher:true},
-    {l:"Casais",           kA:sA.casais,     kB:sB.casais,     fmt:v=>v,          higher:true},
-    {l:"Vendas",           kA:sA.vendas,     kB:sB.vendas,     fmt:v=>v,          higher:true},
-    {l:"Canceladas",       kA:sA.canceladas, kB:sB.canceladas, fmt:v=>v,          higher:false},
-    {l:"VGV",              kA:sA.vgvTotal,   kB:sB.vgvTotal,   fmt:fmtMoney,      higher:true},
-    {l:"Eficiência",       kA:sA.eficiencia, kB:sB.eficiencia, fmt:fmtPct,        higher:true},
-    {l:"Ticket médio",     kA:sA.ticketMedio,kB:sB.ticketMedio,fmt:fmtMoney,      higher:true},
-    {l:"Renda média",      kA:sA.rendaMed,   kB:sB.rendaMed,   fmt:fmtMoney,      higher:true},
-    {l:"Média casais/dia", kA:sA.mediaDia,   kB:sB.mediaDia,   fmt:v=>fmtNum(v),  higher:true},
+  const base=applyFilters(state.rows);
+  const rX=filterByRange(base,el("cmpXStart").value,el("cmpXEnd").value);
+  const rY=filterByRange(base,el("cmpYStart").value,el("cmpYEnd").value);
+  renderCards("cmpStatsX",rX); renderCards("cmpStatsY",rY);
+  const sX=statsFor(rX),sY=statsFor(rY);
+  el("cmpMeta").textContent=[
+    `X: ${fmtBR(el("cmpXStart").value)||"—"} a ${fmtBR(el("cmpXEnd").value)||"—"}`,
+    `Y: ${fmtBR(el("cmpYStart").value)||"—"} a ${fmtBR(el("cmpYEnd").value)||"—"}`,
+    `Status: ${el("statusSelect").value}`,`Prof.: ${el("profTipo").value} / ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
+  ].join(" • ");
+  const metrics=[
+    {label:"Casais",           x:sX.casais,             y:sY.casais,             fmt:v=>String(v|0)},
+    {label:"Média Casais/dia", x:sX.mediaCasaisPeriodo, y:sY.mediaCasaisPeriodo, fmt:v=>fmtNumBR(v,1,1)},
+    {label:"Cotas (vendas)",   x:sX.vendas,             y:sY.vendas,             fmt:v=>String(v|0)},
+    {label:"Cotas canceladas", x:sX.cotasCanceladas,    y:sY.cotasCanceladas,    fmt:v=>String(v|0)},
+    {label:"VGV total",        x:sX.vgvTotal,           y:sY.vgvTotal,           fmt:fmtMoney},
+    {label:"Eficiência",       x:sX.eficiencia,         y:sY.eficiencia,         fmt:fmtPctBR},
+    {label:"% Cancelamento",   x:sX.pctCancel,          y:sY.pctCancel,          fmt:fmtPctBR},
+    {label:"Ticket médio",     x:sX.ticketMedio,        y:sY.ticketMedio,        fmt:fmtMoney},
+    {label:"Renda média",      x:sX.rendaMed,           y:sY.rendaMed,           fmt:fmtMoney},
+    {label:"NoTour",           x:sX.noTour,             y:sY.noTour,             fmt:v=>String(v|0)},
   ];
-
-  const fmtD=d=>d.toLocaleDateString("pt-BR");
-  div.innerHTML=`
-    <div class="compare-grid">
-      <div class="compare-card">
-        <h3>📅 Período A &nbsp;<small style="color:var(--muted);font-weight:600">${fmtD(a1)} – ${fmtD(a2)}</small></h3>
-        ${kpis.map(k=>`<div class="kpi-row"><div class="kpi-top"><span class="kpi-name">${k.l}</span><span class="kpi-delta neu">${k.fmt(k.kA)}</span></div></div>`).join("")}
-      </div>
-      <div class="compare-card">
-        <h3>📅 Período B &nbsp;<small style="color:var(--muted);font-weight:600">${fmtD(b1)} – ${fmtD(b2)}</small></h3>
-        ${kpis.map(k=>`<div class="kpi-row"><div class="kpi-top"><span class="kpi-name">${k.l}</span><span class="kpi-delta neu">${k.fmt(k.kB)}</span></div></div>`).join("")}
-      </div>
-      <div class="compare-card">
-        <h3>📊 Variação (A vs B)</h3>
-        ${kpis.map(k=>{const d=delta(k.kA,k.kB,k.fmt,k.higher);return`<div class="kpi-row"><div class="kpi-top"><span class="kpi-name">${k.l}</span><span class="kpi-delta ${d.cls}">${d.txt}</span></div></div>`;}).join("")}
-      </div>
-    </div>`;
+  el("cmpDeltas").innerHTML=metrics.map(m=>{ const v=pctVar(m.x,m.y); return`
+    <div class="kpi-row">
+      <div class="kpi-top"><div class="kpi-name">${m.label}</div><div class="kpi-delta ${deltaClass(v)}">${fmtVar(v)}</div></div>
+      <div class="kpi-sub"><div><b>X:</b> ${m.fmt(m.x)}</div><div><b>Y:</b> ${m.fmt(m.y)}</div><div><b>Dif.:</b> ${m.fmt((m.x||0)-(m.y||0))}</div></div>
+    </div>`; }).join("");
 }
 
-/* ─────────────────────────────────────────────
-   POPULATE SELECTS
-───────────────────────────────────────────── */
-function populateSelects(){
-  // UF
-  const ufs=new Set(S.rows.map(r=>(r[KEY.uf]||"").trim()).filter(Boolean));
-  el("ufSelect").innerHTML=`<option value="todos">Todas</option>`+
-    [...ufs].sort().map(u=>`<option value="${u}">${u}</option>`).join("");
-
-  // profissional por tipo
-  function updateProfNome(){
-    const tipo=norm(el("profTipo").value);
-    const nomes=new Set(S.rows.map(r=>norm(r[tipo]||"")).filter(Boolean));
-    el("profNome").innerHTML=`<option value="todos">Todos</option>`+
-      [...nomes].sort().map(n=>`<option value="${n}">${cap(n)}</option>`).join("");
-  }
-  el("profTipo").addEventListener("change", updateProfNome);
-  updateProfNome();
+/* ═══════════════════════════════════════════════
+   SELECTS DE PROFISSIONAL
+═══════════════════════════════════════════════ */
+function updateProfFilters(tipoId,nomeId){
+  const tipo=norm(el(tipoId).value);
+  const names=new Set();
+  state.rows.forEach(r=>{ const n=(r[tipo]??"").toString().trim(); if(n) names.add(n); });
+  const arr=[...names].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
+  const isGlobal=(nomeId==="profNome");
+  el(nomeId).innerHTML=(isGlobal?'<option value="todos">Todos</option>':'<option value="">Selecione...</option>')+arr.map(n=>`<option value="${n}">${n}</option>`).join("");
+}
+function updateUFFilter(){
+  const ufs=new Set();
+  state.rows.forEach(r=>{ const u=(r[KEY.uf]??"").toString().trim(); if(u) ufs.add(u); });
+  el("ufSelect").innerHTML='<option value="todos">Todas</option>'+[...ufs].sort().map(u=>`<option value="${u}">${u}</option>`).join("");
 }
 
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════════
    UPDATE ALL
-───────────────────────────────────────────── */
+═══════════════════════════════════════════════ */
 function updateAll(){
-  S.filtered=applyFilters(S.rows);
-  const tab=document.querySelector(".tab.active")?.dataset.tab||"resumo";
-  renderTab(tab);
+  state.filtered=applyFilters(state.rows);
+  renderCards("stats",       state.filtered);
+  renderCards("stats-curva", state.filtered);
+  renderRanking(groupRanking(state.filtered,KEY.promotor),"ranking-promotor","Promotor");
+  renderRanking(groupRanking(state.filtered,KEY.liner),   "ranking-liner",   "Liner");
+  renderRanking(groupRanking(state.filtered,KEY.closer),  "ranking-closer",  "Closer");
+  renderRanking(groupRanking(state.filtered,norm(el("profTipo").value)),"profissionais-table","");
+  renderPerfilRenda(state.filtered,"perfil-renda");
+  renderSingle();
+  renderCurva(state.filtered);
+  renderCancelamento(state.filtered);
+  renderEquipes();
+  renderSupervisores();
+  renderComparativo();
 }
 
-function renderTab(tab){
-  switch(tab){
-    case "resumo":           renderResumo();     break;
-    case "comparativo":      /* on demand */     break;
-    case "curva":            renderCurva();      break;
-    case "cancelamento":     renderCancelamento();break;
-    case "equipes":          renderEquipes();    break;
-    case "promotores":       renderPromotores(); break;
-    case "ranking-promotor": renderRanking("statsRankPromotor","tableRankPromotor","ranking-promotor",KEY.promotor); break;
-    case "ranking-liner":    renderRanking("statsRankLiner","tableRankLiner","ranking-liner",KEY.liner);             break;
-    case "ranking-closer":   renderRanking("statsRankCloser","tableRankCloser","ranking-closer",KEY.closer);         break;
-    case "perfil-renda":     renderPerfilRenda();break;
-    case "profissionais":    renderProfissionais();break;
-  }
-}
-
-/* ─────────────────────────────────────────────
-   SETUP EVENTS
-───────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   SETUP DE EVENTOS
+═══════════════════════════════════════════════ */
 function setup(){
-  // tabs
+  /* filtros globais */
+  ["statusSelect","profNome","ufSelect","dateStart","dateEnd"].forEach(id=>el(id).addEventListener("change",updateAll));
+  el("profTipo").addEventListener("change",()=>{ updateProfFilters("profTipo","profNome"); updateAll(); });
+
+  /* datas rápidas */
+  el("btnLimparPeriodo").addEventListener("click",()=>{ el("dateStart").value=""; el("dateEnd").value=""; updateAll(); });
+  el("btnHoje").addEventListener("click",()=>{ const n=new Date(),iso=toISO(n); el("dateStart").value=iso; el("dateEnd").value=iso; updateAll(); });
+  el("btn30").addEventListener("click",()=>{ const e=new Date(),s=new Date(e); s.setDate(s.getDate()-29); el("dateStart").value=toISO(s); el("dateEnd").value=toISO(e); updateAll(); });
+
+  /* comparativo */
+  ["cmpXStart","cmpXEnd","cmpYStart","cmpYEnd"].forEach(id=>el(id).addEventListener("change",renderComparativo));
+  const setCmp=(pfx,back)=>{ const e=new Date(),s=new Date(e); s.setDate(s.getDate()-(back-1)); el(pfx+"Start").value=toISO(s); el(pfx+"End").value=toISO(e); renderComparativo(); };
+  el("btnCmpXHoje").addEventListener("click",()=>setCmp("cmpX",1));
+  el("btnCmpX30").addEventListener("click",()=>setCmp("cmpX",30));
+  el("btnCmpYHoje").addEventListener("click",()=>setCmp("cmpY",1));
+  el("btnCmpY30").addEventListener("click",()=>setCmp("cmpY",30));
+
+  /* individual */
+  el("profTipoSingle").addEventListener("change",()=>{ updateProfFilters("profTipoSingle","profNomeSingle"); renderSingle(); });
+  el("profNomeSingle").addEventListener("change",renderSingle);
+
+  /* equipes — aba captação */
+  el("btnSalvarEquipe").addEventListener("click",()=>{
+    const p=el("teamPromotorSelect").value,t=el("teamEquipeSelect").value;
+    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
+  });
+  el("btnLimparEquipes").addEventListener("click",()=>{
+    if(!confirm("Limpar todas as marcações?")) return;
+    saveTeamMap({}); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
+  });
+
+  /* equipes — aba supervisores */
+  el("btnSalvarEquipeSup").addEventListener("click",()=>{
+    const p=el("supPromotorSelect").value,t=el("supEquipeSelect").value;
+    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
+  });
+  el("btnLimparEquipesSup").addEventListener("click",()=>{
+    if(!confirm("Limpar todas as marcações de equipe?")) return;
+    saveTeamMap({}); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
+  });
+
+  /* tabs */
   document.querySelectorAll(".tab").forEach(t=>{
     t.addEventListener("click",()=>{
       document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
       document.querySelectorAll(".tab-content").forEach(x=>x.classList.remove("active"));
       t.classList.add("active");
       el(`tab-${t.dataset.tab}`).classList.add("active");
-      renderTab(t.dataset.tab);
+      if(["curva","cancelamento"].includes(t.dataset.tab)){
+        setTimeout(()=>{ try{charts.curva?.resize?.();charts.semana?.resize?.();charts.cancelamento?.resize?.();}catch(e){} },80);
+      }
     });
   });
-
-  // filtros
-  ["statusSelect","profNome","ufSelect","dateStart","dateEnd"].forEach(id=>{
-    el(id).addEventListener("change",updateAll);
-  });
-
-  // período
-  el("btnHoje").addEventListener("click",()=>{
-    const n=new Date(); el("dateStart").value=toISODate(n); el("dateEnd").value=toISODate(n); updateAll();
-  });
-  el("btn30").addEventListener("click",()=>{
-    const e=new Date(), s=new Date(e); s.setDate(s.getDate()-29);
-    el("dateStart").value=toISODate(s); el("dateEnd").value=toISODate(e); updateAll();
-  });
-  el("btnLimparPeriodo").addEventListener("click",()=>{ el("dateStart").value=""; el("dateEnd").value=""; updateAll(); });
-
-  // comparativo
-  el("btnComparar").addEventListener("click", renderComparativo);
-
-  // equipes — salvar rápido
-  el("btnSalvarEq").addEventListener("click",()=>{
-    const p=el("eqPromSelect").value; const t=el("eqTeamSelect").value;
-    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m);
-    renderEquipes(); renderPromotores();
-  });
-  el("btnLimparEq").addEventListener("click",()=>{
-    if(!confirm("Limpar todas as marcações de equipe?")) return;
-    saveTeamMap({}); renderEquipes(); renderPromotores();
-  });
-
-  // promotores — salvar rápido
-  el("btnSalvarSup").addEventListener("click",()=>{
-    const p=el("supPromSelect").value; const t=el("supTeamSelect").value;
-    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m);
-    renderEquipes(); renderPromotores();
-  });
-  el("btnLimparSup").addEventListener("click",()=>{
-    if(!confirm("Limpar todas as marcações de equipe?")) return;
-    saveTeamMap({}); renderEquipes(); renderPromotores();
-  });
-
-  // profissionais tab — tipo
-  el("profTabTipo").addEventListener("change", renderProfissionais);
 }
 
-/* ─────────────────────────────────────────────
-   UPLOAD
-───────────────────────────────────────────── */
-function loadCSVText(text, filename){
+/* ═══════════════════════════════════════════════
+   INIT — fetch dados.csv
+═══════════════════════════════════════════════ */
+async function init(){
   try{
-    S.rows = parseCSV(text);
-    el("mainError").style.display="none";
-    el("uploadArea").style.display="none";
-    el("mainPanel").style.display="block";
-    el("subtitleLine").innerHTML=`Arquivo: <strong>${filename}</strong> · <strong>${S.rows.length}</strong> linhas carregadas`;
-    populateSelects();
-    S.filtered=applyFilters(S.rows);
-    renderTab("resumo");
-    renderMappingList("eqMappingList","eqPromSelect",()=>{ renderEquipes(); renderPromotores(); });
-    renderMappingList("supMappingList","supPromSelect",()=>{ renderEquipes(); renderPromotores(); });
+    el("loading").style.display="block";
+    el("error").style.display="none";
+
+    const resp=await fetch("dados.csv",{cache:"no-store"});
+    if(!resp.ok) throw new Error(`HTTP ${resp.status} — verifique se o arquivo dados.csv está na mesma pasta do index.html`);
+    const text=await resp.text();
+    state.rows=buildObjects(parseDelimited(text,";"));
+
+    updateProfFilters("profTipo","profNome");
+    updateProfFilters("profTipoSingle","profNomeSingle");
+    updateUFFilter();
+    renderTeamMappingUI();
+
+    /* comparativo: X = últimos 30 dias, Y = 30 dias anteriores */
+    const e=new Date(),sX=new Date(e); sX.setDate(sX.getDate()-29);
+    const eY=new Date(sX); eY.setDate(eY.getDate()-1);
+    const sY=new Date(eY); sY.setDate(sY.getDate()-29);
+    el("cmpXStart").value=toISO(sX); el("cmpXEnd").value=toISO(e);
+    el("cmpYStart").value=toISO(sY); el("cmpYEnd").value=toISO(eY);
+
+    updateAll();
+    el("loading").style.display="none";
   }catch(e){
-    el("mainError").style.display="block";
-    el("mainError").textContent=`Erro ao processar CSV: ${e.message}`;
+    console.error(e);
+    el("loading").style.display="none";
+    el("error").style.display="block";
+    el("error").textContent=`Erro ao carregar dados: ${e.message}`;
   }
 }
 
-function setupUpload(){
-  const area=el("uploadArea");
-  const input=el("csvFileInput");
-
-  input.addEventListener("change",e=>{
-    const f=e.target.files[0]; if(!f) return;
-    const reader=new FileReader();
-    reader.onload=ev=>loadCSVText(ev.target.result, f.name);
-    reader.readAsText(f,"UTF-8");
-  });
-
-  area.addEventListener("dragover",e=>{ e.preventDefault(); area.classList.add("dragover"); });
-  area.addEventListener("dragleave",()=>area.classList.remove("dragover"));
-  area.addEventListener("drop",e=>{
-    e.preventDefault(); area.classList.remove("dragover");
-    const f=e.dataTransfer.files[0]; if(!f) return;
-    const reader=new FileReader();
-    reader.onload=ev=>loadCSVText(ev.target.result, f.name);
-    reader.readAsText(f,"UTF-8");
-  });
-}
-
-/* ─────────────────────────────────────────────
-   INIT
-───────────────────────────────────────────── */
-setupUpload();
 setup();
+init();
 </script>
 </body>
 </html>
