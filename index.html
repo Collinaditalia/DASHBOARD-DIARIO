@@ -39,10 +39,7 @@
     }
     .subtitle{font-size:1.02rem;color:var(--muted);font-weight:450;}
 
-    .controls{
-      display:flex;flex-wrap:wrap;gap:16px;margin:22px 0 10px;
-      align-items:end;justify-content:center;
-    }
+    .controls{display:flex;flex-wrap:wrap;gap:16px;margin:22px 0 10px;align-items:end;justify-content:center;}
     .control-group{display:flex;flex-direction:column;gap:8px;min-width:210px;}
     .control-group label{font-size:0.82rem;color:var(--muted);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
     select,input{
@@ -74,11 +71,7 @@
       backdrop-filter:blur(10px);
       padding:10px;
     }
-    .tabs{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-    }
+    .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
     .tab{
       display:flex;align-items:center;justify-content:center;gap:10px;
       padding:12px 12px;text-align:center;cursor:pointer;
@@ -99,10 +92,7 @@
     .tab-content.active{display:block;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    .stats{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:18px;margin:10px 0 12px;
-    }
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:10px 0 12px;}
     .stat-card{
       background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
       padding:20px 18px;text-align:center;backdrop-filter:blur(10px);
@@ -122,14 +112,10 @@
     .note.bad{border-color:rgba(255,45,85,.35);background:rgba(255,45,85,.10);color:#ffd0db;}
     .note.success{border-color:rgba(92,255,176,.35);background:rgba(92,255,176,.08);color:#b0fff0;}
 
-    .divider{
-      height:1px;background:rgba(255,255,255,.08);
-      margin:28px 0 22px;border-radius:99px;
-    }
+    .divider{height:1px;background:rgba(255,255,255,.08);margin:28px 0 22px;border-radius:99px;}
 
     .section-title{
-      font-size:1.12rem;font-weight:900;
-      color:rgba(234,240,255,.92);margin:0 0 12px;
+      font-size:1.12rem;font-weight:900;color:rgba(234,240,255,.92);margin:0 0 12px;
       display:flex;align-items:center;gap:10px;
     }
     .section-title .pill-tag{
@@ -140,8 +126,7 @@
 
     .table-wrap{
       background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
-      overflow:auto;backdrop-filter:blur(10px);margin:10px 0 26px;
-      max-height:70vh;
+      overflow:auto;backdrop-filter:blur(10px);margin:10px 0 26px;max-height:70vh;
     }
     table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px;}
     thead th{
@@ -171,7 +156,7 @@
     .p-med{background:rgba(255,176,32,.12);color:var(--med);border-color:rgba(255,176,32,.28);}
     .p-good{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
 
-    /* ── Promotores por equipe ── */
+    /* ── Promotores lista inline ── */
     .promo-list{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;}
     .promo-row{
       display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -181,34 +166,162 @@
       transition:background .15s;
     }
     .promo-row:hover{background:rgba(255,255,255,.06);}
-    .promo-row .pr-name{
-      font-weight:850;font-size:.97rem;
-      flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-    }
-    .promo-row .pr-tag{
-      font-size:.78rem;font-family:var(--mono);font-weight:800;
-      padding:3px 10px;border-radius:999px;white-space:nowrap;
-    }
+    .promo-row .pr-name{font-weight:850;font-size:.97rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .pr-tag{font-size:.78rem;font-family:var(--mono);font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;}
     .pr-tag.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.38);color:#c4b5ff;}
     .pr-tag.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
     .pr-tag.none{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);}
     .promo-row select.mini-sel{
-      padding:7px 10px;border-radius:10px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      color:var(--text);font-size:.9rem;font-weight:750;
+      padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);color:var(--text);font-size:.9rem;font-weight:750;
       cursor:pointer;min-width:160px;
     }
     .promo-row select.mini-sel:focus{border-color:var(--accent);}
 
-    /* config panel */
     .config-panel{
+      background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);padding:20px;margin:0 0 18px;
+    }
+    .config-panel h4{margin:0 0 14px;font-size:1rem;font-weight:900;color:rgba(234,240,255,.9);}
+
+    /* ════════════════════════════════════════
+       COMPARATIVO LADO A LADO (supervisores)
+    ════════════════════════════════════════ */
+    .sup-compare-wrap{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      overflow:hidden;
+      margin:14px 0;
+      backdrop-filter:blur(10px);
+    }
+    /* cabeçalho das colunas */
+    .sup-compare-header{
+      display:grid;
+      grid-template-columns: 220px 1fr 1fr 1fr;
+      gap:0;
+      border-bottom:2px solid rgba(255,255,255,.10);
+    }
+    .sup-compare-header > div{
+      padding:14px 18px;
+      font-weight:900;
+      font-size:.95rem;
+      text-align:center;
+    }
+    .sup-compare-header .col-label{
+      text-align:left;
+      color:var(--muted);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      border-right:1px solid rgba(255,255,255,.07);
+    }
+    .sup-compare-header .col-parque{
+      background:rgba(124,92,255,.10);
+      border-right:1px solid rgba(255,255,255,.07);
+      color:#c4b5ff;
+    }
+    .sup-compare-header .col-externa{
+      background:rgba(34,211,238,.08);
+      border-right:1px solid rgba(255,255,255,.07);
+      color:#7eedff;
+    }
+    .sup-compare-header .col-geral{
+      background:rgba(92,255,176,.06);
+      color:#b0fff0;
+    }
+    /* linhas de dados */
+    .sup-compare-row{
+      display:grid;
+      grid-template-columns: 220px 1fr 1fr 1fr;
+      gap:0;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      transition:background .15s;
+    }
+    .sup-compare-row:last-child{border-bottom:none;}
+    .sup-compare-row:hover{background:rgba(255,255,255,.025);}
+    .sup-compare-row > div{
+      padding:13px 18px;
+      font-family:var(--mono);
+      font-size:.95rem;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .sup-compare-row .rc-label{
+      text-align:left;
+      justify-content:flex-start;
+      font-family:var(--sans);
+      font-weight:850;
+      color:rgba(234,240,255,.9);
+      font-size:.93rem;
+      border-right:1px solid rgba(255,255,255,.07);
+    }
+    .sup-compare-row .rc-parque{
+      border-right:1px solid rgba(255,255,255,.06);
+      color:#c4b5ff;
+      font-weight:900;
+    }
+    .sup-compare-row .rc-externa{
+      border-right:1px solid rgba(255,255,255,.06);
+      color:#7eedff;
+      font-weight:900;
+    }
+    .sup-compare-row .rc-geral{color:#b0fff0;font-weight:900;}
+
+    /* linha de separação de seção */
+    .sup-compare-row.section-sep > div{
+      background:rgba(255,255,255,.03);
+      padding:8px 18px;
+      font-size:.78rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+      color:var(--muted);
+      font-family:var(--sans);
+      border-top:1px solid rgba(255,255,255,.07);
+    }
+    .sup-compare-row.section-sep .rc-label{ justify-content:flex-start; }
+
+    /* barra de representatividade */
+    .rep-bar-wrap{
+      background:rgba(255,255,255,.05);
+      border-radius:999px;
+      height:8px;
+      overflow:hidden;
+      margin-top:6px;
+      width:100%;
+    }
+    .rep-bar-fill{height:100%;border-radius:999px;}
+    .rep-bar-fill.parque{background:linear-gradient(90deg,#7C5CFF,#c4b5ff);}
+    .rep-bar-fill.externa{background:linear-gradient(90deg,#22D3EE,#7eedff);}
+
+    /* painel de representatividade */
+    .rep-panel{
       background:rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.08);
       border-radius:var(--radius);
-      padding:20px;margin:0 0 18px;
+      padding:20px 22px;
+      margin:14px 0;
     }
-    .config-panel h4{margin:0 0 14px;font-size:1rem;font-weight:900;color:rgba(234,240,255,.9);}
+    .rep-panel h4{margin:0 0 16px;font-size:1rem;font-weight:900;}
+    .rep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+    .rep-card{
+      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius2);
+      padding:16px 18px;position:relative;overflow:hidden;
+    }
+    .rep-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .rep-card.parque::before{background:linear-gradient(90deg,#7C5CFF,#c4b5ff);}
+    .rep-card.externa::before{background:linear-gradient(90deg,#22D3EE,#7eedff);}
+    .rep-card.geral::before{background:linear-gradient(90deg,var(--accent),var(--accent2));}
+    .rep-kpi-label{font-size:.82rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+    .rep-kpi-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;}
+    .rep-kpi-val{font-family:var(--mono);font-weight:900;font-size:1.35rem;}
+    .rep-kpi-pct{font-family:var(--mono);font-weight:900;font-size:.88rem;padding:3px 9px;border-radius:999px;}
+    .rep-kpi-pct.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.35);color:#c4b5ff;}
+    .rep-kpi-pct.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
+    .rep-kpi-pct.geral{background:rgba(92,255,176,.12);border:1px solid rgba(92,255,176,.30);color:#b0fff0;}
 
     /* chart */
     .chart-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);backdrop-filter:blur(10px);padding:14px 14px 12px;margin:14px 0;}
@@ -238,7 +351,10 @@
     .kpi-sub b{color:rgba(234,240,255,.88)}
     .hint{font-size:.9rem;color:var(--muted);line-height:1.45;}
 
-    @media(max-width:1100px){.tabs{grid-template-columns:repeat(3,minmax(0,1fr));}}
+    @media(max-width:1100px){
+      .tabs{grid-template-columns:repeat(3,minmax(0,1fr));}
+      .sup-compare-header,.sup-compare-row{grid-template-columns:160px 1fr 1fr 1fr;}
+    }
     @media(max-width:820px){
       .wrap{padding:0 16px}
       h1{font-size:2.2rem}
@@ -252,6 +368,8 @@
       .kpi-sub{grid-template-columns:1fr;}
       .promo-row{flex-wrap:wrap;}
       .promo-row select.mini-sel{min-width:140px;}
+      .sup-compare-header,.sup-compare-row{grid-template-columns:130px 1fr 1fr 1fr;font-size:.85rem;}
+      .sup-compare-row > div,.sup-compare-header > div{padding:10px 10px;}
     }
   </style>
 
@@ -265,7 +383,7 @@
     <p class="subtitle">Fonte: <strong>dados.csv</strong> (VGV = soma simples da coluna G)</p>
   </header>
 
-  <!-- ═══════════════════ FILTROS GLOBAIS ═══════════════════ -->
+  <!-- ═══ FILTROS GLOBAIS ═══ -->
   <div class="controls">
     <div class="control-group" style="min-width:420px">
       <label>Período</label>
@@ -273,9 +391,9 @@
         <input id="dateStart" type="date" />
         <span class="sep">a</span>
         <input id="dateEnd" type="date" />
-        <button class="btn" id="btnHoje" type="button">Hoje</button>
-        <button class="btn" id="btn30"   type="button">30 dias</button>
-        <button class="btn" id="btnLimparPeriodo" type="button">Limpar</button>
+        <button class="btn" id="btnHoje">Hoje</button>
+        <button class="btn" id="btn30">30 dias</button>
+        <button class="btn" id="btnLimparPeriodo">Limpar</button>
       </div>
     </div>
     <div class="control-group">
@@ -306,10 +424,10 @@
     </div>
   </div>
 
-  <!-- ═══════════════════ ABAS ═══════════════════ -->
+  <!-- ═══ ABAS ═══ -->
   <div class="tabs-wrap">
     <div class="tabs">
-      <div class="tab active"  data-tab="resumo">📊 Resumo</div>
+      <div class="tab active" data-tab="resumo">📊 Resumo</div>
       <div class="tab" data-tab="comparativo">🆚 Comparativo de períodos</div>
       <div class="tab" data-tab="curva">📈 Curva de casais e vendas</div>
       <div class="tab" data-tab="cancelamento">❌ Análise de cancelamento</div>
@@ -323,7 +441,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════ CONTEÚDO ═══════════════════ -->
+  <!-- ═══ CONTEÚDO ═══ -->
   <div id="content">
     <div id="loading" class="note">Carregando dados...</div>
     <div id="error"   class="note bad" style="display:none"></div>
@@ -347,8 +465,7 @@
     <div id="tab-comparativo" class="tab-content">
       <div class="note">
         <strong>Comparativo entre dois períodos</strong><br>
-        Período X e Y respeitam os filtros globais (Status, Profissional, Nome, UF).<br>
-        <strong>Variação %</strong> = (X − Y) / Y × 100. Quando Y = 0, mostra "—".
+        Período X e Y respeitam os filtros globais. <strong>Variação %</strong> = (X − Y) / Y × 100.
       </div>
       <div class="compare-grid">
         <div class="compare-card">
@@ -357,9 +474,9 @@
             <div class="control-group" style="min-width:330px">
               <label>Datas (X)</label>
               <div class="range-row">
-                <input id="cmpXStart" type="date" /><span class="sep">a</span><input id="cmpXEnd" type="date" />
-                <button class="btn" id="btnCmpXHoje" type="button">Hoje</button>
-                <button class="btn" id="btnCmpX30"   type="button">30 dias</button>
+                <input id="cmpXStart" type="date"/><span class="sep">a</span><input id="cmpXEnd" type="date"/>
+                <button class="btn" id="btnCmpXHoje">Hoje</button>
+                <button class="btn" id="btnCmpX30">30 dias</button>
               </div>
             </div>
           </div>
@@ -371,9 +488,9 @@
             <div class="control-group" style="min-width:330px">
               <label>Datas (Y)</label>
               <div class="range-row">
-                <input id="cmpYStart" type="date" /><span class="sep">a</span><input id="cmpYEnd" type="date" />
-                <button class="btn" id="btnCmpYHoje" type="button">Hoje</button>
-                <button class="btn" id="btnCmpY30"   type="button">30 dias</button>
+                <input id="cmpYStart" type="date"/><span class="sep">a</span><input id="cmpYEnd" type="date"/>
+                <button class="btn" id="btnCmpYHoje">Hoje</button>
+                <button class="btn" id="btnCmpY30">30 dias</button>
               </div>
             </div>
           </div>
@@ -384,21 +501,13 @@
         <h3>Variação percentual (X vs Y)</h3>
         <div id="cmpMeta" class="hint" style="margin:6px 0 12px">—</div>
         <div id="cmpDeltas"></div>
-        <div class="note warn" style="margin-top:12px">
-          Dica: use "30 dias" em X e ajuste Y manualmente para comparar períodos consecutivos.
-        </div>
       </div>
     </div>
 
     <!-- ── CURVA ── -->
     <div id="tab-curva" class="tab-content">
       <div class="stats" id="stats-curva"></div>
-      <div class="note">
-        Respeita os filtros globais.<br>
-        • <strong>Casais/dia</strong> = linhas no dia.<br>
-        • <strong>Vendas/dia</strong> = soma de cotas no dia.<br>
-        • <strong>Eficiência</strong> = Vendas ÷ Casais.
-      </div>
+      <div class="note">Respeita os filtros globais. • Casais/dia = linhas no dia. • Vendas/dia = soma de cotas. • Eficiência = Vendas ÷ Casais.</div>
       <div class="chart-card">
         <div class="chart-head">
           <div class="chart-title">Curva diária (Casais × Vendas)</div>
@@ -417,10 +526,7 @@
 
     <!-- ── CANCELAMENTO ── -->
     <div id="tab-cancelamento" class="tab-content">
-      <div class="note">
-        <strong>Análise de cancelamento por quantidade de cotas vendidas</strong><br>
-        % Cancelamento = (cotas canceladas ÷ cotas totais) × 100.
-      </div>
+      <div class="note"><strong>% Cancelamento</strong> = (cotas canceladas ÷ cotas totais) × 100.</div>
       <div class="chart-card">
         <div class="chart-head">
           <div class="chart-title">% Cancelamento por qtd de cotas vendidas</div>
@@ -433,10 +539,7 @@
 
     <!-- ── EQUIPES DE CAPTAÇÃO ── -->
     <div id="tab-equipes" class="tab-content">
-      <div class="note">
-        <strong>Equipes de captação</strong> — marque a equipe de cada Promotor de marketing.
-        A associação fica salva no seu navegador (localStorage).
-      </div>
+      <div class="note"><strong>Equipes de captação</strong> — marque a equipe de cada Promotor de marketing. Salvo no seu navegador.</div>
       <h3 style="margin:10px 0 6px">Equipe Parque</h3>
       <div class="stats" id="stats-equipe-parque"></div>
       <h3 style="margin:16px 0 6px">Equipe Externa</h3>
@@ -444,10 +547,7 @@
       <div class="note warn">Promotores sem equipe marcada entram em <strong>Sem equipe</strong>.</div>
       <h3 style="margin:10px 0 6px">Sem equipe</h3>
       <div class="stats" id="stats-equipe-sem"></div>
-      <div class="note" style="margin-top:18px">
-        <strong>Configurar promotores</strong><br>
-        Se o nome mudar no CSV, será tratado como novo promotor.
-      </div>
+      <div class="divider"></div>
       <div class="team-grid">
         <div class="team-card">
           <h3>Marcar equipe</h3>
@@ -465,11 +565,11 @@
             </div>
             <div class="control-group" style="min-width:160px">
               <label>&nbsp;</label>
-              <button class="btn primary" id="btnSalvarEquipe" type="button">Salvar</button>
+              <button class="btn primary" id="btnSalvarEquipe">💾 Salvar</button>
             </div>
             <div class="control-group" style="min-width:180px">
               <label>&nbsp;</label>
-              <button class="btn danger" id="btnLimparEquipes" type="button">Limpar marcações</button>
+              <button class="btn danger" id="btnLimparEquipes">🗑 Limpar tudo</button>
             </div>
           </div>
         </div>
@@ -482,44 +582,43 @@
 
     <!-- ══════════════════════════════════════════════════
          ABA: PROMOTORES (2 SUPERVISORES)
-         ① Cards de KPIs no TOPO
-         ② Configuração de equipes EMBAIXO
     ══════════════════════════════════════════════════ -->
     <div id="tab-equipes-supervisores" class="tab-content">
 
-      <!-- ① KPIs — TOPO -->
       <div class="note">
         <strong>Promotores de Marketing — 2 Supervisores</strong><br>
-        KPIs de cada equipe no período filtrado. Para configurar quem pertence a cada equipe, use o painel no final desta aba.
+        Comparativo lado a lado: Equipe Parque × Equipe Externa × Geral. Percentual de representação ao final.
       </div>
 
+      <!-- ① TABELA COMPARATIVA LADO A LADO -->
       <div class="section-title">
-        Equipe Parque <span class="pill-tag">KPIs</span>
+        Comparativo Parque × Externa <span class="pill-tag">dado por dado</span>
       </div>
-      <div class="stats" id="stats-super-parque"></div>
+      <div class="sup-compare-wrap">
+        <!-- cabeçalho -->
+        <div class="sup-compare-header">
+          <div class="col-label">Indicador</div>
+          <div class="col-parque">🟣 Equipe Parque</div>
+          <div class="col-externa">🔵 Equipe Externa</div>
+          <div class="col-geral">⚪ Geral</div>
+        </div>
+        <!-- linhas — preenchidas pelo JS -->
+        <div id="supCompareRows"></div>
+      </div>
 
+      <!-- ② REPRESENTATIVIDADE -->
       <div class="section-title" style="margin-top:22px">
-        Equipe Externa <span class="pill-tag">KPIs</span>
+        Representatividade no total <span class="pill-tag">% de cada equipe</span>
       </div>
-      <div class="stats" id="stats-super-externa"></div>
+      <div id="supRepGrid"></div>
 
-      <div class="section-title" style="margin-top:22px">
-        Resultado Geral <span class="pill-tag">Parque + Externa</span>
-      </div>
-      <div class="stats" id="stats-super-geral"></div>
-
-      <div class="note warn" style="margin-top:6px">
-        Promotores <strong>sem equipe definida</strong> não entram nos cards acima.
-      </div>
-
-      <!-- divisor visual -->
+      <!-- divisor -->
       <div class="divider"></div>
 
-      <!-- ② CONFIGURAÇÃO — EMBAIXO -->
+      <!-- ③ CONFIGURAÇÃO -->
       <div class="section-title">
         Configurar promotores <span class="pill-tag">Definir equipe</span>
       </div>
-
       <div class="config-panel">
         <h4>Seleção rápida</h4>
         <div class="controls" style="margin:0;justify-content:flex-start;flex-wrap:wrap">
@@ -536,15 +635,14 @@
           </div>
           <div class="control-group" style="min-width:150px">
             <label>&nbsp;</label>
-            <button class="btn primary" id="btnSalvarEquipeSup" type="button">💾 Salvar</button>
+            <button class="btn primary" id="btnSalvarEquipeSup">💾 Salvar</button>
           </div>
           <div class="control-group" style="min-width:180px">
             <label>&nbsp;</label>
-            <button class="btn danger" id="btnLimparEquipesSup" type="button">🗑 Limpar tudo</button>
+            <button class="btn danger" id="btnLimparEquipesSup">🗑 Limpar tudo</button>
           </div>
         </div>
       </div>
-
       <div class="config-panel" style="margin-top:0">
         <h4>Lista completa — altere diretamente</h4>
         <div id="supMappingList" class="promo-list"></div>
@@ -634,7 +732,7 @@ const sortState = {
   "cancelamento-table" :{ key:"cotasTotal",dir:"desc" },
 };
 
-/* ── localStorage de equipes ── */
+/* ── localStorage ── */
 const TEAM_KEY    = "painel_equipes_promotores_v1";
 const loadTeamMap = () => { try{ const r=localStorage.getItem(TEAM_KEY); const o=r?JSON.parse(r):{}; return(o&&typeof o==="object")?o:{}; }catch(e){return{};} };
 const saveTeamMap = m  => localStorage.setItem(TEAM_KEY, JSON.stringify(m||{}));
@@ -686,6 +784,7 @@ function parseMoneyBR(str){
 const fmtMoney = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v||0);
 const fmtPctBR = f => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}).format((f||0)*100)+"%";
 const fmtNumBR = (v,mn=1,mx=1) => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:mn,maximumFractionDigits:mx}).format(v||0);
+const fmtPct2  = (num,den) => den ? fmtNumBR((num/den)*100,1,1)+"%" : "—";
 
 function parseBRDateTime(str){
   if(!str||typeof str!=="string") return null;
@@ -837,7 +936,7 @@ function renderCardsComCaptador(cid,rows){
 }
 
 /* ═══════════════════════════════════════════════
-   RANKING TABLE
+   RANKING
 ═══════════════════════════════════════════════ */
 function groupRanking(rows,fieldKey){
   const map=new Map();
@@ -991,11 +1090,11 @@ function renderCurva(rows){
   destroyChart(charts.semana);
   charts.semana=new Chart(el("chartSemana").getContext("2d"),{
     data:{labels:LBLS,datasets:[
-      {type:"bar", label:"Casais", data:agg.map(x=>x.c),backgroundColor:"rgba(124,92,255,.25)",borderColor:"rgba(124,92,255,.65)",borderWidth:1,yAxisID:"yN"},
-      {type:"bar", label:"Vendas", data:agg.map(x=>x.v),backgroundColor:"rgba(92,255,176,.18)",borderColor:"rgba(92,255,176,.65)",borderWidth:1,yAxisID:"yN"},
-      {type:"line",label:"VGV",    data:agg.map(x=>x.vgv),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.10)",tension:.25,pointRadius:2.2,yAxisID:"yM"},
-      {type:"line",label:"Eficiência",data:agg.map(x=>x.c?(x.v/x.c)*100:0),borderColor:"rgba(255,176,32,1)",backgroundColor:"rgba(255,176,32,.10)",tension:.25,pointRadius:2.2,yAxisID:"yP"},
-      {type:"line",label:"Média Casais/dia",data:meanC,borderColor:"rgba(234,240,255,.75)",backgroundColor:"rgba(234,240,255,.08)",borderDash:[6,6],tension:0,pointRadius:2,yAxisID:"yN"},
+      {type:"bar", label:"Casais",            data:agg.map(x=>x.c),backgroundColor:"rgba(124,92,255,.25)",borderColor:"rgba(124,92,255,.65)",borderWidth:1,yAxisID:"yN"},
+      {type:"bar", label:"Vendas",            data:agg.map(x=>x.v),backgroundColor:"rgba(92,255,176,.18)",borderColor:"rgba(92,255,176,.65)",borderWidth:1,yAxisID:"yN"},
+      {type:"line",label:"VGV",               data:agg.map(x=>x.vgv),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.10)",tension:.25,pointRadius:2.2,yAxisID:"yM"},
+      {type:"line",label:"Eficiência",        data:agg.map(x=>x.c?(x.v/x.c)*100:0),borderColor:"rgba(255,176,32,1)",backgroundColor:"rgba(255,176,32,.10)",tension:.25,pointRadius:2.2,yAxisID:"yP"},
+      {type:"line",label:"Média Casais/dia",  data:meanC,borderColor:"rgba(234,240,255,.75)",backgroundColor:"rgba(234,240,255,.08)",borderDash:[6,6],tension:0,pointRadius:2,yAxisID:"yN"},
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
       plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}},
@@ -1094,10 +1193,7 @@ function renderTeamMappingUI(){
   const entries=Object.entries(map).filter(([k,v])=>k&&v).sort((a,b)=>a[0].localeCompare(b[0],"pt-BR",{sensitivity:"base"}));
   el("teamMappingList").innerHTML=entries.length?entries.map(([p,t])=>`
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);margin-bottom:8px">
-      <div>
-        <div style="font-weight:850">${p}</div>
-        <div style="color:var(--muted);font-size:.82rem">${t}</div>
-      </div>
+      <div><div style="font-weight:850">${p}</div><div style="color:var(--muted);font-size:.82rem">${t}</div></div>
       <button class="btn" type="button" data-rm="${encodeURIComponent(p)}">Remover</button>
     </div>`).join(""):`<div class="note" style="margin:0">Nenhuma marcação salva.</div>`;
   el("teamMappingList").querySelectorAll("button[data-rm]").forEach(btn=>{
@@ -1106,25 +1202,117 @@ function renderTeamMappingUI(){
 }
 
 /* ═══════════════════════════════════════════════
-   ABA SUPERVISORES
-   ① Cards (KPIs) no TOPO
-   ② Lista de promotores com seleção EMBAIXO
+   SUPERVISORES — comparativo lado a lado + representatividade
 ═══════════════════════════════════════════════ */
 function renderSupervisores(){
   const map=loadTeamMap();
-  const parque  = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
-  const externa = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
-  const geral   = parque.concat(externa);
+  const rowP = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
+  const rowE = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
+  const rowG = rowP.concat(rowE);
 
-  /* ① KPIs — topo */
-  renderCardsComCaptador("stats-super-parque",  parque);
-  renderCardsComCaptador("stats-super-externa", externa);
-  renderCardsComCaptador("stats-super-geral",   geral);
+  const sP=statsFor(rowP), sE=statsFor(rowE), sG=statsFor(rowG);
 
-  /* ② Lista de promotores — embaixo */
+  /* captadores por equipe */
+  const capsP=new Set(); rowP.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)capsP.add(norm(p));});
+  const capsE=new Set(); rowE.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)capsE.add(norm(p));});
+  const capsG=new Set([...capsP,...capsE]);
+
+  const medCP = capsP.size ? sP.casais/capsP.size : 0;
+  const medCE = capsE.size ? sE.casais/capsE.size : 0;
+  const medCG = capsG.size ? sG.casais/capsG.size : 0;
+
+  /* helper para montar uma linha da tabela comparativa */
+  const mkRow=(label,vP,vE,vG,fmt)=>`
+    <div class="sup-compare-row">
+      <div class="rc-label">${label}</div>
+      <div class="rc-parque">${fmt(vP)}</div>
+      <div class="rc-externa">${fmt(vE)}</div>
+      <div class="rc-geral">${fmt(vG)}</div>
+    </div>`;
+
+  const mkSep=label=>`
+    <div class="sup-compare-row section-sep">
+      <div class="rc-label">${label}</div><div></div><div></div><div></div>
+    </div>`;
+
+  const fmtN  = v => String(Math.round(v));
+  const fmtF1 = v => fmtNumBR(v,1,1);
+  const fmtEff= v => fmtPctBR(v);
+  const fmtM  = v => fmtMoney(v);
+  const fmtPc = v => fmtPctBR(v);
+
+  el("supCompareRows").innerHTML=
+    mkSep("Captadores e volume")+
+    mkRow("Captadores",          capsP.size,   capsE.size,   capsG.size,   fmtN)+
+    mkRow("Casais",              sP.casais,    sE.casais,    sG.casais,    fmtN)+
+    mkRow("Média casal/captador",medCP,        medCE,        medCG,        fmtF1)+
+    mkRow("Média de Casais/dia", sP.mediaCasaisPeriodo, sE.mediaCasaisPeriodo, sG.mediaCasaisPeriodo, fmtF1)+
+    mkRow("NoTour",              sP.noTour,    sE.noTour,    sG.noTour,    fmtN)+
+    mkSep("Vendas")+
+    mkRow("Cotas vendidas",      sP.vendas,    sE.vendas,    sG.vendas,    fmtN)+
+    mkRow("Cotas canceladas",    sP.cotasCanceladas, sE.cotasCanceladas, sG.cotasCanceladas, fmtN)+
+    mkRow("% Cancelamento",      sP.pctCancel, sE.pctCancel, sG.pctCancel, fmtPc)+
+    mkRow("Eficiência",          sP.eficiencia,sE.eficiencia,sG.eficiencia,fmtEff)+
+    mkSep("Financeiro")+
+    mkRow("VGV total",           sP.vgvTotal,  sE.vgvTotal,  sG.vgvTotal,  fmtM)+
+    mkRow("Ticket médio (cota)", sP.ticketMedio,sE.ticketMedio,sG.ticketMedio,fmtM)+
+    mkRow("Renda média",         sP.rendaMed,  sE.rendaMed,  sG.rendaMed,  fmtM);
+
+  /* ── REPRESENTATIVIDADE ── */
+  /*
+    Para cada indicador, mostra:
+      Parque: valor e % do geral
+      Externa: valor e % do geral
+  */
+  const repMetrics = [
+    { label:"Casais",           vP:sP.casais,         vE:sE.casais,         vG:sG.casais,         fmt:fmtN },
+    { label:"Cotas vendidas",   vP:sP.vendas,         vE:sE.vendas,         vG:sG.vendas,         fmt:fmtN },
+    { label:"Cotas canceladas", vP:sP.cotasCanceladas,vE:sE.cotasCanceladas,vG:sG.cotasCanceladas,fmt:fmtN },
+    { label:"VGV total",        vP:sP.vgvTotal,       vE:sE.vgvTotal,       vG:sG.vgvTotal,       fmt:fmtM },
+    { label:"Captadores",       vP:capsP.size,        vE:capsE.size,        vG:capsG.size,        fmt:fmtN },
+  ];
+
+  el("supRepGrid").innerHTML=`
+    <div class="rep-panel">
+      <h4>📊 Quanto cada equipe representa do total geral (Parque + Externa)</h4>
+      <div class="rep-grid">
+        ${repMetrics.map(m=>{
+          const pctP = sG.casais||m.vG ? (m.vG ? (m.vP/m.vG) : 0) : 0;
+          const pctE = m.vG ? (m.vE/m.vG) : 0;
+          const wP   = Math.round(pctP*100);
+          const wE   = Math.round(pctE*100);
+          return`
+          <div class="rep-card parque">
+            <div class="rep-kpi-label">${m.label} — Parque</div>
+            <div class="rep-kpi-row">
+              <div class="rep-kpi-val" style="color:#c4b5ff">${m.fmt(m.vP)}</div>
+              <div class="rep-kpi-pct parque">${fmtPct2(m.vP,m.vG)} do total</div>
+            </div>
+            <div class="rep-bar-wrap"><div class="rep-bar-fill parque" style="width:${wP}%"></div></div>
+          </div>
+          <div class="rep-card externa">
+            <div class="rep-kpi-label">${m.label} — Externa</div>
+            <div class="rep-kpi-row">
+              <div class="rep-kpi-val" style="color:#7eedff">${m.fmt(m.vE)}</div>
+              <div class="rep-kpi-pct externa">${fmtPct2(m.vE,m.vG)} do total</div>
+            </div>
+            <div class="rep-bar-wrap"><div class="rep-bar-fill externa" style="width:${wE}%"></div></div>
+          </div>
+          <div class="rep-card geral">
+            <div class="rep-kpi-label">${m.label} — Geral</div>
+            <div class="rep-kpi-row">
+              <div class="rep-kpi-val" style="color:#b0fff0">${m.fmt(m.vG)}</div>
+              <div class="rep-kpi-pct geral">100% do total</div>
+            </div>
+            <div class="rep-bar-wrap"><div class="rep-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+
+  /* ── LISTA DE PROMOTORES (embaixo) ── */
   const promos=listAllPromos();
   el("supPromotorSelect").innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
-
   el("supMappingList").innerHTML=promos.length?promos.map(p=>{
     const cur=map[p]||"";
     const tagCls=cur==="Equipe Parque"?"parque":cur==="Equipe Externa"?"externa":"none";
@@ -1220,7 +1408,7 @@ function renderComparativo(){
 }
 
 /* ═══════════════════════════════════════════════
-   SELECTS DE PROFISSIONAL
+   SELECTS
 ═══════════════════════════════════════════════ */
 function updateProfFilters(tipoId,nomeId){
   const tipo=norm(el(tipoId).value);
@@ -1257,19 +1445,16 @@ function updateAll(){
 }
 
 /* ═══════════════════════════════════════════════
-   SETUP DE EVENTOS
+   EVENTOS
 ═══════════════════════════════════════════════ */
 function setup(){
-  /* filtros globais */
   ["statusSelect","profNome","ufSelect","dateStart","dateEnd"].forEach(id=>el(id).addEventListener("change",updateAll));
   el("profTipo").addEventListener("change",()=>{ updateProfFilters("profTipo","profNome"); updateAll(); });
 
-  /* datas rápidas */
   el("btnLimparPeriodo").addEventListener("click",()=>{ el("dateStart").value=""; el("dateEnd").value=""; updateAll(); });
   el("btnHoje").addEventListener("click",()=>{ const n=new Date(),iso=toISO(n); el("dateStart").value=iso; el("dateEnd").value=iso; updateAll(); });
   el("btn30").addEventListener("click",()=>{ const e=new Date(),s=new Date(e); s.setDate(s.getDate()-29); el("dateStart").value=toISO(s); el("dateEnd").value=toISO(e); updateAll(); });
 
-  /* comparativo */
   ["cmpXStart","cmpXEnd","cmpYStart","cmpYEnd"].forEach(id=>el(id).addEventListener("change",renderComparativo));
   const setCmp=(pfx,back)=>{ const e=new Date(),s=new Date(e); s.setDate(s.getDate()-(back-1)); el(pfx+"Start").value=toISO(s); el(pfx+"End").value=toISO(e); renderComparativo(); };
   el("btnCmpXHoje").addEventListener("click",()=>setCmp("cmpX",1));
@@ -1277,11 +1462,10 @@ function setup(){
   el("btnCmpYHoje").addEventListener("click",()=>setCmp("cmpY",1));
   el("btnCmpY30").addEventListener("click",()=>setCmp("cmpY",30));
 
-  /* individual */
   el("profTipoSingle").addEventListener("change",()=>{ updateProfFilters("profTipoSingle","profNomeSingle"); renderSingle(); });
   el("profNomeSingle").addEventListener("change",renderSingle);
 
-  /* equipes — aba captação */
+  /* equipes */
   el("btnSalvarEquipe").addEventListener("click",()=>{
     const p=el("teamPromotorSelect").value,t=el("teamEquipeSelect").value;
     if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
@@ -1291,7 +1475,7 @@ function setup(){
     saveTeamMap({}); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
   });
 
-  /* equipes — aba supervisores */
+  /* supervisores */
   el("btnSalvarEquipeSup").addEventListener("click",()=>{
     const p=el("supPromotorSelect").value,t=el("supEquipeSelect").value;
     if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
@@ -1324,7 +1508,7 @@ async function init(){
     el("error").style.display="none";
 
     const resp=await fetch("dados.csv",{cache:"no-store"});
-    if(!resp.ok) throw new Error(`HTTP ${resp.status} — verifique se o arquivo dados.csv está na mesma pasta do index.html`);
+    if(!resp.ok) throw new Error(`HTTP ${resp.status} — verifique se dados.csv está na mesma pasta do index.html`);
     const text=await resp.text();
     state.rows=buildObjects(parseDelimited(text,";"));
 
@@ -1333,7 +1517,6 @@ async function init(){
     updateUFFilter();
     renderTeamMappingUI();
 
-    /* comparativo: X = últimos 30 dias, Y = 30 dias anteriores */
     const e=new Date(),sX=new Date(e); sX.setDate(sX.getDate()-29);
     const eY=new Date(sX); eY.setDate(eY.getDate()-1);
     const sY=new Date(eY); sY.setDate(sY.getDate()-29);
