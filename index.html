@@ -2,2635 +2,620 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Painel de Atendimentos (dados.csv)</title>
-  <meta name="color-scheme" content="dark light" />
-  <base href="./" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel - Cadastro/Login com Aprovações</title>
   <style>
     :root{
-      --bg0:#070A12; --bg1:#0B1222; --card: rgba(255,255,255,.06);
-      --stroke: rgba(255,255,255,.12); --text:#EAF0FF; --muted: rgba(234,240,255,.72);
-      --good:#5CFFB0; --med:#FFB020; --bad:#FF2D55;
-      --accent:#7C5CFF; --accent2:#22D3EE;
-      --shadow: 0 20px 60px rgba(0,0,0,.55); --radius: 18px; --radius2: 12px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      --bg:#0b1020;
+      --card:#111a33;
+      --muted:#94a3b8;
+      --text:#e5e7eb;
+      --line:#223055;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --accent:#60a5fa;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0;
-      background:
-        radial-gradient(1200px 700px at 10% 10%, rgba(124,92,255,.25), transparent 55%),
-        radial-gradient(900px 600px at 90% 20%, rgba(34,211,238,.18), transparent 55%),
-        radial-gradient(800px 600px at 40% 90%, rgba(92,255,176,.12), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      font-family:var(--sans); color:var(--text);
-      overflow-x:hidden;
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
+      background: radial-gradient(1200px 600px at 20% 0%, #15245a 0%, var(--bg) 60%);
+      color:var(--text);
     }
-    .wrap{display:flex;flex-direction:column;min-height:100vh;margin:0 auto;max-width:1500px;padding:0 24px;}
-    header{padding:40px 0 18px;text-align:center;}
-    h1{
-      font-size:3.0rem;font-weight:800;margin:0 0 10px;
-      background:linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      background-clip:text;letter-spacing:-0.02em;
+    header{
+      padding:20px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(17,26,51,.65);
+      position: sticky; top:0; backdrop-filter: blur(8px);
     }
-    .subtitle{font-size:1.02rem;color:var(--muted);font-weight:450;}
-
-    .controls{display:flex;flex-wrap:wrap;gap:16px;margin:22px 0 10px;align-items:end;justify-content:center;}
-    .control-group{display:flex;flex-direction:column;gap:8px;min-width:210px;}
-    .control-group label{font-size:0.82rem;color:var(--muted);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
-    select,input{
-      padding:12px 14px;border:1px solid var(--stroke);border-radius:var(--radius2);
-      background:var(--card);color:var(--text);font-size:1rem;outline:none;
-      transition:all 0.2s ease;backdrop-filter:blur(10px);
+    .wrap{max-width:1100px; margin:0 auto; padding:0 12px;}
+    h1{font-size:18px; margin:0 0 4px}
+    .sub{color:var(--muted); font-size:13px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      padding:16px 0 28px;
     }
-    input[type="date"]{color-scheme:dark;cursor:pointer;}
-    input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1);cursor:pointer;}
-    select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,0.12);}
-    select option{color:#0B1222;background:#EAF0FF;font-weight:700;}
-    .range-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-    .range-row .sep{color:var(--muted);font-weight:800;padding:0 2px;white-space:nowrap;}
-    .btn{
-      padding:12px 14px;border:1px solid rgba(255,255,255,.14);
-      border-radius:12px;background:rgba(255,255,255,.06);color:var(--text);
-      cursor:pointer;transition:all .2s ease;font-weight:750;white-space:nowrap;
+    @media (max-width: 920px){ .grid{grid-template-columns: 1fr;} }
+    .card{
+      background: rgba(17,26,51,.8);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .btn:hover{border-color:rgba(255,255,255,.22);transform:translateY(-1px);box-shadow:var(--shadow);}
-    .btn:active{transform:translateY(0px);box-shadow:none;}
-    .btn.primary{background:rgba(124,92,255,.18);border-color:rgba(124,92,255,.35);}
-    .btn.danger{background:rgba(255,45,85,.12);border-color:rgba(255,45,85,.30);color:#ffd0db;}
-
-    .tabs-wrap{
-      margin:16px 0 12px;
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.06);
-      border-radius:22px;
-      backdrop-filter:blur(10px);
-      padding:10px;
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;
     }
-    .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
     .tab{
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      padding:12px 12px;text-align:center;cursor:pointer;
-      border-radius:16px;border:1px solid rgba(255,255,255,0.10);
-      background:rgba(255,255,255,0.04);font-weight:800;
-      color:rgba(234,240,255,.86);transition:all 0.2s ease;
-      user-select:none;white-space:normal;overflow:visible;
-      text-overflow:clip;min-height:48px;line-height:1.15;
-    }
-    .tab:hover{transform:translateY(-1px);border-color:rgba(255,255,255,0.18);box-shadow:0 16px 40px rgba(0,0,0,.35);}
-    .tab.active{
-      background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(34,211,238,.18));
-      border-color:rgba(124,92,255,.55);
-      box-shadow:0 20px 60px rgba(0,0,0,.50);
-      color:white;
-    }
-    .tab-content{display:none;animation:fadeIn 0.25s ease;}
-    .tab-content.active{display:block;}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:10px 0 12px;}
-    .stat-card{
-      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
-      padding:20px 18px;text-align:center;backdrop-filter:blur(10px);
-      position:relative;overflow:hidden;transition:all 0.25s ease;
-    }
-    .stat-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.18);box-shadow:var(--shadow);}
-    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
-    .stat-value{font-size:2.15rem;font-weight:900;margin:0 0 8px;font-family:var(--mono);color:var(--accent2);}
-    .stat-label{font-size:.95rem;color:var(--muted);font-weight:700;letter-spacing:0.2px;}
-
-    .note{
-      background:rgba(124,92,255,0.1);border:1px solid rgba(124,92,255,0.22);
-      border-radius:var(--radius2);padding:14px 16px;margin:14px 0;font-size:0.92rem;
-      color:var(--muted);line-height:1.5;
-    }
-    .note.warn{border-color:rgba(255,176,32,.35);background:rgba(255,176,32,.10);}
-    .note.bad{border-color:rgba(255,45,85,.35);background:rgba(255,45,85,.10);color:#ffd0db;}
-    .note.success{border-color:rgba(92,255,176,.35);background:rgba(92,255,176,.08);color:#b0fff0;}
-
-    .divider{height:1px;background:rgba(255,255,255,.08);margin:28px 0 22px;border-radius:99px;}
-
-    .section-title{
-      font-size:1.12rem;font-weight:900;color:rgba(234,240,255,.92);margin:0 0 12px;
-      display:flex;align-items:center;gap:10px;
-    }
-    .section-title .pill-tag{
-      font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;
-      background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.35);
-      color:rgba(124,92,255,1);font-family:var(--mono);
-    }
-
-    .table-wrap{
-      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
-      overflow:auto;backdrop-filter:blur(10px);margin:10px 0 26px;max-height:70vh;
-    }
-    table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px;}
-    thead th{
-      text-align:left;padding:12px 14px;font-size:0.8rem;color:var(--muted);
-      text-transform:uppercase;letter-spacing:.6px;background:rgba(255,255,255,0.03);
-      border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:1;white-space:nowrap;
-    }
-    thead th.sortable{cursor:pointer;user-select:none;transition:all 0.2s ease;}
-    thead th.sortable:hover{color:var(--text);background:rgba(255,255,255,0.08);}
-    thead th .sort-ind{margin-left:6px;opacity:.9;font-size:.95em;color:var(--accent2);}
-    tbody td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.05);vertical-align:middle;white-space:nowrap;}
-    tbody tr:hover{background:rgba(255,255,255,0.03);}
-    tbody tr:last-child td{border-bottom:none;}
-    .rank-col{font-family:var(--mono);font-weight:900;width:76px;}
-    .num{font-family:var(--mono);text-align:right;}
-    .name{font-weight:900;max-width:420px;overflow:hidden;text-overflow:ellipsis;}
-    .badge{
-      display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;font-size:.78rem;color:var(--muted);font-family:var(--mono);margin-left:8px;
-    }
-    .pill{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-width:86px;padding:4px 10px;border-radius:999px;font-family:var(--mono);
-      font-weight:900;border:1px solid rgba(255,255,255,.14);
-    }
-    .p-bad{background:rgba(255,45,85,.12);color:var(--bad);border-color:rgba(255,45,85,.28);}
-    .p-med{background:rgba(255,176,32,.12);color:var(--med);border-color:rgba(255,176,32,.28);}
-    .p-good{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
-
-    .promo-list{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;}
-    .promo-row{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      padding:12px 14px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.09);
-      background:rgba(255,255,255,.03);
-      transition:background .15s;
-    }
-    .promo-row:hover{background:rgba(255,255,255,.06);}
-    .promo-row .pr-name{font-weight:850;font-size:.97rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .pr-tag{font-size:.78rem;font-family:var(--mono);font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;}
-    .pr-tag.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.38);color:#c4b5ff;}
-    .pr-tag.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
-    .pr-tag.none{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);}
-    .promo-row select.mini-sel{
-      padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);color:var(--text);font-size:.9rem;font-weight:750;
-      cursor:pointer;min-width:160px;
-    }
-    .promo-row select.mini-sel:focus{border-color:var(--accent);}
-
-    .config-panel{
-      background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
-      border-radius:var(--radius);padding:20px;margin:0 0 18px;
-    }
-    .config-panel h4{margin:0 0 14px;font-size:1rem;font-weight:900;color:rgba(234,240,255,.9);}
-
-    .sup-compare-wrap{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      overflow:hidden;
-      margin:14px 0;
-      backdrop-filter:blur(10px);
-    }
-    .sup-compare-header{
-      display:grid;
-      grid-template-columns: 220px 1fr 1fr 1fr;
-      gap:0;
-      border-bottom:2px solid rgba(255,255,255,.10);
-    }
-    .sup-compare-header > div{
-      padding:14px 18px;
-      font-weight:900;
-      font-size:.95rem;
-      text-align:center;
-    }
-    .sup-compare-header .col-label{
-      text-align:left;
-      color:var(--muted);
-      font-size:.82rem;
-      text-transform:uppercase;
-      letter-spacing:.6px;
-      border-right:1px solid rgba(255,255,255,.07);
-    }
-    .sup-compare-header .col-parque{
-      background:rgba(124,92,255,.10);
-      border-right:1px solid rgba(255,255,255,.07);
-      color:#c4b5ff;
-    }
-    .sup-compare-header .col-externa{
-      background:rgba(34,211,238,.08);
-      border-right:1px solid rgba(255,255,255,.07);
-      color:#7eedff;
-    }
-    .sup-compare-header .col-geral{
-      background:rgba(92,255,176,.06);
-      color:#b0fff0;
-    }
-    .sup-compare-row{
-      display:grid;
-      grid-template-columns: 220px 1fr 1fr 1fr;
-      gap:0;
-      border-bottom:1px solid rgba(255,255,255,.05);
-      transition:background .15s;
-    }
-    .sup-compare-row:last-child{border-bottom:none;}
-    .sup-compare-row:hover{background:rgba(255,255,255,.025);}
-    .sup-compare-row > div{
-      padding:13px 18px;
-      font-family:var(--mono);
-      font-size:.95rem;
-      text-align:center;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .sup-compare-row .rc-label{
-      text-align:left;
-      justify-content:flex-start;
-      font-family:var(--sans);
-      font-weight:850;
-      color:rgba(234,240,255,.9);
-      font-size:.93rem;
-      border-right:1px solid rgba(255,255,255,.07);
-    }
-    .sup-compare-row .rc-parque{
-      border-right:1px solid rgba(255,255,255,.06);
-      color:#c4b5ff;
-      font-weight:900;
-    }
-    .sup-compare-row .rc-externa{
-      border-right:1px solid rgba(255,255,255,.06);
-      color:#7eedff;
-      font-weight:900;
-    }
-    .sup-compare-row .rc-geral{color:#b0fff0;font-weight:900;}
-
-    .sup-compare-row.section-sep > div{
-      background:rgba(255,255,255,.03);
-      padding:8px 18px;
-      font-size:.78rem;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.7px;
-      color:var(--muted);
-      font-family:var(--sans);
-      border-top:1px solid rgba(255,255,255,.07);
-    }
-    .sup-compare-row.section-sep .rc-label{ justify-content:flex-start; }
-
-    .rep-bar-wrap{
-      background:rgba(255,255,255,.05);
-      border-radius:999px;
-      height:8px;
-      overflow:hidden;
-      margin-top:6px;
-      width:100%;
-    }
-    .rep-bar-fill{height:100%;border-radius:999px;}
-    .rep-bar-fill.parque{background:linear-gradient(90deg,#7C5CFF,#c4b5ff);}
-    .rep-bar-fill.externa{background:linear-gradient(90deg,#22D3EE,#7eedff);}
-
-    .rep-panel{
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:var(--radius);
-      padding:20px 22px;
-      margin:14px 0;
-    }
-    .rep-panel h4{margin:0 0 16px;font-size:1rem;font-weight:900;}
-    .rep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
-    .rep-card{
-      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius2);
-      padding:16px 18px;position:relative;overflow:hidden;
-    }
-    .rep-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-    .rep-card.parque::before{background:linear-gradient(90deg,#7C5CFF,#c4b5ff);}
-    .rep-card.externa::before{background:linear-gradient(90deg,#22D3EE,#7eedff);}
-    .rep-card.geral::before{background:linear-gradient(90deg,var(--accent),var(--accent2));}
-    .rep-kpi-label{font-size:.82rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
-    .rep-kpi-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;}
-    .rep-kpi-val{font-family:var(--mono);font-weight:900;font-size:1.35rem;}
-    .rep-kpi-pct{font-family:var(--mono);font-weight:900;font-size:.88rem;padding:3px 9px;border-radius:999px;}
-    .rep-kpi-pct.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.35);color:#c4b5ff;}
-    .rep-kpi-pct.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
-    .rep-kpi-pct.geral{background:rgba(92,255,176,.12);border:1px solid rgba(92,255,176,.30);color:#b0fff0;}
-
-    .chart-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);backdrop-filter:blur(10px);padding:14px 14px 12px;margin:14px 0;}
-    .chart-head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin:2px 2px 10px;}
-    .chart-title{font-weight:950;letter-spacing:.2px;}
-    .chart-sub{color:var(--muted);font-size:.92rem;}
-    .chart-wrap{height:360px;position:relative;}
-    .chart-wrap.small{height:320px;position:relative;}
-    canvas{width:100% !important;height:100% !important;display:block;}
-
-    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:10px 0 12px;}
-    .team-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:14px;backdrop-filter:blur(10px);}
-    .team-card h3{margin:0 0 10px;font-size:1.05rem;}
-
-    .compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-top:10px;}
-    .compare-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:14px;backdrop-filter:blur(10px);}
-    .compare-card h3{margin:0 0 10px;font-size:1.05rem;}
-    .kpi-row{display:flex;flex-direction:column;gap:6px;padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);margin-bottom:10px;}
-    .kpi-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;}
-    .kpi-name{font-weight:950;}
-    .kpi-delta{font-family:var(--mono);font-weight:950;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);min-width:110px;text-align:center;}
-    .kpi-delta.pos{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
-    .kpi-delta.neg{background:rgba(255,45,85,.12);color:var(--bad);border-color:rgba(255,45,85,.28);}
-    .kpi-delta.neu{background:rgba(255,255,255,.06);color:rgba(234,240,255,.85);border-color:rgba(255,255,255,.14);}
-    .kpi-sub{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;color:var(--muted);font-size:.9rem;}
-    .kpi-sub > div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .kpi-sub b{color:rgba(234,240,255,.88)}
-    .hint{font-size:.9rem;color:var(--muted);line-height:1.45;}
-
-    /* DESAFIOS */
-    .challenge-grid{display:grid;grid-template-columns: 420px 1fr;gap:14px;align-items:start;margin-top:10px;}
-    .challenge-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:14px;backdrop-filter:blur(10px);overflow:hidden;}
-    .challenge-card h3{margin:0 0 10px;font-size:1.05rem;}
-    .challenge-list{display:flex;flex-direction:column;gap:10px;max-height:65vh;overflow:auto;padding-right:6px;}
-    .challenge-item{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);border-radius:14px;padding:12px 12px;display:flex;flex-direction:column;gap:10px;}
-    .challenge-item .top{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;}
-    .challenge-item .title{font-weight:950;display:flex;gap:10px;align-items:center;min-width:0;}
-    .challenge-item .title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:360px;}
-    .challenge-item .meta{color:var(--muted);font-size:.9rem;}
-    .challenge-item .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
-    .teams-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px;}
-    .team-box{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.02);border-radius:14px;padding:12px;}
-    .team-box .hdr{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px;}
-    .team-box .hdr b{font-size:.98rem;}
-    .team-members{border-top:1px solid rgba(255,255,255,.08);padding-top:10px;margin-top:10px;display:flex;flex-direction:column;gap:8px;}
-    .member-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
-    .member-row label{font-weight:750;color:rgba(234,240,255,.88);text-transform:none;letter-spacing:0;font-size:.95rem;}
-    .member-row input[type="checkbox"]{transform:scale(1.1);}
-    .tiny{font-size:.85rem;color:var(--muted);}
-
-    /* MODAL (ranking por equipe dentro de desafios) */
-    .modal-backdrop{
-      position:fixed; inset:0; background:rgba(0,0,0,.55);
-      display:none; align-items:center; justify-content:center;
-      padding:18px; z-index:9998;
-      backdrop-filter: blur(4px);
-    }
-    .modal-backdrop.open{display:flex;}
-    .modal{
-      width:min(1100px, 96vw);
-      max-height:86vh;
-      overflow:auto;
-      background:rgba(11,18,34,.94);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      box-shadow: 0 30px 100px rgba(0,0,0,.65);
-    }
-    .modal-head{
-      position:sticky; top:0; z-index:1;
-      background:rgba(11,18,34,.96);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      padding:14px 16px;
-      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
-    }
-    .modal-title{font-weight:950;}
-    .modal-sub{color:var(--muted); font-size:.92rem; margin-top:3px;}
-    .modal-body{padding:14px 16px;}
-    .modal-actions{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
-    .clickable{
+      border:1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      padding:8px 10px;
+      border-radius:10px;
       cursor:pointer;
-      text-decoration: underline;
-      text-decoration-color: rgba(34,211,238,.55);
-      text-underline-offset: 3px;
+      font-size:13px;
     }
-    .clickable:hover{color:white;}
-
-    /* Gate de acesso (IMPORTANTE) */
-    .gate-wrap{max-width:980px;margin:0 auto; padding:24px 0 40px;}
-    .gate-card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      padding:18px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
+    .tab.active{ border-color: var(--accent); background: rgba(96,165,250,.12); }
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px}
+    input{
+      width:100%;
+      padding:10px 10px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background: rgba(10,16,32,.55);
+      color: var(--text);
+      outline:none;
     }
-    .gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
-    .gate-grid .col{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;}
-    .gate-grid h3{margin:0 0 10px;font-size:1.02rem;}
-    .gate-grid p{margin:0 0 10px;color:var(--muted);line-height:1.45;}
-    .gate-row{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-    .gate-row small{color:var(--muted);line-height:1.35;}
-    .gate-status{margin-top:12px;display:none;}
-    .gate-status.show{display:block;}
-
-    @media(max-width:1100px){
-      .tabs{grid-template-columns:repeat(3,minmax(0,1fr));}
-      .sup-compare-header,.sup-compare-row{grid-template-columns:160px 1fr 1fr 1fr;}
-      .challenge-grid{grid-template-columns: 1fr;}
-      .gate-grid{grid-template-columns:1fr;}
+    input:focus{border-color: rgba(96,165,250,.7)}
+    .btn{
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      cursor:pointer;
+      background: rgba(96,165,250,.12);
+      color: var(--text);
+      font-weight:600;
+      font-size:13px;
     }
-    @media(max-width:820px){
-      .wrap{padding:0 16px}
-      h1{font-size:2.2rem}
-      .control-group{min-width:unset;width:100%}
-      .range-row{flex-direction:column;align-items:stretch}
-      .range-row .sep{display:none;}
-      table{min-width:820px;}
-      .chart-wrap{height:320px;}
-      .tabs{grid-template-columns:repeat(2,minmax(0,1fr));}
-      .tab{justify-content:flex-start;text-align:left;padding:12px 12px;}
-      .kpi-sub{grid-template-columns:1fr;}
-      .promo-row{flex-wrap:wrap;}
-      .promo-row select.mini-sel{min-width:140px;}
-      .sup-compare-header,.sup-compare-row{grid-template-columns:130px 1fr 1fr 1fr;font-size:.85rem;}
-      .sup-compare-row > div,.sup-compare-header > div{padding:10px 10px;}
+    .btn:hover{border-color: rgba(96,165,250,.7)}
+    .btn.ok{background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.35)}
+    .btn.bad{background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.35)}
+    .btn.warn{background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.35)}
+    .btn.ghost{background: transparent}
+    .hint{color:var(--muted); font-size:12px; line-height:1.35}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); font-size:12px;
+      background: rgba(10,16,32,.45);
+      margin-right:8px;
+    }
+    .dot{width:8px;height:8px;border-radius:99px;background:var(--muted)}
+    .dot.ok{background:var(--ok)}
+    .dot.warn{background:var(--warn)}
+    .dot.bad{background:var(--bad)}
+    .list{margin-top:10px; display:flex; flex-direction:column; gap:10px}
+    .item{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background: rgba(10,16,32,.35);
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+    }
+    .item .meta{font-size:12px; color:var(--muted)}
+    .item .title{font-weight:700; font-size:13px}
+    .right{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .sep{height:1px;background:var(--line); margin:12px 0}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
+    .small{font-size:12px;color:var(--muted)}
+    .toast{
+      position: fixed; right: 14px; bottom: 14px;
+      background: rgba(17,26,51,.95);
+      border:1px solid var(--line);
+      padding:10px 12px;
+      border-radius: 12px;
+      max-width: 340px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+      display:none;
     }
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
-
 <body>
-<div class="wrap">
-
-  <!-- ====== GATE DE ACESSO (CLIENT-SIDE) ======
-       ATENÇÃO: isso NÃO protege de verdade no GitHub Pages.
-       Serve apenas como "bloqueio visual" no navegador.
-       Para proteção real: use Cloudflare Access, Firebase Auth, Supabase, etc.
-  -->
-  <section id="gate" class="gate-wrap" style="display:none">
-    <header>
-      <h1>Acesso restrito</h1>
-      <p class="subtitle">Solicite acesso ao responsável e faça login para entrar.</p>
-    </header>
-
-    <div class="gate-card">
-      <div class="note warn">
-        <strong>Importante</strong><br>
-        No GitHub Pages, não existe “autorização real” apenas com HTML/JS. Qualquer pessoa consegue baixar o código e ver os dados se o <code>dados.csv</code> estiver público.
-        Este gate é um <strong>controle local</strong> (client-side) para uso interno.
-      </div>
-
-      <div class="gate-grid">
-        <div class="col">
-          <h3>1) Solicitar acesso</h3>
-          <p>Quem for entrar envia uma solicitação. O responsável (você) precisa aprovar.</p>
-
-          <div class="gate-row">
-            <label for="reqEmail">Email</label>
-            <input id="reqEmail" type="email" placeholder="ex.: pessoa@empresa.com" autocomplete="email" />
-          </div>
-
-          <div class="gate-row">
-            <label for="reqPass">Senha (para criar o login)</label>
-            <input id="reqPass" type="password" placeholder="Crie uma senha" autocomplete="new-password" />
-            <small>Esta senha será guardada no navegador do responsável (localStorage), não em servidor.</small>
-          </div>
-
-          <div class="gate-row">
-            <button class="btn primary" id="btnRequestAccess">Enviar solicitação</button>
-            <div id="reqMsg" class="note gate-status"></div>
-          </div>
-        </div>
-
-        <div class="col">
-          <h3>2) Entrar</h3>
-          <p>Após aprovado, a pessoa consegue fazer login.</p>
-
-          <div class="gate-row">
-            <label for="loginEmail">Email</label>
-            <input id="loginEmail" type="email" placeholder="ex.: pessoa@empresa.com" autocomplete="email" />
-          </div>
-
-          <div class="gate-row">
-            <label for="loginPass">Senha</label>
-            <input id="loginPass" type="password" placeholder="Sua senha" autocomplete="current-password" />
-          </div>
-
-          <div class="gate-row">
-            <button class="btn primary" id="btnLogin">Entrar</button>
-            <button class="btn" id="btnLogout" style="display:none">Sair</button>
-            <div id="loginMsg" class="note gate-status"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="section-title">
-        Painel do responsável <span class="pill-tag">aprovar / negar</span>
-      </div>
-
-      <div class="note">
-        <strong>Como você aprova</strong><br>
-        Use o “PIN do responsável” para abrir a lista de solicitações. (Você define o PIN na primeira vez.)
-      </div>
-
-      <div class="controls" style="margin:0;justify-content:flex-start">
-        <div class="control-group" style="min-width:260px">
-          <label>PIN do responsável</label>
-          <input id="adminPin" type="password" placeholder="Defina/Informe um PIN" autocomplete="off" />
-        </div>
-        <div class="control-group" style="min-width:220px">
-          <label>&nbsp;</label>
-          <button class="btn" id="btnAdminOpen">Abrir painel</button>
-        </div>
-        <div class="control-group" style="min-width:220px">
-          <label>&nbsp;</label>
-          <button class="btn danger" id="btnAdminReset">Resetar PIN e acessos</button>
-        </div>
-      </div>
-
-      <div id="adminPanel" style="display:none;margin-top:12px">
-        <div class="note success" style="margin-top:0">
-          <strong>Painel aberto.</strong> Aprove ou negue solicitações abaixo.
-        </div>
-        <div id="adminRequests"></div>
+  <header>
+    <div class="wrap">
+      <h1>Painel de Usuários (com Aprovações)</h1>
+      <div class="sub">
+        Admin fixo: <span class="mono">marcel.dorado2@gmail.com</span> • Armazenamento: <span class="mono">localStorage</span> (mesmo navegador/dispositivo)
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- ====== APP ====== -->
-  <div id="app" style="display:none">
-    <header>
-      <h1>Painel de Atendimentos</h1>
-      <p class="subtitle">Fonte: <strong>dados.csv</strong> (VGV = soma simples da coluna G)</p>
-    </header>
-
-    <!-- ═══ FILTROS GLOBAIS ═══ -->
-    <div class="controls">
-      <div class="control-group" style="min-width:420px">
-        <label>Período</label>
-        <div class="range-row">
-          <input id="dateStart" type="date" />
-          <span class="sep">a</span>
-          <input id="dateEnd" type="date" />
-          <button class="btn" id="btnHoje">Hoje</button>
-          <button class="btn" id="btn30">30 dias</button>
-          <button class="btn" id="btnLimparPeriodo">Limpar</button>
+  <main class="wrap">
+    <div class="grid">
+      <section class="card">
+        <div class="tabs">
+          <button class="tab active" data-view="login">Login</button>
+          <button class="tab" data-view="cadastro">Criar usuário</button>
+          <button class="tab" data-view="aprovacoes" id="tabAprovacoes" style="display:none">Aprovações</button>
+          <button class="tab" data-view="conta" id="tabConta" style="display:none">Minha conta</button>
         </div>
-      </div>
-      <div class="control-group">
-        <label>Status do contrato</label>
-        <select id="statusSelect">
-          <option value="todos">Todos</option>
-          <option value="ativo">Ativo</option>
-          <option value="cancelado">Cancelado</option>
-          <option value="sem_status">Sem status</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label>Profissional</label>
-        <select id="profTipo">
-          <option value="promotor de marketing">Promotor de marketing</option>
-          <option value="liner">Liner</option>
-          <option value="closer">Closer</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label>Nome</label>
-        <select id="profNome"><option value="todos">Todos</option></select>
-      </div>
-      <div class="control-group">
-        <label>UF</label>
-        <select id="ufSelect"><option value="todos">Todas</option></select>
-      </div>
-    </div>
 
-    <!-- ═══ ABAS ═══ -->
-    <div class="tabs-wrap">
-      <div class="tabs">
-        <div class="tab active" data-tab="resumo">📊 Resumo</div>
-        <div class="tab" data-tab="comparativo">🆚 Comparativo de períodos</div>
-        <div class="tab" data-tab="curva">📈 Curva de casais e vendas</div>
-        <div class="tab" data-tab="cancelamento">❌ Análise de cancelamento</div>
-        <div class="tab" data-tab="equipes">🧲 Equipes de captação</div>
-        <div class="tab" data-tab="equipes-supervisores">🧑‍✈️ Promotores (2 supervisores)</div>
-        <div class="tab" data-tab="desafios">🏁 Desafios</div>
-        <div class="tab" data-tab="ranking-promotor">🎯 Ranking Promotor</div>
-        <div class="tab" data-tab="ranking-liner">💬 Ranking Liner</div>
-        <div class="tab" data-tab="ranking-closer">🤝 Ranking Closer</div>
-        <div class="tab" data-tab="perfil-renda">💸 Perfil de renda</div>
-        <div class="tab" data-tab="profissionais">👥 Profissionais</div>
-      </div>
-    </div>
-
-    <!-- ═══ CONTEÚDO ═══ -->
-    <div id="content">
-      <div id="loading" class="note">Carregando dados...</div>
-      <div id="error"   class="note bad" style="display:none"></div>
-
-      <!-- ── RESUMO ── -->
-      <div id="tab-resumo" class="tab-content active">
-        <div class="stats" id="stats"></div>
-        <div class="note">
-          <strong>Critérios</strong><br>
-          • Casais = linhas (com ajuste: Total − NoTour).<br>
-          • NoTour = linhas com <strong>Status atendimento</strong> = "NoTour".<br>
-          • Cotas ativas/canceladas = tokens na coluna "Status do contrato".<br>
-          • <strong>VGV total = Σ(coluna G)</strong> (soma simples).<br>
-          • VGV ativo/cancelado: rateio proporcional pelos tokens ATIVO/CANCELADO da linha.<br>
-          • <strong>Eficiência = (Cotas ÷ Casais) × 100</strong>.<br>
-          • <strong>Média de Casais/dia</strong> = total ÷ dias do período (inclusivo).
-        </div>
-      </div>
-
-      <!-- ── COMPARATIVO ── -->
-      <div id="tab-comparativo" class="tab-content">
-        <div class="note">
-          <strong>Comparativo entre dois períodos</strong><br>
-          Período X e Y respeitam os filtros globais. <strong>Variação %</strong> = (X − Y) / Y × 100.
-        </div>
-        <div class="compare-grid">
-          <div class="compare-card">
-            <h3>Período X</h3>
-            <div class="controls" style="margin:0;justify-content:flex-start">
-              <div class="control-group" style="min-width:330px">
-                <label>Datas (X)</label>
-                <div class="range-row">
-                  <input id="cmpXStart" type="date"/><span class="sep">a</span><input id="cmpXEnd" type="date"/>
-                  <button class="btn" id="btnCmpXHoje">Hoje</button>
-                  <button class="btn" id="btnCmpX30">30 dias</button>
-                </div>
-              </div>
+        <!-- LOGIN -->
+        <div id="view-login">
+          <div class="row">
+            <div style="flex:1; min-width: 220px;">
+              <label>E-mail</label>
+              <input id="loginEmail" type="email" placeholder="seuemail@dominio.com" autocomplete="username"/>
             </div>
-            <div class="stats" id="cmpStatsX" style="margin-top:10px"></div>
-          </div>
-          <div class="compare-card">
-            <h3>Período Y</h3>
-            <div class="controls" style="margin:0;justify-content:flex-start">
-              <div class="control-group" style="min-width:330px">
-                <label>Datas (Y)</label>
-                <div class="range-row">
-                  <input id="cmpYStart" type="date"/><span class="sep">a</span><input id="cmpYEnd" type="date"/>
-                  <button class="btn" id="btnCmpYHoje">Hoje</button>
-                  <button class="btn" id="btnCmpY30">30 dias</button>
-                </div>
-              </div>
-            </div>
-            <div class="stats" id="cmpStatsY" style="margin-top:10px"></div>
-          </div>
-        </div>
-        <div class="compare-card" style="margin-top:14px">
-          <h3>Variação percentual (X vs Y)</h3>
-          <div id="cmpMeta" class="hint" style="margin:6px 0 12px">—</div>
-          <div id="cmpDeltas"></div>
-        </div>
-      </div>
-
-      <!-- ── CURVA ── -->
-      <div id="tab-curva" class="tab-content">
-        <div class="stats" id="stats-curva"></div>
-        <div class="note">Respeita os filtros globais. • Casais/dia = linhas no dia. • Vendas/dia = soma de cotas. • Eficiência = Vendas ÷ Casais.</div>
-        <div class="chart-card">
-          <div class="chart-head">
-            <div class="chart-title">Curva diária (Casais × Vendas)</div>
-            <div class="chart-sub" id="curva-meta">—</div>
-          </div>
-          <div class="chart-wrap"><canvas id="chartCurva"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-head">
-            <div class="chart-title">Performance por dia da semana</div>
-            <div class="chart-sub">Vendas, VGV, Casais, Eficiência e Média de Casais/dia da semana</div>
-          </div>
-          <div class="chart-wrap small"><canvas id="chartSemana"></canvas></div>
-        </div>
-      </div>
-
-      <!-- ── CANCELAMENTO ── -->
-      <div id="tab-cancelamento" class="tab-content">
-        <div class="note"><strong>% Cancelamento</strong> = (cotas canceladas ÷ cotas totais) × 100.</div>
-        <div class="chart-card">
-          <div class="chart-head">
-            <div class="chart-title">% Cancelamento por qtd de cotas vendidas</div>
-            <div class="chart-sub" id="cancel-meta">—</div>
-          </div>
-          <div class="chart-wrap"><canvas id="chartCancelamento"></canvas></div>
-        </div>
-        <div id="cancelamento-table"></div>
-      </div>
-
-      <!-- ── EQUIPES DE CAPTAÇÃO ── -->
-      <div id="tab-equipes" class="tab-content">
-        <div class="note"><strong>Equipes de captação</strong> — marque a equipe de cada Promotor de marketing. Salvo no seu navegador.</div>
-        <h3 style="margin:10px 0 6px">Equipe Parque</h3>
-        <div class="stats" id="stats-equipe-parque"></div>
-        <h3 style="margin:16px 0 6px">Equipe Externa</h3>
-        <div class="stats" id="stats-equipe-externa"></div>
-        <div class="note warn">Promotores sem equipe marcada entram em <strong>Sem equipe</strong>.</div>
-        <h3 style="margin:10px 0 6px">Sem equipe</h3>
-        <div class="stats" id="stats-equipe-sem"></div>
-        <div class="divider"></div>
-        <div class="team-grid">
-          <div class="team-card">
-            <h3>Marcar equipe</h3>
-            <div class="controls" style="margin:0;justify-content:flex-start">
-              <div class="control-group" style="min-width:260px">
-                <label>Promotor</label>
-                <select id="teamPromotorSelect"><option value="">Carregando...</option></select>
-              </div>
-              <div class="control-group" style="min-width:220px">
-                <label>Equipe</label>
-                <select id="teamEquipeSelect">
-                  <option value="Equipe Parque">Equipe Parque</option>
-                  <option value="Equipe Externa">Equipe Externa</option>
-                </select>
-              </div>
-              <div class="control-group" style="min-width:160px">
-                <label>&nbsp;</label>
-                <button class="btn primary" id="btnSalvarEquipe">💾 Salvar</button>
-              </div>
-              <div class="control-group" style="min-width:180px">
-                <label>&nbsp;</label>
-                <button class="btn danger" id="btnLimparEquipes">🗑 Limpar tudo</button>
-              </div>
+            <div style="flex:1; min-width: 220px;">
+              <label>Senha</label>
+              <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password"/>
             </div>
           </div>
-          <div class="team-card">
-            <h3>Marcações atuais</h3>
-            <div id="teamMappingList"></div>
+          <div style="margin-top:12px" class="row">
+            <button class="btn ok" id="btnLogin">Entrar</button>
+            <button class="btn ghost" id="btnIrCadastro">Criar novo usuário</button>
+          </div>
+          <div class="sep"></div>
+          <div class="hint">
+            <div class="pill"><span class="dot warn"></span> Cadastro novo = <b>PENDENTE</b> até aprovação do admin</div>
+            <div class="pill"><span class="dot ok"></span> Admin é sempre <span class="mono">marcel.dorado2@gmail.com</span></div>
           </div>
         </div>
-      </div>
 
-      <!-- ── SUPERVISORES ── -->
-      <div id="tab-equipes-supervisores" class="tab-content">
-        <div class="note">
-          <strong>Promotores de Marketing — 2 Supervisores</strong><br>
-          Comparativo lado a lado: Equipe Parque × Equipe Externa × Geral. Percentual de representação ao final.
-        </div>
-
-        <div class="section-title">
-          Comparativo Parque × Externa <span class="pill-tag">dado por dado</span>
-        </div>
-        <div class="sup-compare-wrap">
-          <div class="sup-compare-header">
-            <div class="col-label">Indicador</div>
-            <div class="col-parque">🟣 Equipe Parque</div>
-            <div class="col-externa">🔵 Equipe Externa</div>
-            <div class="col-geral">⚪ Geral</div>
-          </div>
-          <div id="supCompareRows"></div>
-        </div>
-
-        <div class="section-title" style="margin-top:22px">
-          Representatividade no total <span class="pill-tag">% de cada equipe</span>
-        </div>
-        <div id="supRepGrid"></div>
-
-        <div class="divider"></div>
-
-        <div class="section-title">
-          Configurar promotores <span class="pill-tag">Definir equipe</span>
-        </div>
-        <div class="config-panel">
-          <h4>Seleção rápida</h4>
-          <div class="controls" style="margin:0;justify-content:flex-start;flex-wrap:wrap">
-            <div class="control-group" style="min-width:260px">
-              <label>Promotor</label>
-              <select id="supPromotorSelect"><option value="">Carregando...</option></select>
+        <!-- CADASTRO -->
+        <div id="view-cadastro" style="display:none">
+          <div class="row">
+            <div style="flex:1; min-width: 220px;">
+              <label>Nome</label>
+              <input id="regName" type="text" placeholder="Seu nome" />
             </div>
-            <div class="control-group" style="min-width:200px">
-              <label>Equipe</label>
-              <select id="supEquipeSelect">
-                <option value="Equipe Parque">Equipe Parque</option>
-                <option value="Equipe Externa">Equipe Externa</option>
-              </select>
-            </div>
-            <div class="control-group" style="min-width:150px">
-              <label>&nbsp;</label>
-              <button class="btn primary" id="btnSalvarEquipeSup">💾 Salvar</button>
-            </div>
-            <div class="control-group" style="min-width:180px">
-              <label>&nbsp;</label>
-              <button class="btn danger" id="btnLimparEquipesSup">🗑 Limpar tudo</button>
+            <div style="flex:1; min-width: 220px;">
+              <label>E-mail</label>
+              <input id="regEmail" type="email" placeholder="seuemail@dominio.com" />
             </div>
           </div>
-        </div>
-        <div class="config-panel" style="margin-top:0">
-          <h4>Lista completa — altere diretamente</h4>
-          <div id="supMappingList" class="promo-list"></div>
-        </div>
-      </div>
+          <div class="row">
+            <div style="flex:1; min-width: 220px;">
+              <label>Senha</label>
+              <input id="regPass" type="password" placeholder="Crie uma senha" />
+            </div>
+            <div style="flex:1; min-width: 220px;">
+              <label>Confirmar senha</label>
+              <input id="regPass2" type="password" placeholder="Repita a senha" />
+            </div>
+          </div>
 
-      <!-- ── DESAFIOS ── -->
-      <div id="tab-desafios" class="tab-content">
-        <div class="note">
-          <strong>Desafios</strong><br>
-          Crie desafios com período, número de equipes, nome das equipes, seleção de profissionais por equipe e escolha do critério de apuração.
-          Tudo fica salvo no seu navegador (localStorage).
+          <div style="margin-top:12px" class="row">
+            <button class="btn ok" id="btnCadastrar">Cadastrar (fica pendente)</button>
+            <button class="btn ghost" id="btnVoltarLogin">Voltar ao login</button>
+          </div>
+
+          <div class="sep"></div>
+          <div class="hint">
+            Após criar, o usuário aparece na aba <b>Aprovações</b> (visível apenas quando o admin estiver logado).
+          </div>
+        </div>
+
+        <!-- APROVAÇÕES -->
+        <div id="view-aprovacoes" style="display:none">
+          <div class="row" style="justify-content:space-between; align-items:center">
+            <div>
+              <div class="pill"><span class="dot warn"></span> Pendentes: <b id="countPendentes">0</b></div>
+              <div class="pill"><span class="dot ok"></span> Aprovados: <b id="countAprovados">0</b></div>
+              <div class="pill"><span class="dot bad"></span> Bloqueados: <b id="countBloqueados">0</b></div>
+            </div>
+            <div class="right">
+              <button class="btn warn" id="btnRecarregar">Recarregar lista</button>
+              <button class="btn bad" id="btnReset">Resetar tudo</button>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+          <div class="small">
+            Dica: aprovar aqui libera o login imediatamente (neste mesmo link/origem do navegador).
+          </div>
+
+          <div class="list" id="aprovacoesList"></div>
+        </div>
+
+        <!-- CONTA -->
+        <div id="view-conta" style="display:none">
+          <div id="accountBox"></div>
+          <div class="sep"></div>
+          <div class="row">
+            <button class="btn bad" id="btnLogout">Sair</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="pill">
+          <span class="dot" id="dotSessao"></span>
+          Sessão: <b id="sessaoStatus">deslogado</b>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="hint">
+          <b>Importante:</b> este exemplo é “front-end only”. Ele não tem servidor.
+          Então, a aprovação funciona para usuários cadastrados neste mesmo navegador/dispositivo.
           <br><br>
-          <strong>Novo:</strong> clique no <u>nome da equipe</u> na apuração para abrir o <strong>Ranking dos melhores (por pessoa)</strong> e ordenar clicando em <strong>VGV</strong>, <strong>Nº de casais</strong>, <strong>Eficiência</strong> etc.
+          Se você quer que qualquer pessoa crie usuário em qualquer computador e você aprove de um lugar só,
+          eu adapto para um backend (Firebase/Supabase).
         </div>
 
-        <div class="challenge-grid">
-          <div class="challenge-card">
-            <h3 id="challengeFormTitle">Criar desafio</h3>
+        <div class="sep"></div>
 
-            <div class="controls" style="margin:0;justify-content:flex-start">
-              <div class="control-group" style="min-width:260px">
-                <label>Nome do desafio</label>
-                <input id="chName" placeholder="Ex.: Desafio Junho" />
-              </div>
-
-              <div class="control-group" style="min-width:330px">
-                <label>Período do desafio</label>
-                <div class="range-row">
-                  <input id="chStart" type="date" />
-                  <span class="sep">a</span>
-                  <input id="chEnd" type="date" />
-                </div>
-              </div>
-
-              <div class="control-group" style="min-width:220px">
-                <label>Apuração</label>
-                <select id="chMetric">
-                  <option value="casais">Número de casais</option>
-                  <option value="vgv">VGV</option>
-                  <option value="casais_atendidos">Casais atendidos</option>
-                  <option value="eficiencia">Eficiência</option>
-                </select>
-              </div>
-
-              <div class="control-group" style="min-width:220px">
-                <label>Qtd. de equipes</label>
-                <select id="chTeamsCount">
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                </select>
-              </div>
-
-              <div class="control-group" style="min-width:180px">
-                <label>Tipo de profissional</label>
-                <select id="chProfTipo">
-                  <option value="promotor de marketing">Promotor de marketing</option>
-                  <option value="liner">Liner</option>
-                  <option value="closer">Closer</option>
-                </select>
-                <div class="tiny">A seleção abaixo lista apenas nomes desse tipo.</div>
-              </div>
-            </div>
-
-            <div class="divider" style="margin:16px 0 14px"></div>
-
-            <div class="section-title" style="margin-bottom:10px">
-              Equipes <span class="pill-tag">nomes + membros</span>
-            </div>
-            <div id="chTeamsEditor" class="teams-wrap"></div>
-
-            <div class="divider" style="margin:16px 0 14px"></div>
-
-            <div class="controls" style="margin:0;justify-content:flex-start">
-              <div class="control-group" style="min-width:180px">
-                <label>&nbsp;</label>
-                <button class="btn primary" id="btnChSave">💾 Salvar desafio</button>
-              </div>
-              <div class="control-group" style="min-width:220px">
-                <label>&nbsp;</label>
-                <button class="btn" id="btnChNew">➕ Novo</button>
-              </div>
-              <div class="control-group" style="min-width:220px">
-                <label>&nbsp;</label>
-                <button class="btn danger" id="btnChClearAll">🗑 Apagar todos</button>
-              </div>
-            </div>
-
-            <div id="chFormMsg" class="note" style="display:none;margin-top:12px"></div>
-          </div>
-
-          <div class="challenge-card">
-            <h3>Meus desafios</h3>
-            <div id="chList" class="challenge-list"></div>
-
-            <div class="divider"></div>
-
-            <h3>Apuração (no período do desafio)</h3>
-            <div class="note warn" style="margin-top:10px">
-              A apuração do desafio <strong>ignora</strong> o filtro global de período e usa o período definido no desafio.
-              Ela <strong>respeita</strong> os filtros globais de <strong>Status</strong> e <strong>UF</strong>.
-            </div>
-            <div id="chResults"></div>
-          </div>
+        <div class="small">
+          <div>Chaves no localStorage:</div>
+          <div class="mono">mh_users_v1</div>
+          <div class="mono">mh_session_v1</div>
         </div>
-      </div>
-
-      <!-- ── RANKING PROMOTOR ── -->
-      <div id="tab-ranking-promotor" class="tab-content">
-        <div class="note">Ranking por <span class="badge">Promotor de marketing</span>. Clique nos cabeçalhos para ordenar.</div>
-        <div id="ranking-promotor"></div>
-      </div>
-
-      <!-- ── RANKING LINER ── -->
-      <div id="tab-ranking-liner" class="tab-content">
-        <div class="note">Ranking por <span class="badge">Liner</span>. Clique nos cabeçalhos para ordenar.</div>
-        <div id="ranking-liner"></div>
-      </div>
-
-      <!-- ── RANKING CLOSER ── -->
-      <div id="tab-ranking-closer" class="tab-content">
-        <div class="note">Ranking por <span class="badge">Closer</span>. Clique nos cabeçalhos para ordenar.</div>
-        <div id="ranking-closer"></div>
-      </div>
-
-      <!-- ── PERFIL DE RENDA ── -->
-      <div id="tab-perfil-renda" class="tab-content">
-        <div class="note">Performance por faixa de renda. Clique nos cabeçalhos para ordenar.</div>
-        <div id="perfil-renda"></div>
-      </div>
-
-      <!-- ── PROFISSIONAIS ── -->
-      <div id="tab-profissionais" class="tab-content">
-        <div class="note">Selecione um profissional para ver o detalhe individual no período filtrado.</div>
-        <div class="controls" style="margin-top:10px">
-          <div class="control-group">
-            <label>Área (individual)</label>
-            <select id="profTipoSingle">
-              <option value="promotor de marketing">Promotor de marketing</option>
-              <option value="liner">Liner</option>
-              <option value="closer">Closer</option>
-            </select>
-          </div>
-          <div class="control-group">
-            <label>Nome (individual)</label>
-            <select id="profNomeSingle"><option value="">Selecione...</option></select>
-          </div>
-        </div>
-        <div class="stats" id="stats-single" style="margin-top:10px"></div>
-        <div class="note" style="margin-top:8px">Tabela por profissional (respeita os filtros globais):</div>
-        <div id="profissionais-table"></div>
-      </div>
+      </aside>
     </div>
-  </div>
+  </main>
 
-</div>
-
-<!-- Modal: ranking de melhores por equipe (desafios) -->
-<div id="teamModalBackdrop" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="teamModalTitle">
-    <div class="modal-head">
-      <div>
-        <div id="teamModalTitle" class="modal-title">Ranking da equipe</div>
-        <div id="teamModalSub" class="modal-sub">—</div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn" id="btnTeamModalClose">Fechar</button>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div id="teamModalBody"></div>
-    </div>
-  </div>
-</div>
+  <div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
-   GATE DE ACESSO (client-side)
-========================================================= */
-const GATE = {
-  ADMIN_PIN_KEY: "painel_gate_admin_pin_v1",
-  REQUESTS_KEY : "painel_gate_requests_v1",
-  USERS_KEY    : "painel_gate_users_v1", // {email:{passHash,approvedAt}}
-  SESSION_KEY  : "painel_gate_session_v1", // {email,ts}
-};
+(() => {
+  const ADMIN_EMAIL = "marcel.dorado2@gmail.com".toLowerCase();
 
-const el = id => document.getElementById(id);
-const norm = s  => (s ?? "").toString().toLowerCase().trim().replace(/\s+/g," ");
+  const LS_USERS = "mh_users_v1";
+  const LS_SESSION = "mh_session_v1";
 
-async function sha256Hex(str){
-  const data = new TextEncoder().encode(String(str));
-  const digest = await crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-function loadJSON(key, fallback){
-  try{ const r=localStorage.getItem(key); return r?JSON.parse(r):fallback; }catch(e){ return fallback; }
-}
-function saveJSON(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  /** @type {{id:string,name:string,email:string,pass:string,status:'PENDING'|'APPROVED'|'BLOCKED',createdAt:number, approvedAt?:number, blockedAt?:number}[]} */
+  let users = loadUsers();
+  let session = loadSession(); // { email, at }
 
-function showGateMsg(id, text, type="warn"){
-  const box = el(id);
-  box.className = "note gate-status " + (type==="bad"?"bad":type==="success"?"success":"warn");
-  box.textContent = text;
-  box.classList.add("show");
-}
-function hideGateMsg(id){ const box=el(id); box.classList.remove("show"); }
+  // ---------- helpers ----------
+  const $ = (id) => document.getElementById(id);
 
-function isLoggedIn(){
-  const s = loadJSON(GATE.SESSION_KEY, null);
-  return !!(s && s.email);
-}
-function setLoggedIn(email){
-  saveJSON(GATE.SESSION_KEY, { email, ts: Date.now() });
-}
-function logout(){
-  localStorage.removeItem(GATE.SESSION_KEY);
-}
-
-function getUsers(){ return loadJSON(GATE.USERS_KEY, {}); }
-function setUsers(u){ saveJSON(GATE.USERS_KEY, u||{}); }
-function getRequests(){ return loadJSON(GATE.REQUESTS_KEY, []); }
-function setRequests(r){ saveJSON(GATE.REQUESTS_KEY, Array.isArray(r)?r:[]); }
-
-async function ensureAdminPin(pin){
-  const cur = localStorage.getItem(GATE.ADMIN_PIN_KEY);
-  if(cur) return true;
-  if(!pin || String(pin).trim().length < 4) return false;
-  const h = await sha256Hex("PIN:"+pin);
-  localStorage.setItem(GATE.ADMIN_PIN_KEY, h);
-  return true;
-}
-async function checkAdminPin(pin){
-  const cur = localStorage.getItem(GATE.ADMIN_PIN_KEY);
-  if(!cur) return false;
-  const h = await sha256Hex("PIN:"+pin);
-  return h === cur;
-}
-
-function renderGateVisibility(){
-  const logged = isLoggedIn();
-  el("gate").style.display = logged ? "none" : "block";
-  el("app").style.display  = logged ? "block" : "none";
-  el("btnLogout").style.display = logged ? "inline-block" : "none";
-}
-
-function renderAdminRequests(){
-  const reqs = getRequests().sort((a,b)=>(b.ts||0)-(a.ts||0));
-  if(!reqs.length){
-    el("adminRequests").innerHTML = `<div class="note" style="margin:0">Nenhuma solicitação pendente.</div>`;
-    return;
+  function uid(){
+    return "u_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
   }
-  el("adminRequests").innerHTML = `
-    <div class="table-wrap"><table style="min-width:820px">
-      <thead><tr>
-        <th>Email</th>
-        <th class="num">Data</th>
-        <th>Status</th>
-        <th class="num">Ações</th>
-      </tr></thead>
-      <tbody>
-        ${reqs.map(r=>{
-          const st = r.status || "pendente";
-          return `
-            <tr>
-              <td class="name">${r.email}</td>
-              <td class="num">${new Date(r.ts).toLocaleString("pt-BR")}</td>
-              <td>${st}</td>
-              <td class="num">
-                ${st==="pendente" ? `
-                  <button class="btn primary" data-approve="${encodeURIComponent(r.id)}">Aprovar</button>
-                  <button class="btn danger"  data-deny="${encodeURIComponent(r.id)}">Negar</button>
-                ` : `<span class="badge">—</span>`}
-              </td>
-            </tr>
-          `;
-        }).join("")}
-      </tbody>
-    </table></div>
-  `;
+  function now(){ return Date.now(); }
 
-  el("adminRequests").querySelectorAll("button[data-approve]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const id = decodeURIComponent(btn.dataset.approve);
-      const reqs = getRequests();
-      const it = reqs.find(x=>x.id===id);
-      if(!it) return;
+  function toast(msg){
+    const el = $("toast");
+    el.textContent = msg;
+    el.style.display = "block";
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { el.style.display = "none"; }, 2600);
+  }
 
-      // aprovar -> vira user
-      const users = getUsers();
-      users[it.email] = { passHash: it.passHash, approvedAt: Date.now() };
-      setUsers(users);
-
-      it.status="aprovado"; it.handledAt = Date.now();
-      setRequests(reqs);
-
-      renderAdminRequests();
-    });
-  });
-  el("adminRequests").querySelectorAll("button[data-deny]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = decodeURIComponent(btn.dataset.deny);
-      const reqs = getRequests();
-      const it = reqs.find(x=>x.id===id);
-      if(!it) return;
-      it.status="negado"; it.handledAt=Date.now();
-      setRequests(reqs);
-      renderAdminRequests();
-    });
-  });
-}
-
-function setupGate(){
-  // request access
-  el("btnRequestAccess").addEventListener("click", async ()=>{
-    hideGateMsg("reqMsg");
-    const email = (el("reqEmail").value||"").trim().toLowerCase();
-    const pass  = (el("reqPass").value||"").trim();
-    if(!email || !email.includes("@")){ showGateMsg("reqMsg","Informe um email válido.","warn"); return; }
-    if(pass.length < 4){ showGateMsg("reqMsg","Senha muito curta (mín. 4 caracteres).","warn"); return; }
-
-    const users = getUsers();
-    if(users[email]){
-      showGateMsg("reqMsg","Este email já está aprovado. Faça login.","success");
-      return;
+  function loadUsers(){
+    try{
+      const raw = localStorage.getItem(LS_USERS);
+      if(!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    }catch{
+      return [];
     }
+  }
+  function saveUsers(){
+    localStorage.setItem(LS_USERS, JSON.stringify(users));
+  }
 
-    const reqs = getRequests();
-    const already = reqs.find(r=>r.email===email && (r.status||"pendente")==="pendente");
-    if(already){
-      showGateMsg("reqMsg","Já existe uma solicitação pendente para este email.","warn");
-      return;
+  function loadSession(){
+    try{
+      const raw = localStorage.getItem(LS_SESSION);
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed.email === "string") return parsed;
+      return null;
+    }catch{
+      return null;
     }
+  }
+  function saveSession(obj){
+    localStorage.setItem(LS_SESSION, JSON.stringify(obj));
+    session = obj;
+    syncUI();
+  }
+  function clearSession(){
+    localStorage.removeItem(LS_SESSION);
+    session = null;
+    syncUI();
+  }
 
-    const id = "req_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16);
-    const passHash = await sha256Hex("PASS:"+pass);
+  function isAdminEmail(email){
+    return (email || "").toLowerCase() === ADMIN_EMAIL;
+  }
 
-    reqs.push({ id, email, passHash, status:"pendente", ts: Date.now() });
-    setRequests(reqs);
+  function getUserByEmail(email){
+    const e = (email || "").toLowerCase().trim();
+    return users.find(u => u.email === e) || null;
+  }
 
-    el("reqPass").value = "";
-    showGateMsg("reqMsg","Solicitação enviada. Aguarde aprovação do responsável.","success");
-  });
+  function ensureAdminRecord(){
+    // Opcional: criar registro do admin (não pendente) para facilitar login.
+    // Se você não quiser o admin "cadastrado" aqui, pode remover.
+    const existing = getUserByEmail(ADMIN_EMAIL);
+    if(!existing){
+      users.push({
+        id: uid(),
+        name: "Marcel (Admin)",
+        email: ADMIN_EMAIL,
+        pass: "admin", // senha demo; troque se quiser. (Front-only, não é seguro.)
+        status: "APPROVED",
+        createdAt: now(),
+        approvedAt: now()
+      });
+      saveUsers();
+    } else if(existing.status !== "APPROVED"){
+      existing.status = "APPROVED";
+      existing.approvedAt = now();
+      saveUsers();
+    }
+  }
 
-  // login
-  el("btnLogin").addEventListener("click", async ()=>{
-    hideGateMsg("loginMsg");
-    const email = (el("loginEmail").value||"").trim().toLowerCase();
-    const pass  = (el("loginPass").value||"").trim();
-    if(!email || !email.includes("@")){ showGateMsg("loginMsg","Informe um email válido.","warn"); return; }
-    if(!pass){ showGateMsg("loginMsg","Informe a senha.","warn"); return; }
+  // ---------- views ----------
+  const views = {
+    login: $("view-login"),
+    cadastro: $("view-cadastro"),
+    aprovacoes: $("view-aprovacoes"),
+    conta: $("view-conta"),
+  };
 
-    const users = getUsers();
-    const u = users[email];
-    if(!u){ showGateMsg("loginMsg","Ainda não aprovado (ou não existe). Solicite acesso.","warn"); return; }
+  function setActiveTab(name){
+    document.querySelectorAll(".tab").forEach(t => {
+      t.classList.toggle("active", t.dataset.view === name);
+    });
+  }
 
-    const passHash = await sha256Hex("PASS:"+pass);
-    if(passHash !== u.passHash){ showGateMsg("loginMsg","Senha incorreta.","bad"); return; }
+  function showView(name){
+    Object.entries(views).forEach(([k, el]) => el.style.display = (k === name ? "block" : "none"));
+    setActiveTab(name);
+  }
 
-    setLoggedIn(email);
-    el("loginPass").value = "";
-    showGateMsg("loginMsg","Login ok. Entrando...","success");
-    renderGateVisibility();
+  function fmtDate(ts){
+    try { return new Date(ts).toLocaleString("pt-BR"); } catch { return ""; }
+  }
 
-    // inicializa app só depois do login
-    if(!window.__APP_INIT_DONE){
-      window.__APP_INIT_DONE = true;
-      setup();
-      init();
+  function syncUI(){
+    const loggedIn = !!session?.email;
+    const admin = loggedIn && isAdminEmail(session.email);
+
+    $("sessaoStatus").textContent = loggedIn ? session.email : "deslogado";
+    $("dotSessao").className = "dot " + (loggedIn ? "ok" : "bad");
+
+    $("tabConta").style.display = loggedIn ? "inline-flex" : "none";
+    $("tabAprovacoes").style.display = admin ? "inline-flex" : "none";
+
+    if(loggedIn){
+      const me = getUserByEmail(session.email);
+      const status = me?.status || (admin ? "APPROVED" : "PENDING");
+      const statusPill = status === "APPROVED" ? `<span class="dot ok"></span> APROVADO`
+                        : status === "BLOCKED" ? `<span class="dot bad"></span> BLOQUEADO`
+                        : `<span class="dot warn"></span> PENDENTE`;
+
+      $("accountBox").innerHTML = `
+        <div class="pill">${statusPill}</div>
+        <div style="margin-top:10px">
+          <div><b>E-mail:</b> <span class="mono">${session.email}</span></div>
+          <div class="small">Último login: ${fmtDate(session.at)}</div>
+          ${admin ? `<div class="small" style="margin-top:8px"><b>Você é admin.</b> Use a aba Aprovações.</div>` : ``}
+        </div>
+      `;
+
+      // mantém o usuário numa view válida
+      if(admin){
+        // se estiver no login/cadastro, pode ir para aprovações por padrão
+        // mas não força: apenas garante que view atual exista
+      } else {
+        // usuário comum: não pode ver aprovações
+        if(document.querySelector(".tab.active")?.dataset.view === "aprovacoes"){
+          showView("conta");
+        }
+      }
     } else {
-      updateAll();
-    }
-  });
-
-  el("btnLogout").addEventListener("click", ()=>{
-    logout();
-    renderGateVisibility();
-  });
-
-  // admin open
-  el("btnAdminOpen").addEventListener("click", async ()=>{
-    const pin = (el("adminPin").value||"").trim();
-    const hasPin = localStorage.getItem(GATE.ADMIN_PIN_KEY);
-
-    if(!hasPin){
-      const ok = await ensureAdminPin(pin);
-      if(!ok){ showGateMsg("loginMsg","Defina um PIN (mín. 4) para abrir o painel.","warn"); return; }
-    }
-
-    const ok = await checkAdminPin(pin);
-    if(!ok){ showGateMsg("loginMsg","PIN do responsável incorreto.","bad"); return; }
-
-    el("adminPanel").style.display = "block";
-    renderAdminRequests();
-  });
-
-  el("btnAdminReset").addEventListener("click", ()=>{
-    if(!confirm("Isso vai apagar PIN, usuários aprovados e solicitações (apenas neste navegador). Continuar?")) return;
-    localStorage.removeItem(GATE.ADMIN_PIN_KEY);
-    localStorage.removeItem(GATE.REQUESTS_KEY);
-    localStorage.removeItem(GATE.USERS_KEY);
-    localStorage.removeItem(GATE.SESSION_KEY);
-    el("adminPanel").style.display="none";
-    renderGateVisibility();
-  });
-
-  renderGateVisibility();
-  if(isLoggedIn()){
-    if(!window.__APP_INIT_DONE){
-      window.__APP_INIT_DONE = true;
-      setup();
-      init();
-    }
-  }
-}
-
-/* =========================================================
-   APP ORIGINAL + MELHORIA: Ranking por equipe (Desafios)
-========================================================= */
-
-const CLIENT_NAME_HEADERS = [
-  norm("nome do cliente"),norm("cliente"),norm("nome"),norm("casal"),
-  norm("nome completo"),norm("nome do casal"),
-];
-const KEY = {
-  dataAtendimento  : norm("data de atendimento"),
-  statusContrato   : norm("status do contrato"),
-  statusAtendimento: norm("status atendimento"),
-  renda   : norm("renda"),
-  uf      : norm("uf"),
-  promotor: norm("promotor de marketing"),
-  liner   : norm("liner"),
-  closer  : norm("closer"),
-};
-
-const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null } };
-const charts  = { curva:null, semana:null, cancelamento:null };
-const sortState = {
-  "ranking-promotor"   :{ key:"vendas",    dir:"desc" },
-  "ranking-liner"      :{ key:"vendas",    dir:"desc" },
-  "ranking-closer"     :{ key:"vendas",    dir:"desc" },
-  "profissionais-table":{ key:"vendas",    dir:"desc" },
-  "perfil-renda"       :{ key:"vgvTotal",  dir:"desc" },
-  "cancelamento-table" :{ key:"cotasTotal",dir:"desc" },
-  "ch-results-table"   :{ key:"valor",     dir:"desc" },
-
-  /* novo: tabela do modal de ranking por equipe */
-  "ch-team-ranking"    :{ key:"vgvTotal",  dir:"desc" },
-};
-
-const TEAM_KEY    = "painel_equipes_promotores_v1";
-const loadTeamMap = () => { try{ const r=localStorage.getItem(TEAM_KEY); const o=r?JSON.parse(r):{}; return(o&&typeof o==="object")?o:{}; }catch(e){return{};} };
-const saveTeamMap = m  => localStorage.setItem(TEAM_KEY, JSON.stringify(m||{}));
-
-const CH_KEY = "painel_desafios_v1";
-const loadChallenges = () => { try{ const r=localStorage.getItem(CH_KEY); const o=r?JSON.parse(r):[]; return Array.isArray(o)?o:[]; }catch(e){ return []; } };
-const saveChallenges = arr => localStorage.setItem(CH_KEY, JSON.stringify(Array.isArray(arr)?arr:[]));
-
-function parseDelimited(text, delimiter=";"){
-  const lines=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(l=>l.trim());
-  if(!lines.length) return [];
-  const parseLine=line=>{
-    const out=[]; let cur="",inQ=false;
-    for(let i=0;i<line.length;i++){
-      const ch=line[i];
-      if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
-      else if(ch===delimiter&&!inQ){out.push(cur);cur="";}
-      else cur+=ch;
-    }
-    out.push(cur);
-    return out.map(v=>v.trim());
-  };
-  const headers=parseLine(lines[0]).map(h=>h.replace(/^"|"$/g,""));
-  const data=[];
-  for(let i=1;i<lines.length;i++){
-    const vals=parseLine(lines[i]).map(v=>v.replace(/^"|"$/g,""));
-    if(vals.length!==headers.length) continue;
-    const row={}; headers.forEach((h,idx)=>row[norm(h)]=vals[idx]??""); data.push(row);
-  }
-  const keys=Object.keys(data[0]||{});
-  state.meta.firstColKey=keys[0]||null;
-  state.meta.vgvColKey  =keys[6]||null;
-  if(!state.meta.vgvColKey) throw new Error("CSV precisa ter pelo menos 7 colunas (VGV na coluna G).");
-  return data;
-}
-
-function parseMoneyBR(str){
-  if(!str||typeof str!=="string") return 0;
-  const c=str.replace(/[^\d,.-]/g,""); if(!c) return 0;
-  if(c.includes(",")&&c.includes(".")){
-    const lC=c.lastIndexOf(","),lD=c.lastIndexOf(".");
-    return lC>lD?parseFloat(c.replace(/\./g,"").replace(",","."))||0:parseFloat(c.replace(/,/g,""))||0;
-  }
-  if(c.includes(",")) return parseFloat(c.replace(",","."))||0;
-  return parseFloat(c)||0;
-}
-const fmtMoney = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v||0);
-const fmtPctBR = f => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}).format((f||0)*100)+"%";
-const fmtNumBR = (v,mn=1,mx=1) => new Intl.NumberFormat("pt-BR",{minimumFractionDigits:mn,maximumFractionDigits:mx}).format(v||0);
-const fmtPct2  = (num,den) => den ? fmtNumBR((num/den)*100,1,1)+"%" : "—";
-
-function parseBRDateTime(str){
-  if(!str||typeof str!=="string") return null;
-  const s=str.trim(); if(!s) return null;
-  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-  if(m){ const[,d,mo,y,hh,mm,ss]=m; return new Date(+y,+mo-1,+d,hh?+hh:0,mm?+mm:0,ss?+ss:0); }
-  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-  if(m){ const[,y,mo,d,hh,mm,ss]=m; return new Date(+y,+mo-1,+d,hh?+hh:0,mm?+mm:0,ss?+ss:0); }
-  return null;
-}
-function parseDateOnlyInput(s){
-  if(!s) return null;
-  const m=String(s).trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(m) return new Date(+m[1],+m[2]-1,+m[3]);
-  const d2=parseBRDateTime(s); if(!d2) return null;
-  return new Date(d2.getFullYear(),d2.getMonth(),d2.getDate());
-}
-const toISO = dt => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
-const fmtBR = iso => { const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m?`${m[3]}/${m[2]}/${m[1]}`:iso; };
-
-function countQuotas(s){
-  let a=0,c=0,o=0;
-  ((s??"")+""  ).trim().split("#").map(x=>x.trim()).filter(Boolean).forEach(t=>{
-    const k=norm(t);
-    if(k.includes("cancel"))c++; else if(k.includes("ativo"))a++; else o++;
-  });
-  return{ativo:a,cancelado:c,outro:o,total:a+c+o};
-}
-function contractBucket(s){
-  const n=norm(s); if(!n) return "sem_status";
-  if(n.includes("cancel")) return "cancelado";
-  if(n.includes("ativo"))  return "ativo";
-  return "outro";
-}
-
-function buildObjects(rows){
-  if(!rows.length) throw new Error("CSV vazio.");
-  const cnk=(()=>{ const ks=Object.keys(rows[0]); for(const c of CLIENT_NAME_HEADERS) if(ks.includes(c)) return c; return null; })();
-  return rows.map(r=>{
-    const o={...r};
-    o._dt        =parseBRDateTime(o[KEY.dataAtendimento])||parseBRDateTime(o[state.meta.firstColKey]);
-    o._valorVgv  =parseMoneyBR(o[state.meta.vgvColKey]);
-    o._renda     =parseMoneyBR(o[KEY.renda]);
-    o._quotas    =countQuotas(o[KEY.statusContrato]);
-    o._bucket    =contractBucket(o[KEY.statusContrato]);
-    o._clientName=cnk?(o[cnk]??"").toString().trim():"";
-    o._statusAt  =norm(o[KEY.statusAtendimento]??"");
-    return o;
-  });
-}
-
-function applyFilters(rows){
-  const status  =el("statusSelect").value;
-  const profTipo=norm(el("profTipo").value);
-  const profNome=el("profNome").value;
-  const ufSel   =el("ufSelect").value;
-  const d1=parseDateOnlyInput(el("dateStart").value);
-  const d2=parseDateOnlyInput(el("dateEnd").value);
-  let f=rows.slice();
-  if(d1||d2){
-    const s=d1?d1.getTime():-Infinity;
-    const e=d2?new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime():Infinity;
-    f=f.filter(r=>r._dt&&r._dt.getTime()>=s&&r._dt.getTime()<=e);
-  }
-  if(status!=="todos")   f=f.filter(r=>r._bucket===status);
-  if(ufSel !=="todos")   f=f.filter(r=>(r[KEY.uf]??"").toString().trim()===ufSel);
-  if(profNome!=="todos") f=f.filter(r=>norm(r[profTipo]??"")=== norm(profNome));
-  return f;
-}
-
-function sumVGV(rows){
-  return rows.reduce((a,r)=>{
-    const v=r._valorVgv??0,at=r._quotas?.ativo??0,ca=r._quotas?.cancelado??0,t=at+ca;
-    a.total+=v; if(t>0){a.ativo+=v*(at/t);a.cancelado+=v*(ca/t);} return a;
-  },{ativo:0,cancelado:0,total:0});
-}
-function avgRenda(rows){ if(!rows.length) return 0; return rows.reduce((s,r)=>s+(r._renda??0),0)/rows.length; }
-function daysInclusive(){
-  const d1=parseDateOnlyInput(el("dateStart").value);
-  const d2=parseDateOnlyInput(el("dateEnd").value);
-  if(!d1||!d2) return null;
-  const diff=new Date(d2.getFullYear(),d2.getMonth(),d2.getDate()).getTime()-new Date(d1.getFullYear(),d1.getMonth(),d1.getDate()).getTime();
-  return diff<0?0:Math.floor(diff/86400000)+1;
-}
-function distinctDays(rows){ const s=new Set(); rows.forEach(r=>{if(r._dt)s.add(`${r._dt.getFullYear()}-${r._dt.getMonth()}-${r._dt.getDate()}`);}); return s.size; }
-function avgCasais(rows){ const tot=rows.length; const days=daysInclusive(); const d=days??distinctDays(rows); return d?tot/d:0; }
-
-function statsFor(rows){
-  const q  =rows.reduce((a,r)=>({ativo:a.ativo+(r._quotas?.ativo??0),cancelado:a.cancelado+(r._quotas?.cancelado??0),outro:a.outro+(r._quotas?.outro??0),total:a.total+(r._quotas?.total??0)}),{ativo:0,cancelado:0,outro:0,total:0});
-  const vgv=sumVGV(rows);
-  const noTour=rows.filter(r=>r._statusAt==="notour").length;
-  const casais=Math.max(0,rows.length-noTour);
-  const eff=casais?(q.total/casais):0;
-  return{
-    totalLinhas:rows.length,noTour,casais,
-    vendas:q.total,cotasCanceladas:q.cancelado,
-    vgvTotal:vgv.total,vgvAtivo:vgv.ativo,vgvCancelado:vgv.cancelado,
-    eficiencia:eff,pctCancel:q.total?(q.cancelado/q.total):0,
-    ticketMedio:q.total?(vgv.total/q.total):0,
-    rendaMed:avgRenda(rows),mediaCasaisPeriodo:avgCasais(rows),
-  };
-}
-
-function renderCards(cid,rows){
-  const s=statsFor(rows);
-  el(cid).innerHTML=`
-    <div class="stat-card"><div class="stat-value">${s.casais}</div><div class="stat-label">Casais</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtNumBR(s.mediaCasaisPeriodo,1,1)}</div><div class="stat-label">Média de Casais/dia</div></div>
-    <div class="stat-card"><div class="stat-value">${s.vendas}</div><div class="stat-label">Cotas (vendas totais)</div></div>
-    <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV total (Σ col G)</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtMoney(s.rendaMed)}</div><div class="stat-label">Renda média</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtMoney(s.ticketMedio)}</div><div class="stat-label">Ticket médio (cota)</div></div>
-    <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
-}
-
-function groupRanking(rows,fieldKey){
-  const map=new Map();
-  rows.forEach(r=>{ const n=(r[fieldKey]??"").toString().trim(); if(!n) return; if(!map.has(n)) map.set(n,[]); map.get(n).push(r); });
-  return Array.from(map.entries()).map(([name,list])=>{
-    const s=statsFor(list);
-    return{name,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed};
-  }).sort((a,b)=>(b.vendas-a.vendas)||(b.vgvTotal-a.vgvTotal)||a.name.localeCompare(b.name));
-}
-
-function setSort(tid,key){ const c=sortState[tid]||{key,dir:"desc"}; if(c.key===key)c.dir=c.dir==="desc"?"asc":"desc"; else{c.key=key;c.dir="desc";} sortState[tid]=c; }
-function sortInd(tid,key){ const c=sortState[tid]; if(!c||c.key!==key) return ""; return `<span class="sort-ind">${c.dir==="desc"?"▼":"▲"}</span>`; }
-function sortedList(list,tid,defKey="vendas"){
-  const s=sortState[tid]||{key:defKey,dir:"desc"};
-  return list.slice().sort((a,b)=>{
-    const cmp=(x,y,k,d)=>{ const va=x?.[k],vb=y?.[k]; if(va==null&&vb==null)return 0; if(va==null)return 1; if(vb==null)return-1; if(typeof va==="number"&&typeof vb==="number")return d==="asc"?va-vb:vb-va; return d==="asc"?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va)); };
-    return cmp(a,b,s.key,s.dir)||cmp(a,b,"vgvTotal","desc")||cmp(a,b,"vendas","desc");
-  });
-}
-
-const effPill = f => { const p=(f||0)*100; return p<15?"p-bad":p<25?"p-med":"p-good"; };
-const canPill = f => { const p=(f||0)*100; return p<20?"p-good":p<=30?"p-med":"p-bad"; };
-
-function renderRanking(list,cid,badge){
-  const c=el(cid);
-  if(!list.length){c.innerHTML='<div class="note">Nenhum dado para o filtro.</div>';return;}
-  const ord=sortedList(list,cid,"vendas");
-  c.innerHTML=`
-    <div class="table-wrap"><table>
-      <thead><tr>
-        <th style="width:84px">#</th>
-        <th class="sortable" data-sort="name">Profissional${badge?`<span class="badge">${badge}</span>`:""} ${sortInd(cid,"name")}</th>
-        <th class="num sortable" data-sort="casais">Casais ${sortInd(cid,"casais")}</th>
-        <th class="num sortable" data-sort="vendas">Cotas ${sortInd(cid,"vendas")}</th>
-        <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd(cid,"cotasCanceladas")}</th>
-        <th class="num sortable" data-sort="vgvTotal">VGV ${sortInd(cid,"vgvTotal")}</th>
-        <th class="num sortable" data-sort="eficiencia">Eficiência ${sortInd(cid,"eficiencia")}</th>
-        <th class="num sortable" data-sort="pctCancel">%Cancel ${sortInd(cid,"pctCancel")}</th>
-        <th class="num sortable" data-sort="ticketMedio">Ticket ${sortInd(cid,"ticketMedio")}</th>
-        <th class="num sortable" data-sort="rendaMed">Renda ${sortInd(cid,"rendaMed")}</th>
-      </tr></thead>
-      <tbody>${ord.map((it,i)=>{
-        const p=i+1,tr=p===1?"🥇":p===2?"🥈":p===3?"🥉":"";
-        return`<tr>
-          <td class="rank-col">${tr} ${p}°</td>
-          <td class="name" title="${it.name}">${it.name}</td>
-          <td class="num">${it.casais}</td>
-          <td class="num">${it.vendas}</td>
-          <td class="num">${it.cotasCanceladas}</td>
-          <td class="num">${fmtMoney(it.vgvTotal)}</td>
-          <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
-          <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
-          <td class="num">${fmtMoney(it.ticketMedio)}</td>
-          <td class="num">${fmtMoney(it.rendaMed)}</td>
-        </tr>`;}).join("")}
-      </tbody>
-    </table></div>`;
-  c.querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
-    th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderRanking(list,cid,badge); });
-  });
-}
-
-/* PERFIL RENDA */
-function rendaBucket(v){
-  const x=v||0;
-  if(x<9000)   return "Abaixo de R$ 9 mil";
-  if(x<10000)  return "R$ 9 mil a R$ 9,9 mil";
-  if(x<=11900) return "R$ 10 mil a R$ 11,9 mil";
-  if(x<=14900) return "R$ 12 mil a R$ 14,9 mil";
-  if(x<=19900) return "R$ 15 mil a R$ 19,9 mil";
-  if(x<=50000) return "R$ 20 mil a R$ 50 mil";
-  return "Acima de R$ 50,1 mil";
-}
-function renderPerfilRenda(rows,cid){
-  const order=["Abaixo de R$ 9 mil","R$ 9 mil a R$ 9,9 mil","R$ 10 mil a R$ 11,9 mil","R$ 12 mil a R$ 14,9 mil","R$ 15 mil a R$ 19,9 mil","R$ 20 mil a R$ 50 mil","Acima de R$ 50,1 mil"];
-  const map=new Map(order.map(k=>[k,[]]));
-  rows.forEach(r=>{ const b=rendaBucket(r._renda); if(map.has(b)) map.get(b).push(r); });
-  const list=order.map(k=>{ const s=statsFor(map.get(k)||[]); return{faixa:k,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed}; });
-  const ord=sortedList(list,cid,"vgvTotal");
-  const c=el(cid);
-  c.innerHTML=`
-    <div class="table-wrap"><table>
-      <thead><tr>
-        <th class="sortable" data-sort="faixa">Faixa ${sortInd(cid,"faixa")}</th>
-        <th class="num sortable" data-sort="casais">Casais ${sortInd(cid,"casais")}</th>
-        <th class="num sortable" data-sort="vendas">Cotas ${sortInd(cid,"vendas")}</th>
-        <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd(cid,"cotasCanceladas")}</th>
-        <th class="num sortable" data-sort="vgvTotal">VGV ${sortInd(cid,"vgvTotal")}</th>
-        <th class="num sortable" data-sort="eficiencia">Eficiência ${sortInd(cid,"eficiencia")}</th>
-        <th class="num sortable" data-sort="pctCancel">%Cancel ${sortInd(cid,"pctCancel")}</th>
-        <th class="num sortable" data-sort="ticketMedio">Ticket ${sortInd(cid,"ticketMedio")}</th>
-        <th class="num sortable" data-sort="rendaMed">Renda ${sortInd(cid,"rendaMed")}</th>
-      </tr></thead>
-      <tbody>${ord.map(it=>`<tr>
-        <td class="name">${it.faixa}</td>
-        <td class="num">${it.casais}</td><td class="num">${it.vendas}</td>
-        <td class="num">${it.cotasCanceladas}</td>
-        <td class="num">${fmtMoney(it.vgvTotal)}</td>
-        <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
-        <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
-        <td class="num">${fmtMoney(it.ticketMedio)}</td>
-        <td class="num">${fmtMoney(it.rendaMed)}</td>
-      </tr>`).join("")}
-      </tbody>
-    </table></div>`;
-  c.querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
-    th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderPerfilRenda(rows,cid); });
-  });
-}
-
-/* CHARTS */
-function destroyChart(ch){ try{ch?.destroy?.();}catch(e){} }
-
-function renderCurva(rows){
-  el("curva-meta").textContent=[
-    (el("dateStart").value||el("dateEnd").value)?`Período: ${fmtBR(el("dateStart").value)||"—"} a ${fmtBR(el("dateEnd").value)||"—"}`:"Período: (sem filtro)",
-    `Status: ${el("statusSelect").value}`,`Nome: ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
-  ].join(" • ");
-
-  const map=new Map();
-  rows.forEach(r=>{ if(!r._dt) return; const iso=toISO(r._dt); if(!map.has(iso)) map.set(iso,{c:0,v:0}); map.get(iso).c++; map.get(iso).v+=(r._quotas?.total??0); });
-  const ks=[...map.keys()].sort();
-
-  destroyChart(charts.curva);
-  charts.curva=new Chart(el("chartCurva").getContext("2d"),{
-    type:"line",
-    data:{labels:ks.map(fmtBR),datasets:[
-      {label:"Casais",data:ks.map(k=>map.get(k).c),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.15)",tension:.25,pointRadius:2.5,yAxisID:"yC"},
-      {label:"Vendas (cotas)",data:ks.map(k=>map.get(k).v),borderColor:"rgba(92,255,176,1)",backgroundColor:"rgba(92,255,176,.12)",tension:.25,pointRadius:2.5,yAxisID:"yV"},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
-      plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}}},
-      scales:{
-        x:{ticks:{color:"rgba(234,240,255,.7)",maxRotation:0,autoSkip:true},grid:{color:"rgba(255,255,255,.05)"}},
-        yC:{position:"left",ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"},title:{display:true,text:"Casais",color:"rgba(234,240,255,.7)"}},
-        yV:{position:"right",ticks:{color:"rgba(234,240,255,.7)"},grid:{drawOnChartArea:false},title:{display:true,text:"Vendas",color:"rgba(234,240,255,.7)"}},
+      // deslogado não vê conta/aprovações
+      if(["conta","aprovacoes"].includes(document.querySelector(".tab.active")?.dataset.view)){
+        showView("login");
       }
     }
-  });
 
-  const ORDER=[1,2,3,4,5,6,0],LBLS=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
-  const raw=Array.from({length:7},()=>({c:0,v:0,vgv:0,ds:new Set()}));
-  rows.forEach(r=>{ if(!r._dt) return; const i=r._dt.getDay(); raw[i].c++; raw[i].v+=(r._quotas?.total??0); raw[i].vgv+=(r._valorVgv??0); raw[i].ds.add(toISO(r._dt)); });
-  const agg=ORDER.map(i=>raw[i]);
-  const meanC=agg.map(x=>x.ds.size?(x.c/x.ds.size):0);
-
-  destroyChart(charts.semana);
-  charts.semana=new Chart(el("chartSemana").getContext("2d"),{
-    data:{labels:LBLS,datasets:[
-      {type:"bar", label:"Casais",            data:agg.map(x=>x.c),backgroundColor:"rgba(124,92,255,.25)",borderColor:"rgba(124,92,255,.65)",borderWidth:1,yAxisID:"yN"},
-      {type:"bar", label:"Vendas",            data:agg.map(x=>x.v),backgroundColor:"rgba(92,255,176,.18)",borderColor:"rgba(92,255,176,.65)",borderWidth:1,yAxisID:"yN"},
-      {type:"line",label:"VGV",               data:agg.map(x=>x.vgv),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.10)",tension:.25,pointRadius:2.2,yAxisID:"yM"},
-      {type:"line",label:"Eficiência",        data:agg.map(x=>x.c?(x.v/x.c)*100:0),borderColor:"rgba(255,176,32,1)",backgroundColor:"rgba(255,176,32,.10)",tension:.25,pointRadius:2.2,yAxisID:"yP"},
-      {type:"line",label:"Média Casais/dia",  data:meanC,borderColor:"rgba(234,240,255,.75)",backgroundColor:"rgba(234,240,255,.08)",borderDash:[6,6],tension:0,pointRadius:2,yAxisID:"yN"},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
-      plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}},
-        tooltip:{callbacks:{label:ctx=>{ const d=ctx.dataset.label||"",v=ctx.parsed.y??0; if(d.includes("VGV")) return`${d}: ${fmtMoney(v)}`; if(d.includes("Eficiência")) return`${d}: ${fmtNumBR(v,1,1)}%`; if(d.includes("Média")) return`${d}: ${fmtNumBR(v,1,1)}`; return`${d}: ${v}`; }}}},
-      scales:{
-        x:{ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"}},
-        yN:{position:"left",ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"}},
-        yM:{position:"right",ticks:{color:"rgba(234,240,255,.7)",callback:v=>{const n=Number(v)||0;if(Math.abs(n)>=1e6)return`R$${(n/1e6).toFixed(1)}M`;if(Math.abs(n)>=1e3)return`R$${(n/1e3).toFixed(0)}k`;return`R$${n.toFixed(0)}`;}},grid:{drawOnChartArea:false}},
-        yP:{position:"right",min:0,max:100,ticks:{color:"rgba(234,240,255,.7)",callback:v=>`${v}%`},grid:{drawOnChartArea:false}},
-      }
-    }
-  });
-}
-
-/* CANCELAMENTO */
-function renderCancelamento(rows){
-  el("cancel-meta").textContent=[
-    (el("dateStart").value||el("dateEnd").value)?`Período: ${fmtBR(el("dateStart").value)||"—"} a ${fmtBR(el("dateEnd").value)||"—"}`:"Período: (sem filtro)",
-    `Status: ${el("statusSelect").value}`,`Nome: ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
-  ].join(" • ");
-
-  const map=new Map();
-  rows.forEach(r=>{ const qt=r._quotas?.total??0; if(qt<=0) return; if(!map.has(qt)) map.set(qt,{cas:0,can:0,tot:0,rs:0}); const it=map.get(qt); it.cas++; it.can+=(r._quotas?.cancelado??0); it.tot+=qt; it.rs+=(r._renda??0); });
-  const ana=[...map.entries()].map(([cv,d])=>({cotasVendidas:cv,casais:d.cas,cotasTotal:d.tot,cotasCanceladas:d.can,pctCancelamento:d.tot?(d.can/d.tot):0,rendaMed:d.cas?(d.rs/d.cas):0})).sort((a,b)=>a.cotasVendidas-b.cotasVendidas);
-
-  if(!ana.length){el("cancelamento-table").innerHTML='<div class="note">Nenhum dado para análise.</div>';destroyChart(charts.cancelamento);return;}
-
-  destroyChart(charts.cancelamento);
-  const pcts=ana.map(i=>i.pctCancelamento*100);
-  charts.cancelamento=new Chart(el("chartCancelamento").getContext("2d"),{
-    type:"bar",
-    data:{labels:ana.map(i=>`${i.cotasVendidas} cota${i.cotasVendidas>1?"s":""}`),datasets:[{
-      label:"% Cancelamento",data:pcts,
-      backgroundColor:pcts.map(p=>p<20?"rgba(92,255,176,.25)":p<=30?"rgba(255,176,32,.25)":"rgba(255,45,85,.25)"),
-      borderColor:pcts.map(p=>p<20?"rgba(92,255,176,.8)":p<=30?"rgba(255,176,32,.8)":"rgba(255,45,85,.8)"),
-      borderWidth:2
-    }]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}},
-        tooltip:{callbacks:{label:(ctx)=>{const it=ana[ctx.dataIndex];return[`% Cancel: ${fmtNumBR(ctx.parsed.y,1,1)}%`,`Casais: ${it.casais}`,`Cotas cancel.: ${it.cotasCanceladas}`,`Renda média: ${fmtMoney(it.rendaMed)}`];}}}},
-      scales:{
-        x:{ticks:{color:"rgba(234,240,255,.7)"},grid:{color:"rgba(255,255,255,.05)"}},
-        y:{min:0,max:100,ticks:{color:"rgba(234,240,255,.7)",callback:v=>`${v}%`},grid:{color:"rgba(255,255,255,.05)"}},
-      }
-    }
-  });
-
-  const cid="cancelamento-table";
-  const ord=sortedList(ana,cid,"cotasTotal");
-  el(cid).innerHTML=`
-    <div class="table-wrap"><table>
-      <thead><tr>
-        <th class="num sortable" data-sort="cotasVendidas">Cotas vendidas ${sortInd(cid,"cotasVendidas")}</th>
-        <th class="num sortable" data-sort="casais">Casais ${sortInd(cid,"casais")}</th>
-        <th class="num sortable" data-sort="cotasTotal">Cotas totais ${sortInd(cid,"cotasTotal")}</th>
-        <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd(cid,"cotasCanceladas")}</th>
-        <th class="num sortable" data-sort="rendaMed">Renda média ${sortInd(cid,"rendaMed")}</th>
-        <th class="num sortable" data-sort="pctCancelamento">% Cancelamento ${sortInd(cid,"pctCancelamento")}</th>
-      </tr></thead>
-      <tbody>${ord.map(it=>`<tr>
-        <td class="num">${it.cotasVendidas}</td><td class="num">${it.casais}</td>
-        <td class="num">${it.cotasTotal}</td><td class="num">${it.cotasCanceladas}</td>
-        <td class="num">${fmtMoney(it.rendaMed)}</td>
-        <td class="num"><span class="pill ${canPill(it.pctCancelamento)}">${fmtPctBR(it.pctCancelamento)}</span></td>
-      </tr>`).join("")}
-      </tbody>
-    </table></div>`;
-  el(cid).querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
-    th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderCancelamento(rows); });
-  });
-}
-
-/* EQUIPES */
-function renderEquipes(){
-  const map=loadTeamMap();
-  renderCards("stats-equipe-parque",  state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; }));
-  renderCards("stats-equipe-externa", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; }));
-  renderCards("stats-equipe-sem",     state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return !map[p]; }));
-}
-
-function listAllPromos(){
-  const s=new Set();
-  state.rows.forEach(r=>{ const n=(r[KEY.promotor]??"").toString().trim(); if(n) s.add(n); });
-  return [...s].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
-}
-function listNamesByTipo(tipoKeyNorm){
-  const s=new Set();
-  state.rows.forEach(r=>{
-    const n=(r[tipoKeyNorm]??"").toString().trim();
-    if(n) s.add(n);
-  });
-  return [...s].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
-}
-
-function renderTeamMappingUI(){
-  const promos=listAllPromos();
-  const sel=el("teamPromotorSelect");
-  sel.innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
-  const map=loadTeamMap();
-  const entries=Object.entries(map).filter(([k,v])=>k&&v).sort((a,b)=>a[0].localeCompare(b[0],"pt-BR",{sensitivity:"base"}));
-  el("teamMappingList").innerHTML=entries.length?entries.map(([p,t])=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);margin-bottom:8px">
-      <div><div style="font-weight:850">${p}</div><div style="color:var(--muted);font-size:.82rem">${t}</div></div>
-      <button class="btn" type="button" data-rm="${encodeURIComponent(p)}">Remover</button>
-    </div>`).join(""):`<div class="note" style="margin:0">Nenhuma marcação salva.</div>`;
-  el("teamMappingList").querySelectorAll("button[data-rm]").forEach(btn=>{
-    btn.addEventListener("click",()=>{ const m=loadTeamMap(); delete m[decodeURIComponent(btn.dataset.rm)]; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores(); });
-  });
-}
-
-/* SUPERVISORES */
-function renderSupervisores(){
-  const map=loadTeamMap();
-  const rowP = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
-  const rowE = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
-  const rowG = rowP.concat(rowE);
-
-  const sP=statsFor(rowP), sE=statsFor(rowE), sG=statsFor(rowG);
-
-  const capsP=new Set(); rowP.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)capsP.add(norm(p));});
-  const capsE=new Set(); rowE.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)capsE.add(norm(p));});
-  const capsG=new Set([...capsP,...capsE]);
-
-  const medCP = capsP.size ? sP.casais/capsP.size : 0;
-  const medCE = capsE.size ? sE.casais/capsE.size : 0;
-  const medCG = capsG.size ? sG.casais/capsG.size : 0;
-
-  const mkRow=(label,vP,vE,vG,fmt)=>`
-    <div class="sup-compare-row">
-      <div class="rc-label">${label}</div>
-      <div class="rc-parque">${fmt(vP)}</div>
-      <div class="rc-externa">${fmt(vE)}</div>
-      <div class="rc-geral">${fmt(vG)}</div>
-    </div>`;
-  const mkSep=label=>`
-    <div class="sup-compare-row section-sep">
-      <div class="rc-label">${label}</div><div></div><div></div><div></div>
-    </div>`;
-
-  const fmtN  = v => String(Math.round(v));
-  const fmtF1 = v => fmtNumBR(v,1,1);
-  const fmtEff= v => fmtPctBR(v);
-  const fmtM  = v => fmtMoney(v);
-  const fmtPc = v => fmtPctBR(v);
-
-  el("supCompareRows").innerHTML=
-    mkSep("Captadores e volume")+
-    mkRow("Captadores",          capsP.size,   capsE.size,   capsG.size,   fmtN)+
-    mkRow("Casais",              sP.casais,    sE.casais,    sG.casais,    fmtN)+
-    mkRow("Média casal/captador",medCP,        medCE,        medCG,        fmtF1)+
-    mkRow("Média de Casais/dia", sP.mediaCasaisPeriodo, sE.mediaCasaisPeriodo, sG.mediaCasaisPeriodo, fmtF1)+
-    mkRow("NoTour",              sP.noTour,    sE.noTour,    sG.noTour,    fmtN)+
-    mkSep("Vendas")+
-    mkRow("Cotas vendidas",      sP.vendas,    sE.vendas,    sG.vendas,    fmtN)+
-    mkRow("Cotas canceladas",    sP.cotasCanceladas, sE.cotasCanceladas, sG.cotasCanceladas, fmtN)+
-    mkRow("% Cancelamento",      sP.pctCancel, sE.pctCancel, sG.pctCancel, fmtPc)+
-    mkRow("Eficiência",          sP.eficiencia,sE.eficiencia,sG.eficiencia,fmtEff)+
-    mkSep("Financeiro")+
-    mkRow("VGV total",           sP.vgvTotal,  sE.vgvTotal,  sG.vgvTotal,  fmtM)+
-    mkRow("Ticket médio (cota)", sP.ticketMedio,sE.ticketMedio,sG.ticketMedio,fmtM)+
-    mkRow("Renda média",         sP.rendaMed,  sE.rendaMed,  sG.rendaMed,  fmtM);
-
-  const repMetrics = [
-    { label:"Casais",           vP:sP.casais,         vE:sE.casais,         vG:sG.casais,         fmt:fmtN },
-    { label:"Cotas vendidas",   vP:sP.vendas,         vE:sE.vendas,         vG:sG.vendas,         fmt:fmtN },
-    { label:"Cotas canceladas", vP:sP.cotasCanceladas,vE:sE.cotasCanceladas,vG:sG.cotasCanceladas,fmt:fmtN },
-    { label:"VGV total",        vP:sP.vgvTotal,       vE:sE.vgvTotal,       vG:sG.vgvTotal,       fmt:fmtM },
-    { label:"Captadores",       vP:capsP.size,        vE:capsE.size,        vG:capsG.size,        fmt:fmtN },
-  ];
-
-  el("supRepGrid").innerHTML=`
-    <div class="rep-panel">
-      <h4>📊 Quanto cada equipe representa do total geral (Parque + Externa)</h4>
-      <div class="rep-grid">
-        ${repMetrics.map(m=>{
-          const pctP = m.vG ? (m.vP/m.vG) : 0;
-          const pctE = m.vG ? (m.vE/m.vG) : 0;
-          const wP   = Math.round(pctP*100);
-          const wE   = Math.round(pctE*100);
-          return`
-          <div class="rep-card parque">
-            <div class="rep-kpi-label">${m.label} — Parque</div>
-            <div class="rep-kpi-row">
-              <div class="rep-kpi-val" style="color:#c4b5ff">${m.fmt(m.vP)}</div>
-              <div class="rep-kpi-pct parque">${fmtPct2(m.vP,m.vG)} do total</div>
-            </div>
-            <div class="rep-bar-wrap"><div class="rep-bar-fill parque" style="width:${wP}%"></div></div>
-          </div>
-          <div class="rep-card externa">
-            <div class="rep-kpi-label">${m.label} — Externa</div>
-            <div class="rep-kpi-row">
-              <div class="rep-kpi-val" style="color:#7eedff">${m.fmt(m.vE)}</div>
-              <div class="rep-kpi-pct externa">${fmtPct2(m.vE,m.vG)} do total</div>
-            </div>
-            <div class="rep-bar-wrap"><div class="rep-bar-fill externa" style="width:${wE}%"></div></div>
-          </div>
-          <div class="rep-card geral">
-            <div class="rep-kpi-label">${m.label} — Geral</div>
-            <div class="rep-kpi-row">
-              <div class="rep-kpi-val" style="color:#b0fff0">${m.fmt(m.vG)}</div>
-              <div class="rep-kpi-pct geral">100% do total</div>
-            </div>
-            <div class="rep-bar-wrap"><div class="rep-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
-          </div>`;
-        }).join("")}
-      </div>
-    </div>`;
-
-  const promos=listAllPromos();
-  el("supPromotorSelect").innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
-  el("supMappingList").innerHTML=promos.length?promos.map(p=>{
-    const cur=map[p]||"";
-    const tagCls=cur==="Equipe Parque"?"parque":cur==="Equipe Externa"?"externa":"none";
-    const tagLbl=cur||"Sem equipe";
-    return`<div class="promo-row">
-      <span class="pr-name" title="${p}">${p}</span>
-      <span class="pr-tag ${tagCls}">${tagLbl}</span>
-      <select class="mini-sel" data-promo="${encodeURIComponent(p)}">
-        <option value="">— sem equipe —</option>
-        <option value="Equipe Parque"  ${cur==="Equipe Parque" ?"selected":""}>Equipe Parque</option>
-        <option value="Equipe Externa" ${cur==="Equipe Externa"?"selected":""}>Equipe Externa</option>
-      </select>
-    </div>`;
-  }).join(""):`<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
-
-  el("supMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
-    sel.addEventListener("change",()=>{
-      const p=decodeURIComponent(sel.dataset.promo);
-      const m=loadTeamMap();
-      if(sel.value) m[p]=sel.value; else delete m[p];
-      saveTeamMap(m);
-      renderSupervisores();
-      renderEquipes();
-      renderTeamMappingUI();
-      renderDesafios(); // atualiza apuração se estiver em desafio
-    });
-  });
-}
-
-/* PROFISSIONAL INDIVIDUAL */
-function renderSingle(){
-  const tipo=norm(el("profTipoSingle").value);
-  const nome=el("profNomeSingle").value;
-  if(!nome){el("stats-single").innerHTML="";return;}
-  const mine=state.filtered.filter(r=>norm(r[tipo]??"")=== norm(nome));
-  const s=statsFor(mine);
-  el("stats-single").innerHTML=`
-    <div class="stat-card"><div class="stat-value">${nome}</div><div class="stat-label">Profissional</div></div>
-    <div class="stat-card"><div class="stat-value">${s.casais}</div><div class="stat-label">Casais</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtNumBR(s.mediaCasaisPeriodo,1,1)}</div><div class="stat-label">Média Casais/dia</div></div>
-    <div class="stat-card"><div class="stat-value">${s.vendas}</div><div class="stat-label">Cotas</div></div>
-    <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtPctBR(s.pctCancel)}</div><div class="stat-label">% Cancelamento</div></div>
-    <div class="stat-card"><div class="stat-value">${fmtMoney(s.ticketMedio)}</div><div class="stat-label">Ticket médio</div></div>
-    <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
-}
-
-/* COMPARATIVO */
-function filterByRange(rows,s,e){
-  const d1=parseDateOnlyInput(s),d2=parseDateOnlyInput(e);
-  if(!d1&&!d2) return rows.slice();
-  const st=d1?d1.getTime():-Infinity;
-  const en=d2?new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime():Infinity;
-  return rows.filter(r=>r._dt&&r._dt.getTime()>=st&&r._dt.getTime()<=en);
-}
-function pctVar(x,y){ const X=Number(x)||0,Y=Number(y)||0; if(Y===0) return null; return(X-Y)/Y; }
-function fmtVar(f){ if(f===null) return "—"; const p=f*100,sg=p>0?"+":""; return sg+fmtNumBR(p,1,1)+"%"; }
-function deltaClass(f){ if(f===null||Math.abs(f)<1e-9) return "neu"; return f>0?"pos":"neg"; }
-
-function renderComparativo(){
-  const base=applyFilters(state.rows);
-  const rX=filterByRange(base,el("cmpXStart").value,el("cmpXEnd").value);
-  const rY=filterByRange(base,el("cmpYStart").value,el("cmpYEnd").value);
-  renderCards("cmpStatsX",rX); renderCards("cmpStatsY",rY);
-  const sX=statsFor(rX),sY=statsFor(rY);
-  el("cmpMeta").textContent=[
-    `X: ${fmtBR(el("cmpXStart").value)||"—"} a ${fmtBR(el("cmpXEnd").value)||"—"}`,
-    `Y: ${fmtBR(el("cmpYStart").value)||"—"} a ${fmtBR(el("cmpYEnd").value)||"—"}`,
-    `Status: ${el("statusSelect").value}`,`Prof.: ${el("profTipo").value} / ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
-  ].join(" • ");
-  const metrics=[
-    {label:"Casais",           x:sX.casais,             y:sY.casais,             fmt:v=>String(v|0)},
-    {label:"Média Casais/dia", x:sX.mediaCasaisPeriodo, y:sY.mediaCasaisPeriodo, fmt:v=>fmtNumBR(v,1,1)},
-    {label:"Cotas (vendas)",   x:sX.vendas,             y:sY.vendas,             fmt:v=>String(v|0)},
-    {label:"Cotas canceladas", x:sX.cotasCanceladas,    y:sY.cotasCanceladas,    fmt:v=>String(v|0)},
-    {label:"VGV total",        x:sX.vgvTotal,           y:sY.vgvTotal,           fmt:fmtMoney},
-    {label:"Eficiência",       x:sX.eficiencia,         y:sY.eficiencia,         fmt:fmtPctBR},
-    {label:"% Cancelamento",   x:sX.pctCancel,          y:sY.pctCancel,          fmt:fmtPctBR},
-    {label:"Ticket médio",     x:sX.ticketMedio,        y:sY.ticketMedio,        fmt:fmtMoney},
-    {label:"Renda média",      x:sX.rendaMed,           y:sY.rendaMed,           fmt:fmtMoney},
-    {label:"NoTour",           x:sX.noTour,             y:sY.noTour,             fmt:v=>String(v|0)},
-  ];
-  el("cmpDeltas").innerHTML=metrics.map(m=>{ const v=pctVar(m.x,m.y); return`
-    <div class="kpi-row">
-      <div class="kpi-top"><div class="kpi-name">${m.label}</div><div class="kpi-delta ${deltaClass(v)}">${fmtVar(v)}</div></div>
-      <div class="kpi-sub"><div><b>X:</b> ${m.fmt(m.x)}</div><div><b>Y:</b> ${m.fmt(m.y)}</div><div><b>Dif.:</b> ${m.fmt((m.x||0)-(m.y||0))}</div></div>
-    </div>`; }).join("");
-}
-
-/* SELECTS */
-function updateProfFilters(tipoId,nomeId){
-  const tipo=norm(el(tipoId).value);
-  const names=new Set();
-  state.rows.forEach(r=>{ const n=(r[tipo]??"").toString().trim(); if(n) names.add(n); });
-  const arr=[...names].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
-  const isGlobal=(nomeId==="profNome");
-  el(nomeId).innerHTML=(isGlobal?'<option value="todos">Todos</option>':'<option value="">Selecione...</option>')+arr.map(n=>`<option value="${n}">${n}</option>`).join("");
-}
-function updateUFFilter(){
-  const ufs=new Set();
-  state.rows.forEach(r=>{ const u=(r[KEY.uf]??"").toString().trim(); if(u) ufs.add(u); });
-  el("ufSelect").innerHTML='<option value="todos">Todas</option>'+[...ufs].sort().map(u=>`<option value="${u}">${u}</option>`).join("");
-}
-
-/* DESAFIOS */
-let currentChallengeId = null;
-
-const metricLabel = m => ({
-  casais:"Número de casais",
-  vgv:"VGV",
-  casais_atendidos:"Casais atendidos",
-  eficiencia:"Eficiência",
-}[m]||m);
-
-function uid(){ return "ch_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
-
-function showChMsg(text,type="success"){
-  const box=el("chFormMsg");
-  box.style.display="block";
-  box.className="note "+(type==="bad"?"bad":type==="warn"?"warn":"success");
-  box.textContent=text;
-  setTimeout(()=>{ box.style.display="none"; }, 2200);
-}
-
-function newChallengeTemplate(){
-  return {
-    id: uid(),
-    name: "",
-    start: "",
-    end: "",
-    metric: "casais",
-    profTipo: norm("promotor de marketing"),
-    teams: [
-      { name:"Equipe 1", members:[] },
-      { name:"Equipe 2", members:[] },
-    ],
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  };
-}
-
-function ensureTeamsCount(ch, n){
-  const nn = Math.max(2, Math.min(6, Number(n)||2));
-  ch.teams = Array.isArray(ch.teams)?ch.teams:[];
-  while(ch.teams.length < nn) ch.teams.push({ name:`Equipe ${ch.teams.length+1}`, members:[] });
-  while(ch.teams.length > nn) ch.teams.pop();
-  ch.teams.forEach((t,i)=>{
-    if(!t || typeof t!=="object") ch.teams[i] = { name:`Equipe ${i+1}`, members:[] };
-    if(typeof ch.teams[i].name!=="string") ch.teams[i].name = `Equipe ${i+1}`;
-    if(!Array.isArray(ch.teams[i].members)) ch.teams[i].members = [];
-  });
-}
-
-function renderChallengeTeamsEditor(){
-  const challenges = loadChallenges();
-  const ch = challenges.find(x=>x.id===currentChallengeId) || null;
-  const tipo = norm(el("chProfTipo").value);
-  const names = listNamesByTipo(tipo);
-  const teamsCount = Number(el("chTeamsCount").value)||2;
-
-  const tmp = ch ? structuredClone(ch) : newChallengeTemplate();
-  tmp.profTipo = tipo;
-  ensureTeamsCount(tmp, teamsCount);
-
-  const used = new Set();
-  tmp.teams.forEach(t=>t.members.forEach(m=>used.add(norm(m))));
-
-  el("chTeamsEditor").innerHTML = tmp.teams.map((t,idx)=>{
-    return `
-      <div class="team-box" data-team-index="${idx}">
-        <div class="hdr">
-          <b>Equipe ${idx+1}</b>
-          <span class="badge">${t.members.length} membros</span>
-        </div>
-        <div class="control-group" style="min-width:unset">
-          <label>Nome da equipe</label>
-          <input data-team-name="${idx}" value="${(t.name||"").replace(/"/g,"&quot;")}" placeholder="Ex.: Time Azul" />
-        </div>
-        <div class="team-members">
-          <div class="tiny">Marque os profissionais que farão parte desta equipe:</div>
-          ${names.length ? names.map(n=>{
-            const nn = norm(n);
-            const checked = t.members.some(x=>norm(x)===nn);
-            const disabled = !checked && used.has(nn);
-            return `
-              <div class="member-row">
-                <label title="${n}">
-                  <input type="checkbox" data-team-member="${idx}" data-member="${encodeURIComponent(n)}" ${checked?"checked":""} ${disabled?"disabled":""}/>
-                  ${n}
-                </label>
-                ${disabled?`<span class="badge">em outra equipe</span>`:""}
-              </div>
-            `;
-          }).join("") : `<div class="note" style="margin:0">Nenhum profissional encontrado no CSV para este tipo.</div>`}
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  el("chTeamsEditor").querySelectorAll("input[data-team-name]").forEach(inp=>{
-    inp.addEventListener("input", ()=>{
-      if(!currentChallengeId) return;
-      const idx=Number(inp.dataset.teamName);
-      const arr=loadChallenges();
-      const ch=arr.find(x=>x.id===currentChallengeId);
-      if(!ch) return;
-      ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
-      ch.teams[idx].name = inp.value;
-      ch.updatedAt = Date.now();
-      saveChallenges(arr);
-      renderDesafios(false);
-    });
-  });
-
-  el("chTeamsEditor").querySelectorAll("input[type='checkbox'][data-team-member]").forEach(cb=>{
-    cb.addEventListener("change", ()=>{
-      const tIdx = Number(cb.dataset.teamMember);
-      const member = decodeURIComponent(cb.dataset.member);
-
-      if(currentChallengeId){
-        const arr=loadChallenges();
-        const ch=arr.find(x=>x.id===currentChallengeId);
-        if(!ch) return;
-        ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
-        ch.teams.forEach(t=>t.members = (t.members||[]).filter(x=>norm(x)!==norm(member)));
-        if(cb.checked) ch.teams[tIdx].members.push(member);
-        ch.updatedAt = Date.now();
-        saveChallenges(arr);
-      }
-
-      renderDesafios(false);
-    });
-  });
-}
-
-function readChallengeFromForm(){
-  const name = (el("chName").value||"").trim();
-  const start = el("chStart").value;
-  const end = el("chEnd").value;
-  const metric = el("chMetric").value;
-  const profTipo = norm(el("chProfTipo").value);
-  const teamsCount = Number(el("chTeamsCount").value)||2;
-
-  const names = listNamesByTipo(profTipo);
-  const teams = [];
-  for(let i=0;i<teamsCount;i++) teams.push({ name:`Equipe ${i+1}`, members:[] });
-
-  document.querySelectorAll("#chTeamsEditor input[data-team-name]").forEach(inp=>{
-    const idx=Number(inp.dataset.teamName);
-    if(Number.isFinite(idx) && teams[idx]) teams[idx].name = (inp.value||`Equipe ${idx+1}`).trim() || `Equipe ${idx+1}`;
-  });
-
-  document.querySelectorAll("#chTeamsEditor input[type='checkbox'][data-team-member]").forEach(cb=>{
-    if(!cb.checked) return;
-    const tIdx=Number(cb.dataset.teamMember);
-    const member=decodeURIComponent(cb.dataset.member);
-    if(!teams[tIdx]) return;
-    if(!names.some(n=>norm(n)===norm(member))) return;
-    teams[tIdx].members.push(member);
-  });
-
-  const seen=new Set();
-  teams.forEach(t=>{
-    t.members = t.members.filter(m=>{
-      const k=norm(m);
-      if(seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
-  });
-
-  return { name, start, end, metric, profTipo, teamsCount, teams };
-}
-
-function resetChallengeForm(){
-  currentChallengeId = null;
-  el("challengeFormTitle").textContent = "Criar desafio";
-  el("chName").value="";
-  el("chStart").value="";
-  el("chEnd").value="";
-  el("chMetric").value="casais";
-  el("chTeamsCount").value="2";
-  el("chProfTipo").value="promotor de marketing";
-  renderChallengeTeamsEditor();
-  renderDesafios(false);
-}
-
-function loadChallengeIntoForm(ch){
-  currentChallengeId = ch.id;
-  el("challengeFormTitle").textContent = "Editar desafio";
-  el("chName").value = ch.name||"";
-  el("chStart").value = ch.start||"";
-  el("chEnd").value = ch.end||"";
-  el("chMetric").value = ch.metric||"casais";
-  el("chProfTipo").value = (ch.profTipo||norm("promotor de marketing"));
-  el("chTeamsCount").value = String(Math.max(2, Math.min(6, (ch.teams||[]).length || 2)));
-  renderChallengeTeamsEditor();
-  renderDesafios(false);
-}
-
-function deleteChallenge(id){
-  const arr = loadChallenges().filter(x=>x.id!==id);
-  saveChallenges(arr);
-  if(currentChallengeId===id) resetChallengeForm();
-  renderDesafios();
-}
-
-function formatChallengePeriod(ch){
-  const s = ch.start ? fmtBR(ch.start) : "—";
-  const e = ch.end ? fmtBR(ch.end) : "—";
-  return `${s} a ${e}`;
-}
-
-function challengeMetricValue(ch, rowsForTeam){
-  const s = statsFor(rowsForTeam);
-  switch(ch.metric){
-    case "casais": return { val: s.casais, fmt: v=>String(v|0) };
-    case "vgv": return { val: s.vgvTotal, fmt: fmtMoney };
-    case "casais_atendidos": return { val: s.totalLinhas, fmt: v=>String(v|0) };
-    case "eficiencia": return { val: s.eficiencia, fmt: fmtPctBR };
-    default: return { val: s.casais, fmt: v=>String(v|0) };
+    renderApprovals();
   }
-}
 
-function applyFiltersForChallengeBase(rows){
-  const status  =el("statusSelect").value;
-  const ufSel   =el("ufSelect").value;
-  let f=rows.slice();
-  if(status!=="todos")   f=f.filter(r=>r._bucket===status);
-  if(ufSel !=="todos")   f=f.filter(r=>(r[KEY.uf]??"").toString().trim()===ufSel);
-  return f;
-}
+  function renderApprovals(){
+    const list = $("aprovacoesList");
+    if(!list) return;
 
-/* ===== NOVO: Ranking dos melhores por equipe (clicar no nome da equipe) ===== */
-function openTeamRankingModal(payload){
-  const { challengeId, teamIndex } = payload;
-  const ch = loadChallenges().find(x=>x.id===challengeId);
-  if(!ch) return;
+    const pend = users.filter(u => u.status === "PENDING");
+    const appr = users.filter(u => u.status === "APPROVED");
+    const bloc = users.filter(u => u.status === "BLOCKED");
 
-  const team = (ch.teams||[])[teamIndex];
-  if(!team) return;
+    $("countPendentes").textContent = String(pend.length);
+    $("countAprovados").textContent = String(appr.length);
+    $("countBloqueados").textContent = String(bloc.length);
 
-  const base = applyFiltersForChallengeBase(state.rows);
-  const inPeriod = filterByRange(base, ch.start, ch.end);
+    const isAdmin = !!session?.email && isAdminEmail(session.email);
+    if(!isAdmin){
+      list.innerHTML = `<div class="hint">Apenas o admin vê esta aba.</div>`;
+      return;
+    }
 
-  const tipoKey = norm(ch.profTipo||norm("promotor de marketing"));
-  const memberSet = new Set((team.members||[]).map(norm));
+    const sorted = [...users].sort((a,b) => b.createdAt - a.createdAt);
 
-  // linhas apenas da equipe (por pessoa do tipo)
-  const teamRows = inPeriod.filter(r=>{
-    const who = (r[tipoKey]??"").toString().trim();
-    return who && memberSet.has(norm(who));
-  });
+    if(sorted.length === 0){
+      list.innerHTML = `<div class="hint">Nenhum usuário cadastrado ainda.</div>`;
+      return;
+    }
 
-  // agrupa por pessoa
-  const rank = groupRanking(teamRows, tipoKey);
+    list.innerHTML = sorted.map(u => {
+      const dot = u.status === "APPROVED" ? "ok" : u.status === "BLOCKED" ? "bad" : "warn";
+      const label = u.status === "APPROVED" ? "APROVADO" : u.status === "BLOCKED" ? "BLOQUEADO" : "PENDENTE";
+      const isTheAdmin = u.email === ADMIN_EMAIL;
 
-  el("teamModalTitle").textContent = `Ranking — ${team.name || `Equipe ${teamIndex+1}`}`;
-  el("teamModalSub").textContent = `Desafio: ${(ch.name||"Desafio").trim()||"Desafio"} • Período: ${formatChallengePeriod(ch)} • Tipo: ${ch.profTipo} • Filtros: Status=${el("statusSelect").value}, UF=${el("ufSelect").value}`;
-
-  // render tabela com ordenação por cabeçalho (VGV, casais, eficiência etc.)
-  const cid = "teamModalBody";
-  const container = el(cid);
-
-  const render = ()=>{
-    const ord = sortedList(rank, "ch-team-ranking", "vgvTotal");
-    container.innerHTML = rank.length ? `
-      <div class="note">Clique nos cabeçalhos para ordenar (VGV, Nº de casais, Eficiência, etc.).</div>
-      <div class="table-wrap"><table style="min-width:980px">
-        <thead><tr>
-          <th style="width:84px">#</th>
-          <th class="sortable" data-sort="name">Nome ${sortInd("ch-team-ranking","name")}</th>
-          <th class="num sortable" data-sort="casais">Casais ${sortInd("ch-team-ranking","casais")}</th>
-          <th class="num sortable" data-sort="vendas">Cotas ${sortInd("ch-team-ranking","vendas")}</th>
-          <th class="num sortable" data-sort="cotasCanceladas">Canceladas ${sortInd("ch-team-ranking","cotasCanceladas")}</th>
-          <th class="num sortable" data-sort="vgvTotal">VGV ${sortInd("ch-team-ranking","vgvTotal")}</th>
-          <th class="num sortable" data-sort="eficiencia">Eficiência ${sortInd("ch-team-ranking","eficiencia")}</th>
-          <th class="num sortable" data-sort="pctCancel">%Cancel ${sortInd("ch-team-ranking","pctCancel")}</th>
-          <th class="num sortable" data-sort="ticketMedio">Ticket ${sortInd("ch-team-ranking","ticketMedio")}</th>
-        </tr></thead>
-        <tbody>
-          ${ord.map((it,i)=>{
-            const p=i+1,tr=p===1?"🥇":p===2?"🥈":p===3?"🥉":"";
-            return `
-              <tr>
-                <td class="rank-col">${tr} ${p}°</td>
-                <td class="name" title="${it.name}">${it.name}</td>
-                <td class="num">${it.casais}</td>
-                <td class="num">${it.vendas}</td>
-                <td class="num">${it.cotasCanceladas}</td>
-                <td class="num">${fmtMoney(it.vgvTotal)}</td>
-                <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
-                <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
-                <td class="num">${fmtMoney(it.ticketMedio)}</td>
-              </tr>
-            `;
-          }).join("")}
-        </tbody>
-      </table></div>
-    ` : `<div class="note">Sem dados para esta equipe no período (ou equipe sem membros).</div>`;
-
-    container.querySelectorAll("thead th.sortable").forEach(th=>{
-      th.addEventListener("click", ()=>{
-        setSort("ch-team-ranking", th.dataset.sort);
-        render();
-      });
-    });
-  };
-
-  // reset sort inicial
-  sortState["ch-team-ranking"] = { key: "vgvTotal", dir: "desc" };
-  render();
-
-  const bd = el("teamModalBackdrop");
-  bd.classList.add("open");
-  bd.setAttribute("aria-hidden","false");
-}
-
-function closeTeamModal(){
-  const bd = el("teamModalBackdrop");
-  bd.classList.remove("open");
-  bd.setAttribute("aria-hidden","true");
-  el("teamModalBody").innerHTML = "";
-}
-
-el("btnTeamModalClose").addEventListener("click", closeTeamModal);
-el("teamModalBackdrop").addEventListener("click", (e)=>{
-  if(e.target === el("teamModalBackdrop")) closeTeamModal();
-});
-window.addEventListener("keydown",(e)=>{
-  if(e.key==="Escape") closeTeamModal();
-});
-
-function renderChallengeResults(ch){
-  if(!ch){ el("chResults").innerHTML = `<div class="note">Selecione um desafio na lista para ver a apuração.</div>`; return; }
-
-  const base = applyFiltersForChallengeBase(state.rows);
-  const inPeriod = filterByRange(base, ch.start, ch.end);
-
-  const tipoKey = norm(ch.profTipo||norm("promotor de marketing"));
-  const teams = Array.isArray(ch.teams)?ch.teams:[];
-  const results = teams.map((t, idx)=>{
-    const members = (t.members||[]).map(x=>x.toString());
-    const memberSet = new Set(members.map(norm));
-
-    const rowsTeam = inPeriod.filter(r=>{
-      const who = (r[tipoKey]??"").toString().trim();
-      return who && memberSet.has(norm(who));
-    });
-
-    const met = challengeMetricValue(ch, rowsTeam);
-
-    return {
-      teamIndex: idx,
-      teamName: (t.name||"Equipe").trim() || "Equipe",
-      membersCount: members.length,
-      valor: met.val,
-      fmt: met.fmt,
-      stats: statsFor(rowsTeam),
-    };
-  });
-
-  const sorted = results.slice().sort((a,b)=>{
-    const av = (typeof a.valor==="number")?a.valor:0;
-    const bv = (typeof b.valor==="number")?b.valor:0;
-    if(bv!==av) return bv-av;
-    return a.teamName.localeCompare(b.teamName,"pt-BR",{sensitivity:"base"});
-  });
-
-  const best = sorted[0]?.valor ?? 0;
-
-  el("chResults").innerHTML = `
-    <div class="note">
-      <strong>${(ch.name||"Desafio").trim() || "Desafio"}</strong><br>
-      Período: <strong>${formatChallengePeriod(ch)}</strong> • Apuração: <strong>${metricLabel(ch.metric)}</strong> • Tipo: <strong>${ch.profTipo}</strong><br>
-      Filtros aplicados: Status=<strong>${el("statusSelect").value}</strong> • UF=<strong>${el("ufSelect").value}</strong>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:84px">#</th>
-            <th class="sortable" data-sort="teamName">Equipe ${sortInd("ch-results-table","teamName")}</th>
-            <th class="num sortable" data-sort="membersCount">Membros ${sortInd("ch-results-table","membersCount")}</th>
-            <th class="num sortable" data-sort="valor">${metricLabel(ch.metric)} ${sortInd("ch-results-table","valor")}</th>
-            <th class="num">Casais</th>
-            <th class="num">Cotas</th>
-            <th class="num">VGV</th>
-            <th class="num">Eficiência</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${sorted.map((r,i)=>{
-            const pos=i+1;
-            const medal = pos===1?"🥇":pos===2?"🥈":pos===3?"🥉":"";
-            const delta = (typeof r.valor==="number" && typeof best==="number") ? (r.valor-best) : 0;
-
-            const main = (ch.metric==="vgv") ? r.fmt(r.valor)
-                       : (ch.metric==="eficiencia") ? r.fmt(r.valor)
-                       : String(r.valor|0);
-
-            return `
-              <tr>
-                <td class="rank-col">${medal} ${pos}°</td>
-                <td class="name">
-                  <span class="clickable" data-open-team="${encodeURIComponent(ch.id)}" data-team-index="${r.teamIndex}" title="Clique para ver o ranking dos melhores desta equipe">
-                    ${r.teamName}
-                  </span>
-                </td>
-                <td class="num">${r.membersCount}</td>
-                <td class="num">
-                  <b>${main}</b>
-                  ${pos>1 ? `<span class="badge">dif.: ${ch.metric==="vgv"?fmtMoney(delta):ch.metric==="eficiencia"?fmtNumBR(delta*100,1,1)+"%":String(delta|0)}</span>`:""}
-                </td>
-                <td class="num">${r.stats.casais}</td>
-                <td class="num">${r.stats.vendas}</td>
-                <td class="num">${fmtMoney(r.stats.vgvTotal)}</td>
-                <td class="num"><span class="pill ${effPill(r.stats.eficiencia)}">${fmtPctBR(r.stats.eficiencia)}</span></td>
-              </tr>
-            `;
-          }).join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
-
-  // clique no nome da equipe -> abre modal com ranking
-  el("chResults").querySelectorAll("[data-open-team]").forEach(a=>{
-    a.addEventListener("click", ()=>{
-      const challengeId = decodeURIComponent(a.dataset.openTeam);
-      const teamIndex = Number(a.dataset.teamIndex);
-      openTeamRankingModal({ challengeId, teamIndex });
-    });
-  });
-
-  el("chResults").querySelectorAll("thead th.sortable").forEach(th=>{
-    th.addEventListener("click", ()=>{
-      setSort("ch-results-table", th.dataset.sort);
-      const st = sortState["ch-results-table"] || {key:"valor",dir:"desc"};
-      const again = results.slice().sort((a,b)=>{
-        const key = st.key;
-        const dir = st.dir;
-        const va = a[key], vb = b[key];
-        const num = (x)=> (typeof x==="number")?x:0;
-        const cmp = (x,y)=> String(x??"").localeCompare(String(y??""),"pt-BR",{sensitivity:"base"});
-        const baseCmp = (key==="valor"||key==="membersCount") ? (num(va)-num(vb)) : cmp(va,vb);
-        return dir==="asc" ? baseCmp : -baseCmp;
-      });
-
-      const tbody = el("chResults").querySelector("tbody");
-      tbody.innerHTML = again.map((r,i)=>{
-        const pos=i+1;
-        const medal = pos===1?"🥇":pos===2?"🥈":pos===3?"🥉":"";
-        const main = (ch.metric==="vgv") ? r.fmt(r.valor)
-                   : (ch.metric==="eficiencia") ? r.fmt(r.valor)
-                   : String(r.valor|0);
-        return `
-          <tr>
-            <td class="rank-col">${medal} ${pos}°</td>
-            <td class="name">
-              <span class="clickable" data-open-team="${encodeURIComponent(ch.id)}" data-team-index="${r.teamIndex}">
-                ${r.teamName}
-              </span>
-            </td>
-            <td class="num">${r.membersCount}</td>
-            <td class="num"><b>${main}</b></td>
-            <td class="num">${r.stats.casais}</td>
-            <td class="num">${r.stats.vendas}</td>
-            <td class="num">${fmtMoney(r.stats.vgvTotal)}</td>
-            <td class="num"><span class="pill ${effPill(r.stats.eficiencia)}">${fmtPctBR(r.stats.eficiencia)}</span></td>
-          </tr>
+      const actions = isTheAdmin
+        ? `<span class="small">Admin fixo</span>`
+        : `
+          <button class="btn ok" data-act="approve" data-id="${u.id}" ${u.status==="APPROVED" ? "disabled" : ""}>Aprovar</button>
+          <button class="btn warn" data-act="pending" data-id="${u.id}" ${u.status==="PENDING" ? "disabled" : ""}>Marcar pendente</button>
+          <button class="btn bad" data-act="block" data-id="${u.id}" ${u.status==="BLOCKED" ? "disabled" : ""}>Bloquear</button>
+          <button class="btn ghost" data-act="delete" data-id="${u.id}">Excluir</button>
         `;
-      }).join("");
 
-      tbody.querySelectorAll("[data-open-team]").forEach(a=>{
-        a.addEventListener("click", ()=>{
-          const challengeId = decodeURIComponent(a.dataset.openTeam);
-          const teamIndex = Number(a.dataset.teamIndex);
-          openTeamRankingModal({ challengeId, teamIndex });
-        });
+      return `
+        <div class="item">
+          <div>
+            <div class="title">
+              <span class="pill" style="margin:0 8px 0 0"><span class="dot ${dot}"></span> ${label}</span>
+              ${u.name || "(Sem nome)"} <span class="mono">(${u.email})</span>
+            </div>
+            <div class="meta">
+              Criado em: ${fmtDate(u.createdAt)}
+              ${u.approvedAt ? ` • Aprovado em: ${fmtDate(u.approvedAt)}` : ""}
+              ${u.blockedAt ? ` • Bloqueado em: ${fmtDate(u.blockedAt)}` : ""}
+            </div>
+          </div>
+          <div class="right">${actions}</div>
+        </div>
+      `;
+    }).join("");
+
+    // attach handlers
+    list.querySelectorAll("button[data-act]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const act = btn.dataset.act;
+        const id = btn.dataset.id;
+        const u = users.find(x => x.id === id);
+        if(!u) return;
+
+        if(act === "approve"){
+          u.status = "APPROVED";
+          u.approvedAt = now();
+          u.blockedAt = undefined;
+          saveUsers();
+          toast("Usuário aprovado.");
+        }
+        if(act === "pending"){
+          u.status = "PENDING";
+          u.approvedAt = undefined;
+          u.blockedAt = undefined;
+          saveUsers();
+          toast("Usuário marcado como pendente.");
+        }
+        if(act === "block"){
+          u.status = "BLOCKED";
+          u.blockedAt = now();
+          saveUsers();
+          toast("Usuário bloqueado.");
+        }
+        if(act === "delete"){
+          if(confirm(`Excluir o usuário ${u.email}?`)){
+            users = users.filter(x => x.id !== id);
+            saveUsers();
+            toast("Usuário excluído.");
+          }
+        }
+        syncUI();
       });
     });
-  });
-}
-
-function renderDesafios(recalcTeamsEditor=true){
-  const arr = loadChallenges().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-  el("chList").innerHTML = arr.length ? arr.map(ch=>{
-    const active = (ch.id===currentChallengeId);
-    return `
-      <div class="challenge-item" style="${active?'border-color: rgba(124,92,255,.45); box-shadow: 0 18px 50px rgba(0,0,0,.35);':''}">
-        <div class="top">
-          <div class="title">
-            <span>${(ch.name||"Sem nome").trim() || "Sem nome"}</span>
-            <span class="badge">${metricLabel(ch.metric)}</span>
-            <span class="badge">${ch.profTipo||"—"}</span>
-          </div>
-          <div class="meta">📅 ${formatChallengePeriod(ch)} • 🧩 ${Array.isArray(ch.teams)?ch.teams.length:0} equipes</div>
-        </div>
-        <div class="actions">
-          <button class="btn" data-ch-open="${encodeURIComponent(ch.id)}">Editar</button>
-          <button class="btn" data-ch-view="${encodeURIComponent(ch.id)}">Apurar</button>
-          <button class="btn danger" data-ch-del="${encodeURIComponent(ch.id)}">Excluir</button>
-        </div>
-      </div>
-    `;
-  }).join("") : `<div class="note" style="margin:0">Nenhum desafio criado ainda.</div>`;
-
-  el("chList").querySelectorAll("button[data-ch-open]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const id=decodeURIComponent(b.dataset.chOpen);
-      const ch=loadChallenges().find(x=>x.id===id);
-      if(ch) loadChallengeIntoForm(ch);
-    });
-  });
-  el("chList").querySelectorAll("button[data-ch-view]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const id=decodeURIComponent(b.dataset.chView);
-      const ch=loadChallenges().find(x=>x.id===id);
-      if(!ch) return;
-      currentChallengeId = id;
-      renderChallengeResults(ch);
-      renderDesafios(false);
-    });
-  });
-  el("chList").querySelectorAll("button[data-ch-del]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const id=decodeURIComponent(b.dataset.chDel);
-      if(!confirm("Excluir este desafio?")) return;
-      deleteChallenge(id);
-    });
-  });
-
-  if(recalcTeamsEditor) renderChallengeTeamsEditor();
-
-  const current = currentChallengeId ? loadChallenges().find(x=>x.id===currentChallengeId) : null;
-  renderChallengeResults(current);
-}
-
-/* UPDATE ALL */
-function updateAll(){
-  state.filtered=applyFilters(state.rows);
-  renderCards("stats",       state.filtered);
-  renderCards("stats-curva", state.filtered);
-  renderRanking(groupRanking(state.filtered,KEY.promotor),"ranking-promotor","Promotor");
-  renderRanking(groupRanking(state.filtered,KEY.liner),   "ranking-liner",   "Liner");
-  renderRanking(groupRanking(state.filtered,KEY.closer),  "ranking-closer",  "Closer");
-  renderRanking(groupRanking(state.filtered,norm(el("profTipo").value)),"profissionais-table","");
-  renderPerfilRenda(state.filtered,"perfil-renda");
-  renderSingle();
-  renderCurva(state.filtered);
-  renderCancelamento(state.filtered);
-  renderEquipes();
-  renderSupervisores();
-  renderComparativo();
-  renderDesafios(false);
-}
-
-/* EVENTOS */
-function setup(){
-  ["statusSelect","profNome","ufSelect","dateStart","dateEnd"].forEach(id=>el(id).addEventListener("change",updateAll));
-  el("profTipo").addEventListener("change",()=>{ updateProfFilters("profTipo","profNome"); updateAll(); });
-
-  el("btnLimparPeriodo").addEventListener("click",()=>{ el("dateStart").value=""; el("dateEnd").value=""; updateAll(); });
-  el("btnHoje").addEventListener("click",()=>{ const n=new Date(),iso=toISO(n); el("dateStart").value=iso; el("dateEnd").value=iso; updateAll(); });
-  el("btn30").addEventListener("click",()=>{ const e=new Date(),s=new Date(e); s.setDate(s.getDate()-29); el("dateStart").value=toISO(s); el("dateEnd").value=toISO(e); updateAll(); });
-
-  ["cmpXStart","cmpXEnd","cmpYStart","cmpYEnd"].forEach(id=>el(id).addEventListener("change",renderComparativo));
-  const setCmp=(pfx,back)=>{ const e=new Date(),s=new Date(e); s.setDate(s.getDate()-(back-1)); el(pfx+"Start").value=toISO(s); el(pfx+"End").value=toISO(e); renderComparativo(); };
-  el("btnCmpXHoje").addEventListener("click",()=>setCmp("cmpX",1));
-  el("btnCmpX30").addEventListener("click",()=>setCmp("cmpX",30));
-  el("btnCmpYHoje").addEventListener("click",()=>setCmp("cmpY",1));
-  el("btnCmpY30").addEventListener("click",()=>setCmp("cmpY",30));
-
-  el("profTipoSingle").addEventListener("change",()=>{ updateProfFilters("profTipoSingle","profNomeSingle"); renderSingle(); });
-  el("profNomeSingle").addEventListener("change",renderSingle);
-
-  el("btnSalvarEquipe").addEventListener("click",()=>{
-    const p=el("teamPromotorSelect").value,t=el("teamEquipeSelect").value;
-    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
-  });
-  el("btnLimparEquipes").addEventListener("click",()=>{
-    if(!confirm("Limpar todas as marcações?")) return;
-    saveTeamMap({}); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
-  });
-
-  el("btnSalvarEquipeSup").addEventListener("click",()=>{
-    const p=el("supPromotorSelect").value,t=el("supEquipeSelect").value;
-    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
-  });
-  el("btnLimparEquipesSup").addEventListener("click",()=>{
-    if(!confirm("Limpar todas as marcações de equipe?")) return;
-    saveTeamMap({}); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
-  });
-
-  el("chTeamsCount").addEventListener("change", ()=>{
-    if(currentChallengeId){
-      const arr=loadChallenges();
-      const ch=arr.find(x=>x.id===currentChallengeId);
-      if(ch){
-        ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
-        ch.updatedAt = Date.now();
-        saveChallenges(arr);
-      }
-    }
-    renderDesafios(true);
-  });
-  el("chProfTipo").addEventListener("change", ()=>{
-    if(currentChallengeId){
-      const arr=loadChallenges();
-      const ch=arr.find(x=>x.id===currentChallengeId);
-      if(ch){
-        ch.profTipo = norm(el("chProfTipo").value);
-        ch.teams.forEach(t=>t.members=[]);
-        ch.updatedAt = Date.now();
-        saveChallenges(arr);
-      }
-    }
-    renderDesafios(true);
-  });
-  ["chName","chStart","chEnd","chMetric"].forEach(id=>{
-    el(id).addEventListener("change", ()=>{
-      if(!currentChallengeId) return;
-      const arr=loadChallenges();
-      const ch=arr.find(x=>x.id===currentChallengeId);
-      if(!ch) return;
-      ch.name = (el("chName").value||"").trim();
-      ch.start = el("chStart").value;
-      ch.end = el("chEnd").value;
-      ch.metric = el("chMetric").value;
-      ch.updatedAt = Date.now();
-      saveChallenges(arr);
-      renderDesafios(false);
-    });
-  });
-
-  el("btnChNew").addEventListener("click", ()=>{
-    resetChallengeForm();
-    showChMsg("Pronto: preencha e salve um novo desafio.", "success");
-  });
-
-  el("btnChSave").addEventListener("click", ()=>{
-    const form = readChallengeFromForm();
-
-    if(!form.name){ showChMsg("Informe um nome para o desafio.", "warn"); return; }
-    if(form.start && form.end){
-      const d1=parseDateOnlyInput(form.start), d2=parseDateOnlyInput(form.end);
-      if(d1 && d2 && d2.getTime() < d1.getTime()){ showChMsg("Período inválido: a data final é menor que a inicial.", "warn"); return; }
-    } else { showChMsg("Informe o período (início e fim) do desafio.", "warn"); return; }
-
-    const emptyTeams = form.teams.filter(t=>(t.members||[]).length===0).length;
-    if(emptyTeams>0){
-      if(!confirm("Existem equipes sem membros. Deseja salvar assim mesmo?")) return;
-    }
-
-    const arr=loadChallenges();
-    let ch=null;
-
-    if(currentChallengeId) ch = arr.find(x=>x.id===currentChallengeId) || null;
-
-    if(!ch){
-      ch = newChallengeTemplate();
-      ch.id = uid();
-      arr.push(ch);
-      currentChallengeId = ch.id;
-    }
-
-    ch.name = form.name;
-    ch.start = form.start;
-    ch.end = form.end;
-    ch.metric = form.metric;
-    ch.profTipo = form.profTipo;
-    ensureTeamsCount(ch, form.teamsCount);
-
-    ch.teams.forEach((t,i)=>{
-      t.name = (form.teams[i]?.name || `Equipe ${i+1}`).trim() || `Equipe ${i+1}`;
-      t.members = (form.teams[i]?.members || []).slice();
-    });
-    ch.updatedAt = Date.now();
-
-    saveChallenges(arr);
-    showChMsg("Desafio salvo.", "success");
-    renderDesafios(true);
-  });
-
-  el("btnChClearAll").addEventListener("click", ()=>{
-    if(!confirm("Apagar TODOS os desafios salvos neste navegador?")) return;
-    saveChallenges([]);
-    resetChallengeForm();
-    renderDesafios();
-  });
-
-  document.querySelectorAll(".tab").forEach(t=>{
-    t.addEventListener("click",()=>{
-      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach(x=>x.classList.remove("active"));
-      t.classList.add("active");
-      el(`tab-${t.dataset.tab}`).classList.add("active");
-      if(["curva","cancelamento"].includes(t.dataset.tab)){
-        setTimeout(()=>{ try{charts.curva?.resize?.();charts.semana?.resize?.();charts.cancelamento?.resize?.();}catch(e){} },80);
-      }
-      if(t.dataset.tab==="desafios") renderDesafios(true);
-    });
-  });
-}
-
-/* INIT */
-async function init(){
-  try{
-    el("loading").style.display="block";
-    el("error").style.display="none";
-
-    const resp=await fetch("dados.csv",{cache:"no-store"});
-    if(!resp.ok) throw new Error(`HTTP ${resp.status} — verifique se dados.csv está na mesma pasta do index.html`);
-    const text=await resp.text();
-    state.rows=buildObjects(parseDelimited(text,";"));
-
-    updateProfFilters("profTipo","profNome");
-    updateProfFilters("profTipoSingle","profNomeSingle");
-    updateUFFilter();
-    renderTeamMappingUI();
-
-    const e=new Date(),sX=new Date(e); sX.setDate(sX.getDate()-29);
-    const eY=new Date(sX); eY.setDate(eY.getDate()-1);
-    const sY=new Date(eY); sY.setDate(sY.getDate()-29);
-    el("cmpXStart").value=toISO(sX); el("cmpXEnd").value=toISO(e);
-    el("cmpYStart").value=toISO(sY); el("cmpYEnd").value=toISO(eY);
-
-    resetChallengeForm();
-    renderDesafios(true);
-
-    updateAll();
-    el("loading").style.display="none";
-  }catch(e){
-    console.error(e);
-    el("loading").style.display="none";
-    el("error").style.display="block";
-    el("error").textContent=`Erro ao carregar dados: ${e.message}`;
   }
-}
 
-/* boot gate */
-setupGate();
+  // ---------- actions ----------
+  $("btnIrCadastro").addEventListener("click", () => showView("cadastro"));
+  $("btnVoltarLogin").addEventListener("click", () => showView("login"));
+
+  document.querySelectorAll(".tab").forEach(t => {
+    t.addEventListener("click", () => showView(t.dataset.view));
+  });
+
+  $("btnCadastrar").addEventListener("click", () => {
+    const name = $("regName").value.trim();
+    const email = $("regEmail").value.trim().toLowerCase();
+    const pass = $("regPass").value;
+    const pass2 = $("regPass2").value;
+
+    if(!name || !email || !pass) return toast("Preencha nome, e-mail e senha.");
+    if(pass !== pass2) return toast("As senhas não conferem.");
+    if(!email.includes("@")) return toast("E-mail inválido.");
+
+    const exists = getUserByEmail(email);
+    if(exists) return toast("Esse e-mail já está cadastrado.");
+
+    // Admin fixo nunca entra como pendente
+    const status = isAdminEmail(email) ? "APPROVED" : "PENDING";
+
+    users.push({
+      id: uid(),
+      name,
+      email,
+      pass,
+      status,
+      createdAt: now(),
+      approvedAt: status === "APPROVED" ? now() : undefined
+    });
+    saveUsers();
+
+    toast(status === "APPROVED" ? "Admin cadastrado/aprovado." : "Usuário criado como PENDENTE. Aguarde aprovação.");
+    $("regName").value = $("regEmail").value = $("regPass").value = $("regPass2").value = "";
+    showView("login");
+    syncUI();
+  });
+
+  $("btnLogin").addEventListener("click", () => {
+    const email = $("loginEmail").value.trim().toLowerCase();
+    const pass = $("loginPass").value;
+
+    if(!email || !pass) return toast("Informe e-mail e senha.");
+
+    // Admin fixo: precisa existir registro e senha bater (demo), ou você pode liberar sem senha.
+    const u = getUserByEmail(email);
+    if(!u) return toast("Usuário não encontrado. Crie um usuário primeiro.");
+    if(u.pass !== pass) return toast("Senha incorreta.");
+
+    if(u.status === "PENDING") return toast("Seu acesso está PENDENTE. Aguarde aprovação do admin.");
+    if(u.status === "BLOCKED") return toast("Seu acesso está BLOQUEADO. Fale com o admin.");
+
+    saveSession({ email, at: now() });
+    toast("Login realizado.");
+    showView(isAdminEmail(email) ? "aprovacoes" : "conta");
+  });
+
+  $("btnLogout").addEventListener("click", () => {
+    clearSession();
+    toast("Saiu da conta.");
+    showView("login");
+  });
+
+  $("btnRecarregar").addEventListener("click", () => {
+    users = loadUsers();
+    toast("Lista recarregada.");
+    syncUI();
+  });
+
+  $("btnReset").addEventListener("click", () => {
+    if(!confirm("Isso vai apagar TODOS os usuários e a sessão deste navegador. Continuar?")) return;
+    localStorage.removeItem(LS_USERS);
+    localStorage.removeItem(LS_SESSION);
+    users = [];
+    session = null;
+    ensureAdminRecord();
+    toast("Reset concluído.");
+    showView("login");
+    syncUI();
+  });
+
+  // init
+  ensureAdminRecord();
+  syncUI();
+
+  // default view
+  if(session?.email){
+    showView(isAdminEmail(session.email) ? "aprovacoes" : "conta");
+  } else {
+    showView("login");
+  }
+})();
 </script>
 </body>
 </html>
