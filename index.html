@@ -156,6 +156,35 @@
     .p-med{background:rgba(255,176,32,.12);color:var(--med);border-color:rgba(255,176,32,.28);}
     .p-good{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
 
+    /* ── Membros na apuração ── */
+    .team-name-btn{
+      display:inline-flex;align-items:center;gap:7px;
+      cursor:pointer;background:none;border:none;color:inherit;
+      font:inherit;font-weight:900;padding:0;text-align:left;
+      transition:color .15s;
+    }
+    .team-name-btn:hover{color:var(--accent2);}
+    .team-name-btn .chevron{font-size:.75em;opacity:.7;display:inline-block;transition:transform .2s ease;}
+    .team-name-btn.open .chevron{transform:rotate(90deg);}
+    .members-row td{padding:0 !important;border-bottom:1px solid rgba(255,255,255,.05);}
+    .members-row.hidden{display:none;}
+    .members-panel{
+      padding:10px 18px 14px 52px;
+      background:rgba(124,92,255,.06);
+      border-top:1px solid rgba(124,92,255,.18);
+      animation:fadeIn .2s ease;
+    }
+    .members-panel .mp-title{font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px;}
+    .members-panel .mp-list{display:flex;flex-wrap:wrap;gap:8px;}
+    .members-panel .mp-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:5px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+      font-size:.88rem;font-weight:750;color:rgba(234,240,255,.9);
+    }
+    .members-panel .mp-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex-shrink:0;}
+    .members-panel .mp-empty{font-size:.88rem;color:var(--muted);font-style:italic;}
+
     .promo-list{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;}
     .promo-row{
       display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -184,124 +213,41 @@
     .config-panel h4{margin:0 0 14px;font-size:1rem;font-weight:900;color:rgba(234,240,255,.9);}
 
     .sup-compare-wrap{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      overflow:hidden;
-      margin:14px 0;
-      backdrop-filter:blur(10px);
+      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
+      overflow:hidden;margin:14px 0;backdrop-filter:blur(10px);
     }
     .sup-compare-header{
-      display:grid;
-      grid-template-columns: 220px 1fr 1fr 1fr;
-      gap:0;
+      display:grid;grid-template-columns: 220px 1fr 1fr 1fr;gap:0;
       border-bottom:2px solid rgba(255,255,255,.10);
     }
-    .sup-compare-header > div{
-      padding:14px 18px;
-      font-weight:900;
-      font-size:.95rem;
-      text-align:center;
-    }
-    .sup-compare-header .col-label{
-      text-align:left;
-      color:var(--muted);
-      font-size:.82rem;
-      text-transform:uppercase;
-      letter-spacing:.6px;
-      border-right:1px solid rgba(255,255,255,.07);
-    }
-    .sup-compare-header .col-parque{
-      background:rgba(124,92,255,.10);
-      border-right:1px solid rgba(255,255,255,.07);
-      color:#c4b5ff;
-    }
-    .sup-compare-header .col-externa{
-      background:rgba(34,211,238,.08);
-      border-right:1px solid rgba(255,255,255,.07);
-      color:#7eedff;
-    }
-    .sup-compare-header .col-geral{
-      background:rgba(92,255,176,.06);
-      color:#b0fff0;
-    }
+    .sup-compare-header > div{padding:14px 18px;font-weight:900;font-size:.95rem;text-align:center;}
+    .sup-compare-header .col-label{text-align:left;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.6px;border-right:1px solid rgba(255,255,255,.07);}
+    .sup-compare-header .col-parque{background:rgba(124,92,255,.10);border-right:1px solid rgba(255,255,255,.07);color:#c4b5ff;}
+    .sup-compare-header .col-externa{background:rgba(34,211,238,.08);border-right:1px solid rgba(255,255,255,.07);color:#7eedff;}
+    .sup-compare-header .col-geral{background:rgba(92,255,176,.06);color:#b0fff0;}
     .sup-compare-row{
-      display:grid;
-      grid-template-columns: 220px 1fr 1fr 1fr;
-      gap:0;
-      border-bottom:1px solid rgba(255,255,255,.05);
-      transition:background .15s;
+      display:grid;grid-template-columns: 220px 1fr 1fr 1fr;gap:0;
+      border-bottom:1px solid rgba(255,255,255,.05);transition:background .15s;
     }
     .sup-compare-row:last-child{border-bottom:none;}
     .sup-compare-row:hover{background:rgba(255,255,255,.025);}
-    .sup-compare-row > div{
-      padding:13px 18px;
-      font-family:var(--mono);
-      font-size:.95rem;
-      text-align:center;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .sup-compare-row .rc-label{
-      text-align:left;
-      justify-content:flex-start;
-      font-family:var(--sans);
-      font-weight:850;
-      color:rgba(234,240,255,.9);
-      font-size:.93rem;
-      border-right:1px solid rgba(255,255,255,.07);
-    }
-    .sup-compare-row .rc-parque{
-      border-right:1px solid rgba(255,255,255,.06);
-      color:#c4b5ff;
-      font-weight:900;
-    }
-    .sup-compare-row .rc-externa{
-      border-right:1px solid rgba(255,255,255,.06);
-      color:#7eedff;
-      font-weight:900;
-    }
+    .sup-compare-row > div{padding:13px 18px;font-family:var(--mono);font-size:.95rem;text-align:center;display:flex;align-items:center;justify-content:center;}
+    .sup-compare-row .rc-label{text-align:left;justify-content:flex-start;font-family:var(--sans);font-weight:850;color:rgba(234,240,255,.9);font-size:.93rem;border-right:1px solid rgba(255,255,255,.07);}
+    .sup-compare-row .rc-parque{border-right:1px solid rgba(255,255,255,.06);color:#c4b5ff;font-weight:900;}
+    .sup-compare-row .rc-externa{border-right:1px solid rgba(255,255,255,.06);color:#7eedff;font-weight:900;}
     .sup-compare-row .rc-geral{color:#b0fff0;font-weight:900;}
-
-    .sup-compare-row.section-sep > div{
-      background:rgba(255,255,255,.03);
-      padding:8px 18px;
-      font-size:.78rem;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.7px;
-      color:var(--muted);
-      font-family:var(--sans);
-      border-top:1px solid rgba(255,255,255,.07);
-    }
+    .sup-compare-row.section-sep > div{background:rgba(255,255,255,.03);padding:8px 18px;font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-family:var(--sans);border-top:1px solid rgba(255,255,255,.07);}
     .sup-compare-row.section-sep .rc-label{ justify-content:flex-start; }
 
-    .rep-bar-wrap{
-      background:rgba(255,255,255,.05);
-      border-radius:999px;
-      height:8px;
-      overflow:hidden;
-      margin-top:6px;
-      width:100%;
-    }
+    .rep-bar-wrap{background:rgba(255,255,255,.05);border-radius:999px;height:8px;overflow:hidden;margin-top:6px;width:100%;}
     .rep-bar-fill{height:100%;border-radius:999px;}
     .rep-bar-fill.parque{background:linear-gradient(90deg,#7C5CFF,#c4b5ff);}
     .rep-bar-fill.externa{background:linear-gradient(90deg,#22D3EE,#7eedff);}
 
-    .rep-panel{
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:var(--radius);
-      padding:20px 22px;
-      margin:14px 0;
-    }
+    .rep-panel{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:20px 22px;margin:14px 0;}
     .rep-panel h4{margin:0 0 16px;font-size:1rem;font-weight:900;}
     .rep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
-    .rep-card{
-      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius2);
-      padding:16px 18px;position:relative;overflow:hidden;
-    }
+    .rep-card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius2);padding:16px 18px;position:relative;overflow:hidden;}
     .rep-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
     .rep-card.parque::before{background:linear-gradient(90deg,#7C5CFF,#c4b5ff);}
     .rep-card.externa::before{background:linear-gradient(90deg,#22D3EE,#7eedff);}
@@ -342,58 +288,28 @@
     .hint{font-size:.9rem;color:var(--muted);line-height:1.45;}
 
     .challenge-grid{
-      display:grid;
-      grid-template-columns: 420px 1fr;
-      gap:14px;
-      align-items:start;
-      margin-top:10px;
+      display:grid;grid-template-columns: 420px 1fr;gap:14px;align-items:start;margin-top:10px;
     }
     .challenge-card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      padding:14px;
-      backdrop-filter:blur(10px);
-      overflow:hidden;
+      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);
+      padding:14px;backdrop-filter:blur(10px);overflow:hidden;
     }
     .challenge-card h3{margin:0 0 10px;font-size:1.05rem;}
     .challenge-list{display:flex;flex-direction:column;gap:10px;max-height:65vh;overflow:auto;padding-right:6px;}
     .challenge-item{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.03);
-      border-radius:14px;
-      padding:12px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+      border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);
+      border-radius:14px;padding:12px 12px;display:flex;flex-direction:column;gap:10px;
     }
-    .challenge-item .top{
-      display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;
-    }
-    .challenge-item .title{
-      font-weight:950;
-      display:flex;gap:10px;align-items:center;min-width:0;
-    }
-    .challenge-item .title span{
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:360px;
-    }
+    .challenge-item .top{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap;}
+    .challenge-item .title{font-weight:950;display:flex;gap:10px;align-items:center;min-width:0;}
+    .challenge-item .title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:360px;}
     .challenge-item .meta{color:var(--muted);font-size:.9rem;}
     .challenge-item .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
     .teams-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px;}
-    .team-box{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.02);
-      border-radius:14px;
-      padding:12px;
-    }
+    .team-box{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.02);border-radius:14px;padding:12px;}
     .team-box .hdr{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px;}
     .team-box .hdr b{font-size:.98rem;}
-    .team-members{
-      border-top:1px solid rgba(255,255,255,.08);
-      padding-top:10px;
-      margin-top:10px;
-      display:flex;flex-direction:column;gap:8px;
-    }
+    .team-members{border-top:1px solid rgba(255,255,255,.08);padding-top:10px;margin-top:10px;display:flex;flex-direction:column;gap:8px;}
     .member-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
     .member-row label{font-weight:750;color:rgba(234,240,255,.88);text-transform:none;letter-spacing:0;font-size:.95rem;}
     .member-row input[type="checkbox"]{transform:scale(1.1);}
@@ -493,6 +409,7 @@
     <div id="loading" class="note">Carregando dados...</div>
     <div id="error"   class="note bad" style="display:none"></div>
 
+    <!-- RESUMO -->
     <div id="tab-resumo" class="tab-content active">
       <div class="stats" id="stats"></div>
       <div class="note">
@@ -507,6 +424,7 @@
       </div>
     </div>
 
+    <!-- COMPARATIVO -->
     <div id="tab-comparativo" class="tab-content">
       <div class="note">
         <strong>Comparativo entre dois períodos</strong><br>
@@ -549,6 +467,7 @@
       </div>
     </div>
 
+    <!-- CURVA -->
     <div id="tab-curva" class="tab-content">
       <div class="stats" id="stats-curva"></div>
       <div class="note">Respeita os filtros globais. • Casais/dia = linhas no dia. • Vendas/dia = soma de cotas. • Eficiência = Vendas ÷ Casais.</div>
@@ -568,6 +487,7 @@
       </div>
     </div>
 
+    <!-- CANCELAMENTO -->
     <div id="tab-cancelamento" class="tab-content">
       <div class="note"><strong>% Cancelamento</strong> = (cotas canceladas ÷ cotas totais) × 100.</div>
       <div class="chart-card">
@@ -580,6 +500,7 @@
       <div id="cancelamento-table"></div>
     </div>
 
+    <!-- EQUIPES -->
     <div id="tab-equipes" class="tab-content">
       <div class="note"><strong>Equipes de captação</strong> — marque a equipe de cada Promotor de marketing. Salvo no seu navegador.</div>
       <h3 style="margin:10px 0 6px">Equipe Parque</h3>
@@ -622,12 +543,12 @@
       </div>
     </div>
 
+    <!-- SUPERVISORES -->
     <div id="tab-equipes-supervisores" class="tab-content">
       <div class="note">
         <strong>Promotores de Marketing — 2 Supervisores</strong><br>
         Comparativo lado a lado: Equipe Parque × Equipe Externa × Geral. Percentual de representação ao final.
       </div>
-
       <div class="section-title">
         Comparativo Parque × Externa <span class="pill-tag">dado por dado</span>
       </div>
@@ -640,14 +561,11 @@
         </div>
         <div id="supCompareRows"></div>
       </div>
-
       <div class="section-title" style="margin-top:22px">
         Representatividade no total <span class="pill-tag">% de cada equipe</span>
       </div>
       <div id="supRepGrid"></div>
-
       <div class="divider"></div>
-
       <div class="section-title">
         Configurar promotores <span class="pill-tag">Definir equipe</span>
       </div>
@@ -681,23 +599,21 @@
       </div>
     </div>
 
+    <!-- DESAFIOS -->
     <div id="tab-desafios" class="tab-content">
       <div class="note">
         <strong>Desafios</strong><br>
         Crie desafios com período, número de equipes, nome das equipes, seleção de profissionais por equipe e escolha do critério de apuração.
         Tudo fica salvo no seu navegador (localStorage).
       </div>
-
       <div class="challenge-grid">
         <div class="challenge-card">
           <h3 id="challengeFormTitle">Criar desafio</h3>
-
           <div class="controls" style="margin:0;justify-content:flex-start">
             <div class="control-group" style="min-width:260px">
               <label>Nome do desafio</label>
               <input id="chName" placeholder="Ex.: Desafio Junho" />
             </div>
-
             <div class="control-group" style="min-width:330px">
               <label>Período do desafio</label>
               <div class="range-row">
@@ -706,7 +622,6 @@
                 <input id="chEnd" type="date" />
               </div>
             </div>
-
             <div class="control-group" style="min-width:220px">
               <label>Apuração</label>
               <select id="chMetric">
@@ -716,33 +631,18 @@
                 <option value="eficiencia">Eficiência</option>
               </select>
             </div>
-
-            <!-- ALTERADO: até 20 equipes -->
             <div class="control-group" style="min-width:220px">
               <label>Qtd. de equipes</label>
               <select id="chTeamsCount">
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
+                <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                <option value="5">5</option><option value="6">6</option><option value="7">7</option>
+                <option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                <option value="11">11</option><option value="12">12</option><option value="13">13</option>
+                <option value="14">14</option><option value="15">15</option><option value="16">16</option>
+                <option value="17">17</option><option value="18">18</option><option value="19">19</option>
                 <option value="20">20</option>
               </select>
             </div>
-
             <div class="control-group" style="min-width:180px">
               <label>Tipo de profissional</label>
               <select id="chProfTipo">
@@ -753,16 +653,12 @@
               <div class="tiny">A seleção abaixo lista apenas nomes desse tipo.</div>
             </div>
           </div>
-
           <div class="divider" style="margin:16px 0 14px"></div>
-
           <div class="section-title" style="margin-bottom:10px">
             Equipes <span class="pill-tag">nomes + membros</span>
           </div>
           <div id="chTeamsEditor" class="teams-wrap"></div>
-
           <div class="divider" style="margin:16px 0 14px"></div>
-
           <div class="controls" style="margin:0;justify-content:flex-start">
             <div class="control-group" style="min-width:180px">
               <label>&nbsp;</label>
@@ -777,16 +673,13 @@
               <button class="btn danger" id="btnChClearAll">🗑 Apagar todos</button>
             </div>
           </div>
-
           <div id="chFormMsg" class="note" style="display:none;margin-top:12px"></div>
         </div>
 
         <div class="challenge-card">
           <h3>Meus desafios</h3>
           <div id="chList" class="challenge-list"></div>
-
           <div class="divider"></div>
-
           <h3>Apuração (no período do desafio)</h3>
           <div class="note warn" style="margin-top:10px">
             A apuração do desafio <strong>ignora</strong> o filtro global de período e usa o período definido no desafio.
@@ -797,26 +690,27 @@
       </div>
     </div>
 
+    <!-- RANKINGS -->
     <div id="tab-ranking-promotor" class="tab-content">
       <div class="note">Ranking por <span class="badge">Promotor de marketing</span>. Clique nos cabeçalhos para ordenar.</div>
       <div id="ranking-promotor"></div>
     </div>
-
     <div id="tab-ranking-liner" class="tab-content">
       <div class="note">Ranking por <span class="badge">Liner</span>. Clique nos cabeçalhos para ordenar.</div>
       <div id="ranking-liner"></div>
     </div>
-
     <div id="tab-ranking-closer" class="tab-content">
       <div class="note">Ranking por <span class="badge">Closer</span>. Clique nos cabeçalhos para ordenar.</div>
       <div id="ranking-closer"></div>
     </div>
 
+    <!-- PERFIL RENDA -->
     <div id="tab-perfil-renda" class="tab-content">
       <div class="note">Performance por faixa de renda. Clique nos cabeçalhos para ordenar.</div>
       <div id="perfil-renda"></div>
     </div>
 
+    <!-- PROFISSIONAIS -->
     <div id="tab-profissionais" class="tab-content">
       <div class="note">Selecione um profissional para ver o detalhe individual no período filtrado.</div>
       <div class="controls" style="margin-top:10px">
@@ -841,13 +735,26 @@
 </div>
 
 <script>
+/* ═══════════════════════════════════════
+   UTILITÁRIOS
+═══════════════════════════════════════ */
 const el   = id => document.getElementById(id);
-const norm = s  => (s ?? "").toString().toLowerCase().trim().replace(/\s+/g," ");
+
+/**
+ * norm(): normaliza string para comparação — lowercase, trim, espaços simples.
+ * IMPORTANTE: NÃO modifica o valor original salvo; só é usada em comparações.
+ */
+const norm = s => (s ?? "").toString().toLowerCase().trim().replace(/\s+/g," ");
 
 const CLIENT_NAME_HEADERS = [
   norm("nome do cliente"),norm("cliente"),norm("nome"),norm("casal"),
   norm("nome completo"),norm("nome do casal"),
 ];
+
+/**
+ * KEY: mapeamento de colunas do CSV (valores já normalizados).
+ * Usados para buscar no objeto row via row[KEY.xxx].
+ */
 const KEY = {
   dataAtendimento  : norm("data de atendimento"),
   statusContrato   : norm("status do contrato"),
@@ -859,16 +766,39 @@ const KEY = {
   closer  : norm("closer"),
 };
 
-const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null } };
-const charts  = { curva:null, semana:null, cancelamento:null };
+/**
+ * TIPO_KEY_MAP: resolve o nome do tipo de profissional (como salvo no desafio)
+ * para a chave normalizada usada no objeto row.
+ * Isso corrige o bug principal: ch.profTipo pode ser "closer", "liner", etc.
+ * e precisamos encontrar a chave correta no row.
+ */
+const TIPO_KEY_MAP = {
+  [norm("promotor de marketing")] : KEY.promotor,
+  [norm("liner")]                 : KEY.liner,
+  [norm("closer")]                : KEY.closer,
+};
+
+function resolveTipoKey(profTipo){
+  const n = norm(profTipo ?? "");
+  // tenta mapa direto
+  if(TIPO_KEY_MAP[n]) return TIPO_KEY_MAP[n];
+  // fallback: procura chave que contenha o tipo
+  for(const [k,v] of Object.entries(TIPO_KEY_MAP)){
+    if(n.includes(k) || k.includes(n)) return v;
+  }
+  return KEY.promotor; // fallback final
+}
+
+const state  = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null } };
+const charts = { curva:null, semana:null, cancelamento:null };
 const sortState = {
-  "ranking-promotor"   :{ key:"vendas",    dir:"desc" },
-  "ranking-liner"      :{ key:"vendas",    dir:"desc" },
-  "ranking-closer"     :{ key:"vendas",    dir:"desc" },
-  "profissionais-table":{ key:"vendas",    dir:"desc" },
-  "perfil-renda"       :{ key:"vgvTotal",  dir:"desc" },
-  "cancelamento-table" :{ key:"cotasTotal",dir:"desc" },
-  "ch-results-table"   :{ key:"valor",     dir:"desc" },
+  "ranking-promotor"   :{ key:"vendas",   dir:"desc" },
+  "ranking-liner"      :{ key:"vendas",   dir:"desc" },
+  "ranking-closer"     :{ key:"vendas",   dir:"desc" },
+  "profissionais-table":{ key:"vendas",   dir:"desc" },
+  "perfil-renda"       :{ key:"vgvTotal", dir:"desc" },
+  "cancelamento-table" :{ key:"cotasTotal",dir:"desc"},
+  "ch-results-table"   :{ key:"valor",    dir:"desc" },
 };
 
 const TEAM_KEY    = "painel_equipes_promotores_v1";
@@ -879,6 +809,9 @@ const CH_KEY = "painel_desafios_v1";
 const loadChallenges = () => { try{ const r=localStorage.getItem(CH_KEY); const o=r?JSON.parse(r):[]; return Array.isArray(o)?o:[]; }catch(e){ return []; } };
 const saveChallenges = arr => localStorage.setItem(CH_KEY, JSON.stringify(Array.isArray(arr)?arr:[]));
 
+/* ═══════════════════════════════════════
+   PARSE CSV
+═══════════════════════════════════════ */
 function parseDelimited(text, delimiter=";"){
   const lines=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n").filter(l=>l.trim());
   if(!lines.length) return [];
@@ -907,6 +840,9 @@ function parseDelimited(text, delimiter=";"){
   return data;
 }
 
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
 function parseMoneyBR(str){
   if(!str||typeof str!=="string") return 0;
   const c=str.replace(/[^\d,.-]/g,""); if(!c) return 0;
@@ -972,6 +908,9 @@ function buildObjects(rows){
   });
 }
 
+/* ═══════════════════════════════════════
+   FILTROS
+═══════════════════════════════════════ */
 function applyFilters(rows){
   const status  =el("statusSelect").value;
   const profTipo=norm(el("profTipo").value);
@@ -991,6 +930,9 @@ function applyFilters(rows){
   return f;
 }
 
+/* ═══════════════════════════════════════
+   STATS
+═══════════════════════════════════════ */
 function sumVGV(rows){
   return rows.reduce((a,r)=>{
     const v=r._valorVgv??0,at=r._quotas?.ativo??0,ca=r._quotas?.cancelado??0,t=at+ca;
@@ -1038,6 +980,9 @@ function renderCards(cid,rows){
     <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
 }
 
+/* ═══════════════════════════════════════
+   RANKING
+═══════════════════════════════════════ */
 function groupRanking(rows,fieldKey){
   const map=new Map();
   rows.forEach(r=>{ const n=(r[fieldKey]??"").toString().trim(); if(!n) return; if(!map.has(n)) map.set(n,[]); map.get(n).push(r); });
@@ -1083,8 +1028,7 @@ function renderRanking(list,cid,badge){
         return`<tr>
           <td class="rank-col">${tr} ${p}°</td>
           <td class="name" title="${it.name}">${it.name}</td>
-          <td class="num">${it.casais}</td>
-          <td class="num">${it.vendas}</td>
+          <td class="num">${it.casais}</td><td class="num">${it.vendas}</td>
           <td class="num">${it.cotasCanceladas}</td>
           <td class="num">${fmtMoney(it.vgvTotal)}</td>
           <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
@@ -1099,6 +1043,9 @@ function renderRanking(list,cid,badge){
   });
 }
 
+/* ═══════════════════════════════════════
+   PERFIL RENDA
+═══════════════════════════════════════ */
 function rendaBucket(v){
   const x=v||0;
   if(x<9000)   return "Abaixo de R$ 9 mil";
@@ -1146,6 +1093,9 @@ function renderPerfilRenda(rows,cid){
   });
 }
 
+/* ═══════════════════════════════════════
+   GRÁFICOS
+═══════════════════════════════════════ */
 function destroyChart(ch){ try{ch?.destroy?.();}catch(e){} }
 
 function renderCurva(rows){
@@ -1184,11 +1134,11 @@ function renderCurva(rows){
   destroyChart(charts.semana);
   charts.semana=new Chart(el("chartSemana").getContext("2d"),{
     data:{labels:LBLS,datasets:[
-      {type:"bar", label:"Casais",            data:agg.map(x=>x.c),backgroundColor:"rgba(124,92,255,.25)",borderColor:"rgba(124,92,255,.65)",borderWidth:1,yAxisID:"yN"},
-      {type:"bar", label:"Vendas",            data:agg.map(x=>x.v),backgroundColor:"rgba(92,255,176,.18)",borderColor:"rgba(92,255,176,.65)",borderWidth:1,yAxisID:"yN"},
-      {type:"line",label:"VGV",               data:agg.map(x=>x.vgv),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.10)",tension:.25,pointRadius:2.2,yAxisID:"yM"},
-      {type:"line",label:"Eficiência",        data:agg.map(x=>x.c?(x.v/x.c)*100:0),borderColor:"rgba(255,176,32,1)",backgroundColor:"rgba(255,176,32,.10)",tension:.25,pointRadius:2.2,yAxisID:"yP"},
-      {type:"line",label:"Média Casais/dia",  data:meanC,borderColor:"rgba(234,240,255,.75)",backgroundColor:"rgba(234,240,255,.08)",borderDash:[6,6],tension:0,pointRadius:2,yAxisID:"yN"},
+      {type:"bar", label:"Casais",           data:agg.map(x=>x.c),backgroundColor:"rgba(124,92,255,.25)",borderColor:"rgba(124,92,255,.65)",borderWidth:1,yAxisID:"yN"},
+      {type:"bar", label:"Vendas",           data:agg.map(x=>x.v),backgroundColor:"rgba(92,255,176,.18)",borderColor:"rgba(92,255,176,.65)",borderWidth:1,yAxisID:"yN"},
+      {type:"line",label:"VGV",              data:agg.map(x=>x.vgv),borderColor:"rgba(34,211,238,1)",backgroundColor:"rgba(34,211,238,.10)",tension:.25,pointRadius:2.2,yAxisID:"yM"},
+      {type:"line",label:"Eficiência",       data:agg.map(x=>x.c?(x.v/x.c)*100:0),borderColor:"rgba(255,176,32,1)",backgroundColor:"rgba(255,176,32,.10)",tension:.25,pointRadius:2.2,yAxisID:"yP"},
+      {type:"line",label:"Média Casais/dia", data:meanC,borderColor:"rgba(234,240,255,.75)",backgroundColor:"rgba(234,240,255,.08)",borderDash:[6,6],tension:0,pointRadius:2,yAxisID:"yN"},
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
       plugins:{legend:{labels:{color:"rgba(234,240,255,.85)"}},
@@ -1203,6 +1153,9 @@ function renderCurva(rows){
   });
 }
 
+/* ═══════════════════════════════════════
+   CANCELAMENTO
+═══════════════════════════════════════ */
 function renderCancelamento(rows){
   el("cancel-meta").textContent=[
     (el("dateStart").value||el("dateEnd").value)?`Período: ${fmtBR(el("dateStart").value)||"—"} a ${fmtBR(el("dateEnd").value)||"—"}`:"Período: (sem filtro)",
@@ -1260,6 +1213,9 @@ function renderCancelamento(rows){
   });
 }
 
+/* ═══════════════════════════════════════
+   EQUIPES
+═══════════════════════════════════════ */
 function renderEquipes(){
   const map=loadTeamMap();
   renderCards("stats-equipe-parque",  state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; }));
@@ -1272,12 +1228,16 @@ function listAllPromos(){
   state.rows.forEach(r=>{ const n=(r[KEY.promotor]??"").toString().trim(); if(n) s.add(n); });
   return [...s].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
 }
-function listNamesByTipo(tipoKeyNorm){
+
+/**
+ * listNamesByTipo: lista nomes únicos de profissionais pelo tipo.
+ * tipoKeyNorm deve ser a chave normalizada da coluna no row (ex: KEY.closer).
+ * ── CORRIGIDO: recebe o nome do tipo e resolve para a chave correta ──
+ */
+function listNamesByTipo(profTipoNome){
+  const colKey = resolveTipoKey(profTipoNome);
   const s=new Set();
-  state.rows.forEach(r=>{
-    const n=(r[tipoKeyNorm]??"").toString().trim();
-    if(n) s.add(n);
-  });
+  state.rows.forEach(r=>{ const n=(r[colKey]??"").toString().trim(); if(n) s.add(n); });
   return [...s].sort((a,b)=>a.localeCompare(b,"pt-BR",{sensitivity:"base"}));
 }
 
@@ -1297,21 +1257,21 @@ function renderTeamMappingUI(){
   });
 }
 
+/* ═══════════════════════════════════════
+   SUPERVISORES
+═══════════════════════════════════════ */
 function renderSupervisores(){
   const map=loadTeamMap();
-  const rowP = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
-  const rowE = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
-  const rowG = rowP.concat(rowE);
-
-  const sP=statsFor(rowP), sE=statsFor(rowE), sG=statsFor(rowG);
-
+  const rowP=state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
+  const rowE=state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
+  const rowG=rowP.concat(rowE);
+  const sP=statsFor(rowP),sE=statsFor(rowE),sG=statsFor(rowG);
   const capsP=new Set(); rowP.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)capsP.add(norm(p));});
   const capsE=new Set(); rowE.forEach(r=>{const p=(r[KEY.promotor]??"").toString().trim();if(p)capsE.add(norm(p));});
   const capsG=new Set([...capsP,...capsE]);
-
-  const medCP = capsP.size ? sP.casais/capsP.size : 0;
-  const medCE = capsE.size ? sE.casais/capsE.size : 0;
-  const medCG = capsG.size ? sG.casais/capsG.size : 0;
+  const medCP=capsP.size?sP.casais/capsP.size:0;
+  const medCE=capsE.size?sE.casais/capsE.size:0;
+  const medCG=capsG.size?sG.casais/capsG.size:0;
 
   const mkRow=(label,vP,vE,vG,fmt)=>`
     <div class="sup-compare-row">
@@ -1325,35 +1285,35 @@ function renderSupervisores(){
       <div class="rc-label">${label}</div><div></div><div></div><div></div>
     </div>`;
 
-  const fmtN  = v => String(Math.round(v));
-  const fmtF1 = v => fmtNumBR(v,1,1);
-  const fmtEff= v => fmtPctBR(v);
-  const fmtM  = v => fmtMoney(v);
-  const fmtPc = v => fmtPctBR(v);
+  const fmtN=v=>String(Math.round(v));
+  const fmtF1=v=>fmtNumBR(v,1,1);
+  const fmtEff=v=>fmtPctBR(v);
+  const fmtM=v=>fmtMoney(v);
+  const fmtPc=v=>fmtPctBR(v);
 
   el("supCompareRows").innerHTML=
     mkSep("Captadores e volume")+
-    mkRow("Captadores",          capsP.size,   capsE.size,   capsG.size,   fmtN)+
-    mkRow("Casais",              sP.casais,    sE.casais,    sG.casais,    fmtN)+
-    mkRow("Média casal/captador",medCP,        medCE,        medCG,        fmtF1)+
-    mkRow("Média de Casais/dia", sP.mediaCasaisPeriodo, sE.mediaCasaisPeriodo, sG.mediaCasaisPeriodo, fmtF1)+
-    mkRow("NoTour",              sP.noTour,    sE.noTour,    sG.noTour,    fmtN)+
+    mkRow("Captadores",          capsP.size,  capsE.size,  capsG.size,  fmtN)+
+    mkRow("Casais",              sP.casais,   sE.casais,   sG.casais,   fmtN)+
+    mkRow("Média casal/captador",medCP,       medCE,       medCG,       fmtF1)+
+    mkRow("Média de Casais/dia", sP.mediaCasaisPeriodo,sE.mediaCasaisPeriodo,sG.mediaCasaisPeriodo,fmtF1)+
+    mkRow("NoTour",              sP.noTour,   sE.noTour,   sG.noTour,   fmtN)+
     mkSep("Vendas")+
-    mkRow("Cotas vendidas",      sP.vendas,    sE.vendas,    sG.vendas,    fmtN)+
-    mkRow("Cotas canceladas",    sP.cotasCanceladas, sE.cotasCanceladas, sG.cotasCanceladas, fmtN)+
-    mkRow("% Cancelamento",      sP.pctCancel, sE.pctCancel, sG.pctCancel, fmtPc)+
+    mkRow("Cotas vendidas",      sP.vendas,   sE.vendas,   sG.vendas,   fmtN)+
+    mkRow("Cotas canceladas",    sP.cotasCanceladas,sE.cotasCanceladas,sG.cotasCanceladas,fmtN)+
+    mkRow("% Cancelamento",      sP.pctCancel,sE.pctCancel,sG.pctCancel,fmtPc)+
     mkRow("Eficiência",          sP.eficiencia,sE.eficiencia,sG.eficiencia,fmtEff)+
     mkSep("Financeiro")+
-    mkRow("VGV total",           sP.vgvTotal,  sE.vgvTotal,  sG.vgvTotal,  fmtM)+
+    mkRow("VGV total",           sP.vgvTotal, sE.vgvTotal, sG.vgvTotal, fmtM)+
     mkRow("Ticket médio (cota)", sP.ticketMedio,sE.ticketMedio,sG.ticketMedio,fmtM)+
-    mkRow("Renda média",         sP.rendaMed,  sE.rendaMed,  sG.rendaMed,  fmtM);
+    mkRow("Renda média",         sP.rendaMed, sE.rendaMed, sG.rendaMed, fmtM);
 
-  const repMetrics = [
-    { label:"Casais",           vP:sP.casais,         vE:sE.casais,         vG:sG.casais,         fmt:fmtN },
-    { label:"Cotas vendidas",   vP:sP.vendas,         vE:sE.vendas,         vG:sG.vendas,         fmt:fmtN },
-    { label:"Cotas canceladas", vP:sP.cotasCanceladas,vE:sE.cotasCanceladas,vG:sG.cotasCanceladas,fmt:fmtN },
-    { label:"VGV total",        vP:sP.vgvTotal,       vE:sE.vgvTotal,       vG:sG.vgvTotal,       fmt:fmtM },
-    { label:"Captadores",       vP:capsP.size,        vE:capsE.size,        vG:capsG.size,        fmt:fmtN },
+  const repMetrics=[
+    {label:"Casais",           vP:sP.casais,         vE:sE.casais,         vG:sG.casais,         fmt:fmtN},
+    {label:"Cotas vendidas",   vP:sP.vendas,         vE:sE.vendas,         vG:sG.vendas,         fmt:fmtN},
+    {label:"Cotas canceladas", vP:sP.cotasCanceladas,vE:sE.cotasCanceladas,vG:sG.cotasCanceladas,fmt:fmtN},
+    {label:"VGV total",        vP:sP.vgvTotal,       vE:sE.vgvTotal,       vG:sG.vgvTotal,       fmt:fmtM},
+    {label:"Captadores",       vP:capsP.size,        vE:capsE.size,        vG:capsG.size,        fmt:fmtN},
   ];
 
   el("supRepGrid").innerHTML=`
@@ -1361,33 +1321,22 @@ function renderSupervisores(){
       <h4>📊 Quanto cada equipe representa do total geral (Parque + Externa)</h4>
       <div class="rep-grid">
         ${repMetrics.map(m=>{
-          const pctP = m.vG ? (m.vP/m.vG) : 0;
-          const pctE = m.vG ? (m.vE/m.vG) : 0;
-          const wP   = Math.round(pctP*100);
-          const wE   = Math.round(pctE*100);
+          const pctP=m.vG?(m.vP/m.vG):0,pctE=m.vG?(m.vE/m.vG):0;
+          const wP=Math.round(pctP*100),wE=Math.round(pctE*100);
           return`
           <div class="rep-card parque">
             <div class="rep-kpi-label">${m.label} — Parque</div>
-            <div class="rep-kpi-row">
-              <div class="rep-kpi-val" style="color:#c4b5ff">${m.fmt(m.vP)}</div>
-              <div class="rep-kpi-pct parque">${fmtPct2(m.vP,m.vG)} do total</div>
-            </div>
+            <div class="rep-kpi-row"><div class="rep-kpi-val" style="color:#c4b5ff">${m.fmt(m.vP)}</div><div class="rep-kpi-pct parque">${fmtPct2(m.vP,m.vG)} do total</div></div>
             <div class="rep-bar-wrap"><div class="rep-bar-fill parque" style="width:${wP}%"></div></div>
           </div>
           <div class="rep-card externa">
             <div class="rep-kpi-label">${m.label} — Externa</div>
-            <div class="rep-kpi-row">
-              <div class="rep-kpi-val" style="color:#7eedff">${m.fmt(m.vE)}</div>
-              <div class="rep-kpi-pct externa">${fmtPct2(m.vE,m.vG)} do total</div>
-            </div>
+            <div class="rep-kpi-row"><div class="rep-kpi-val" style="color:#7eedff">${m.fmt(m.vE)}</div><div class="rep-kpi-pct externa">${fmtPct2(m.vE,m.vG)} do total</div></div>
             <div class="rep-bar-wrap"><div class="rep-bar-fill externa" style="width:${wE}%"></div></div>
           </div>
           <div class="rep-card geral">
             <div class="rep-kpi-label">${m.label} — Geral</div>
-            <div class="rep-kpi-row">
-              <div class="rep-kpi-val" style="color:#b0fff0">${m.fmt(m.vG)}</div>
-              <div class="rep-kpi-pct geral">100% do total</div>
-            </div>
+            <div class="rep-kpi-row"><div class="rep-kpi-val" style="color:#b0fff0">${m.fmt(m.vG)}</div><div class="rep-kpi-pct geral">100% do total</div></div>
             <div class="rep-bar-wrap"><div class="rep-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
           </div>`;
         }).join("")}
@@ -1417,14 +1366,14 @@ function renderSupervisores(){
       const m=loadTeamMap();
       if(sel.value) m[p]=sel.value; else delete m[p];
       saveTeamMap(m);
-      renderSupervisores();
-      renderEquipes();
-      renderTeamMappingUI();
-      renderDesafios();
+      renderSupervisores(); renderEquipes(); renderTeamMappingUI(); renderDesafios();
     });
   });
 }
 
+/* ═══════════════════════════════════════
+   PROFISSIONAL INDIVIDUAL
+═══════════════════════════════════════ */
 function renderSingle(){
   const tipo=norm(el("profTipoSingle").value);
   const nome=el("profNomeSingle").value;
@@ -1444,6 +1393,9 @@ function renderSingle(){
     <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
 }
 
+/* ═══════════════════════════════════════
+   COMPARATIVO
+═══════════════════════════════════════ */
 function filterByRange(rows,s,e){
   const d1=parseDateOnlyInput(s),d2=parseDateOnlyInput(e);
   if(!d1&&!d2) return rows.slice();
@@ -1467,16 +1419,16 @@ function renderComparativo(){
     `Status: ${el("statusSelect").value}`,`Prof.: ${el("profTipo").value} / ${el("profNome").value}`,`UF: ${el("ufSelect").value}`
   ].join(" • ");
   const metrics=[
-    {label:"Casais",           x:sX.casais,             y:sY.casais,             fmt:v=>String(v|0)},
-    {label:"Média Casais/dia", x:sX.mediaCasaisPeriodo, y:sY.mediaCasaisPeriodo, fmt:v=>fmtNumBR(v,1,1)},
-    {label:"Cotas (vendas)",   x:sX.vendas,             y:sY.vendas,             fmt:v=>String(v|0)},
-    {label:"Cotas canceladas", x:sX.cotasCanceladas,    y:sY.cotasCanceladas,    fmt:v=>String(v|0)},
-    {label:"VGV total",        x:sX.vgvTotal,           y:sY.vgvTotal,           fmt:fmtMoney},
-    {label:"Eficiência",       x:sX.eficiencia,         y:sY.eficiencia,         fmt:fmtPctBR},
-    {label:"% Cancelamento",   x:sX.pctCancel,          y:sY.pctCancel,          fmt:fmtPctBR},
-    {label:"Ticket médio",     x:sX.ticketMedio,        y:sY.ticketMedio,        fmt:fmtMoney},
-    {label:"Renda média",      x:sX.rendaMed,           y:sY.rendaMed,           fmt:fmtMoney},
-    {label:"NoTour",           x:sX.noTour,             y:sY.noTour,             fmt:v=>String(v|0)},
+    {label:"Casais",           x:sX.casais,            y:sY.casais,            fmt:v=>String(v|0)},
+    {label:"Média Casais/dia", x:sX.mediaCasaisPeriodo,y:sY.mediaCasaisPeriodo,fmt:v=>fmtNumBR(v,1,1)},
+    {label:"Cotas (vendas)",   x:sX.vendas,            y:sY.vendas,            fmt:v=>String(v|0)},
+    {label:"Cotas canceladas", x:sX.cotasCanceladas,   y:sY.cotasCanceladas,   fmt:v=>String(v|0)},
+    {label:"VGV total",        x:sX.vgvTotal,          y:sY.vgvTotal,          fmt:fmtMoney},
+    {label:"Eficiência",       x:sX.eficiencia,        y:sY.eficiencia,        fmt:fmtPctBR},
+    {label:"% Cancelamento",   x:sX.pctCancel,         y:sY.pctCancel,         fmt:fmtPctBR},
+    {label:"Ticket médio",     x:sX.ticketMedio,       y:sY.ticketMedio,       fmt:fmtMoney},
+    {label:"Renda média",      x:sX.rendaMed,          y:sY.rendaMed,          fmt:fmtMoney},
+    {label:"NoTour",           x:sX.noTour,            y:sY.noTour,            fmt:v=>String(v|0)},
   ];
   el("cmpDeltas").innerHTML=metrics.map(m=>{ const v=pctVar(m.x,m.y); return`
     <div class="kpi-row">
@@ -1485,6 +1437,9 @@ function renderComparativo(){
     </div>`; }).join("");
 }
 
+/* ═══════════════════════════════════════
+   SELECTS
+═══════════════════════════════════════ */
 function updateProfFilters(tipoId,nomeId){
   const tipo=norm(el(tipoId).value);
   const names=new Set();
@@ -1499,19 +1454,17 @@ function updateUFFilter(){
   el("ufSelect").innerHTML='<option value="todos">Todas</option>'+[...ufs].sort().map(u=>`<option value="${u}">${u}</option>`).join("");
 }
 
-/* DESAFIOS */
+/* ═══════════════════════════════════════
+   DESAFIOS
+═══════════════════════════════════════ */
 let currentChallengeId = null;
 
 const metricLabel = m => ({
-  casais:"Número de casais",
-  vgv:"VGV",
-  casais_atendidos:"Casais atendidos",
-  eficiencia:"Eficiência",
+  casais:"Número de casais", vgv:"VGV",
+  casais_atendidos:"Casais atendidos", eficiencia:"Eficiência",
 }[m]||m);
 
-function uid(){
-  return "ch_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16);
-}
+function uid(){ return "ch_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
 
 function showChMsg(text,type="success"){
   const box=el("chFormMsg");
@@ -1523,144 +1476,114 @@ function showChMsg(text,type="success"){
 
 function newChallengeTemplate(){
   return {
-    id: uid(),
-    name: "",
-    start: "",
-    end: "",
-    metric: "casais",
-    profTipo: norm("promotor de marketing"),
-    teams: [
-      { name:"Equipe 1", members:[] },
-      { name:"Equipe 2", members:[] },
-    ],
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    id:uid(), name:"", start:"", end:"", metric:"casais",
+    profTipo:norm("promotor de marketing"),
+    teams:[{name:"Equipe 1",members:[]},{name:"Equipe 2",members:[]}],
+    createdAt:Date.now(), updatedAt:Date.now(),
   };
 }
 
-/* ALTERADO: agora limita 2..20 (antes 2..6) */
-function ensureTeamsCount(ch, n){
-  const nn = Math.max(2, Math.min(20, Number(n)||2));
-  ch.teams = Array.isArray(ch.teams)?ch.teams:[];
-  while(ch.teams.length < nn){
-    ch.teams.push({ name:`Equipe ${ch.teams.length+1}`, members:[] });
-  }
-  while(ch.teams.length > nn){
-    ch.teams.pop();
-  }
+function ensureTeamsCount(ch,n){
+  const nn=Math.max(2,Math.min(20,Number(n)||2));
+  ch.teams=Array.isArray(ch.teams)?ch.teams:[];
+  while(ch.teams.length<nn) ch.teams.push({name:`Equipe ${ch.teams.length+1}`,members:[]});
+  while(ch.teams.length>nn) ch.teams.pop();
   ch.teams.forEach((t,i)=>{
-    if(!t || typeof t!=="object") ch.teams[i] = { name:`Equipe ${i+1}`, members:[] };
-    if(typeof ch.teams[i].name!=="string") ch.teams[i].name = `Equipe ${i+1}`;
-    if(!Array.isArray(ch.teams[i].members)) ch.teams[i].members = [];
+    if(!t||typeof t!=="object") ch.teams[i]={name:`Equipe ${i+1}`,members:[]};
+    if(typeof ch.teams[i].name!=="string") ch.teams[i].name=`Equipe ${i+1}`;
+    if(!Array.isArray(ch.teams[i].members)) ch.teams[i].members=[];
   });
 }
 
 function renderChallengeTeamsEditor(){
-  const challenges = loadChallenges();
-  const ch = challenges.find(x=>x.id===currentChallengeId) || null;
-  const tipo = norm(el("chProfTipo").value);
-  const names = listNamesByTipo(tipo);
+  const challenges=loadChallenges();
+  const ch=challenges.find(x=>x.id===currentChallengeId)||null;
+  const profTipoNome=el("chProfTipo").value;                    // ex: "closer"
+  const names=listNamesByTipo(profTipoNome);                    // ← usa resolveTipoKey internamente
+  const teamsCount=Number(el("chTeamsCount").value)||2;
+  const tmp=ch?structuredClone(ch):newChallengeTemplate();
+  tmp.profTipo=norm(profTipoNome);
+  ensureTeamsCount(tmp,teamsCount);
 
-  const teamsCount = Number(el("chTeamsCount").value)||2;
-
-  const tmp = ch ? structuredClone(ch) : newChallengeTemplate();
-  tmp.profTipo = tipo;
-  ensureTeamsCount(tmp, teamsCount);
-
-  const used = new Set();
+  const used=new Set();
   tmp.teams.forEach(t=>t.members.forEach(m=>used.add(norm(m))));
 
-  el("chTeamsEditor").innerHTML = tmp.teams.map((t,idx)=>{
-    return `
-      <div class="team-box" data-team-index="${idx}">
-        <div class="hdr">
-          <b>Equipe ${idx+1}</b>
-          <span class="badge">${t.members.length} membros</span>
-        </div>
-        <div class="control-group" style="min-width:unset">
-          <label>Nome da equipe</label>
-          <input data-team-name="${idx}" value="${(t.name||"").replace(/"/g,"&quot;")}" placeholder="Ex.: Time Azul" />
-        </div>
-        <div class="team-members">
-          <div class="tiny">Marque os profissionais que farão parte desta equipe:</div>
-          ${names.length ? names.map(n=>{
-            const nn = norm(n);
-            const checked = t.members.some(x=>norm(x)===nn);
-            const disabled = !checked && used.has(nn);
-            return `
-              <div class="member-row">
-                <label title="${n}">
-                  <input type="checkbox" data-team-member="${idx}" data-member="${encodeURIComponent(n)}" ${checked?"checked":""} ${disabled?"disabled":""}/>
-                  ${n}
-                </label>
-                ${disabled?`<span class="badge">em outra equipe</span>`:""}
-              </div>
-            `;
-          }).join("") : `<div class="note" style="margin:0">Nenhum profissional encontrado no CSV para este tipo.</div>`}
-        </div>
+  el("chTeamsEditor").innerHTML=tmp.teams.map((t,idx)=>`
+    <div class="team-box" data-team-index="${idx}">
+      <div class="hdr"><b>Equipe ${idx+1}</b><span class="badge">${t.members.length} membros</span></div>
+      <div class="control-group" style="min-width:unset">
+        <label>Nome da equipe</label>
+        <input data-team-name="${idx}" value="${(t.name||"").replace(/"/g,"&quot;")}" placeholder="Ex.: Time Azul" />
       </div>
-    `;
-  }).join("");
+      <div class="team-members">
+        <div class="tiny">Marque os profissionais que farão parte desta equipe:</div>
+        ${names.length?names.map(n=>{
+          const nn=norm(n);
+          const checked=t.members.some(x=>norm(x)===nn);
+          const disabled=!checked&&used.has(nn);
+          return`<div class="member-row">
+            <label title="${n}">
+              <input type="checkbox" data-team-member="${idx}" data-member="${encodeURIComponent(n)}" ${checked?"checked":""} ${disabled?"disabled":""}/>
+              ${n}
+            </label>
+            ${disabled?`<span class="badge">em outra equipe</span>`:""}
+          </div>`;
+        }).join(""):`<div class="note" style="margin:0">Nenhum profissional encontrado no CSV para este tipo.</div>`}
+      </div>
+    </div>
+  `).join("");
 
   el("chTeamsEditor").querySelectorAll("input[data-team-name]").forEach(inp=>{
-    inp.addEventListener("input", ()=>{
+    inp.addEventListener("input",()=>{
       if(!currentChallengeId) return;
       const idx=Number(inp.dataset.teamName);
       const arr=loadChallenges();
       const ch=arr.find(x=>x.id===currentChallengeId);
       if(!ch) return;
-      ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
-      ch.teams[idx].name = inp.value;
-      ch.updatedAt = Date.now();
+      ensureTeamsCount(ch,Number(el("chTeamsCount").value)||2);
+      ch.teams[idx].name=inp.value;
+      ch.updatedAt=Date.now();
       saveChallenges(arr);
       renderDesafios(false);
     });
   });
 
   el("chTeamsEditor").querySelectorAll("input[type='checkbox'][data-team-member]").forEach(cb=>{
-    cb.addEventListener("change", ()=>{
-      const tIdx = Number(cb.dataset.teamMember);
-      const member = decodeURIComponent(cb.dataset.member);
-
+    cb.addEventListener("change",()=>{
+      const tIdx=Number(cb.dataset.teamMember);
+      const member=decodeURIComponent(cb.dataset.member);
       if(currentChallengeId){
         const arr=loadChallenges();
         const ch=arr.find(x=>x.id===currentChallengeId);
         if(!ch) return;
-        ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
-
-        ch.teams.forEach(t=>t.members = (t.members||[]).filter(x=>norm(x)!==norm(member)));
-        if(cb.checked){
-          ch.teams[tIdx].members.push(member);
-        }
-        ch.updatedAt = Date.now();
+        ensureTeamsCount(ch,Number(el("chTeamsCount").value)||2);
+        // Remove o membro de TODAS as equipes antes de adicionar na equipe correta
+        ch.teams.forEach(t=>t.members=(t.members||[]).filter(x=>norm(x)!==norm(member)));
+        if(cb.checked) ch.teams[tIdx].members.push(member);
+        ch.updatedAt=Date.now();
         saveChallenges(arr);
       }
-
       renderDesafios(false);
     });
   });
 }
 
 function readChallengeFromForm(){
-  const name = (el("chName").value||"").trim();
-  const start = el("chStart").value;
-  const end = el("chEnd").value;
-  const metric = el("chMetric").value;
-  const profTipo = norm(el("chProfTipo").value);
-  const teamsCount = Number(el("chTeamsCount").value)||2;
-
-  const names = listNamesByTipo(profTipo);
-
-  const teams = [];
-  for(let i=0;i<teamsCount;i++){
-    teams.push({ name:`Equipe ${i+1}`, members:[] });
-  }
+  const name=(el("chName").value||"").trim();
+  const start=el("chStart").value;
+  const end=el("chEnd").value;
+  const metric=el("chMetric").value;
+  const profTipoNome=el("chProfTipo").value;
+  const profTipo=norm(profTipoNome);
+  const teamsCount=Number(el("chTeamsCount").value)||2;
+  const names=listNamesByTipo(profTipoNome);
+  const teams=[];
+  for(let i=0;i<teamsCount;i++) teams.push({name:`Equipe ${i+1}`,members:[]});
 
   document.querySelectorAll("#chTeamsEditor input[data-team-name]").forEach(inp=>{
     const idx=Number(inp.dataset.teamName);
-    if(Number.isFinite(idx) && teams[idx]) teams[idx].name = (inp.value||`Equipe ${idx+1}`).trim() || `Equipe ${idx+1}`;
+    if(Number.isFinite(idx)&&teams[idx]) teams[idx].name=(inp.value||`Equipe ${idx+1}`).trim()||`Equipe ${idx+1}`;
   });
-
   document.querySelectorAll("#chTeamsEditor input[type='checkbox'][data-team-member]").forEach(cb=>{
     if(!cb.checked) return;
     const tIdx=Number(cb.dataset.teamMember);
@@ -1671,21 +1594,13 @@ function readChallengeFromForm(){
   });
 
   const seen=new Set();
-  teams.forEach(t=>{
-    t.members = t.members.filter(m=>{
-      const k=norm(m);
-      if(seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
-  });
-
-  return { name, start, end, metric, profTipo, teamsCount, teams };
+  teams.forEach(t=>{ t.members=t.members.filter(m=>{ const k=norm(m); if(seen.has(k)) return false; seen.add(k); return true; }); });
+  return{name,start,end,metric,profTipo,teamsCount,teams};
 }
 
 function resetChallengeForm(){
-  currentChallengeId = null;
-  el("challengeFormTitle").textContent = "Criar desafio";
+  currentChallengeId=null;
+  el("challengeFormTitle").textContent="Criar desafio";
   el("chName").value="";
   el("chStart").value="";
   el("chEnd").value="";
@@ -1697,99 +1612,185 @@ function resetChallengeForm(){
 }
 
 function loadChallengeIntoForm(ch){
-  currentChallengeId = ch.id;
-  el("challengeFormTitle").textContent = "Editar desafio";
-  el("chName").value = ch.name||"";
-  el("chStart").value = ch.start||"";
-  el("chEnd").value = ch.end||"";
-  el("chMetric").value = ch.metric||"casais";
-  el("chProfTipo").value = (ch.profTipo||norm("promotor de marketing"));
-
-  /* ALTERADO: agora carrega até 20 */
-  el("chTeamsCount").value = String(Math.max(2, Math.min(20, (ch.teams||[]).length || 2)));
-
+  currentChallengeId=ch.id;
+  el("challengeFormTitle").textContent="Editar desafio";
+  el("chName").value=ch.name||"";
+  el("chStart").value=ch.start||"";
+  el("chEnd").value=ch.end||"";
+  el("chMetric").value=ch.metric||"casais";
+  el("chProfTipo").value=(ch.profTipo||norm("promotor de marketing"));
+  el("chTeamsCount").value=String(Math.max(2,Math.min(20,(ch.teams||[]).length||2)));
   renderChallengeTeamsEditor();
   renderDesafios(false);
 }
 
 function deleteChallenge(id){
-  const arr = loadChallenges().filter(x=>x.id!==id);
+  const arr=loadChallenges().filter(x=>x.id!==id);
   saveChallenges(arr);
   if(currentChallengeId===id) resetChallengeForm();
   renderDesafios();
 }
 
 function formatChallengePeriod(ch){
-  const s = ch.start ? fmtBR(ch.start) : "—";
-  const e = ch.end ? fmtBR(ch.end) : "—";
-  return `${s} a ${e}`;
+  return `${ch.start?fmtBR(ch.start):"—"} a ${ch.end?fmtBR(ch.end):"—"}`;
 }
 
-function challengeMetricValue(ch, rowsForTeam){
-  const s = statsFor(rowsForTeam);
+/* ─────────────────────────────────────────────────────────────────
+   ★ FUNÇÃO CORRIGIDA: challengeMetricValue
+   O erro estava aqui: tipoKey era passado como norm(ch.profTipo)
+   mas isso resultava numa string como "closer" que não é a chave
+   do objeto row. Agora usamos resolveTipoKey() para obter a chave
+   correta do CSV (ex: KEY.closer = "closer" — mas verificado via mapa).
+   
+   Além disso, a filtragem por membro agora compara usando norm() em
+   ambos os lados para evitar divergências de capitalização/espaços.
+─────────────────────────────────────────────────────────────────── */
+function rowsForTeam(allRows, ch, team){
+  // Resolve a chave da coluna do CSV para o tipo de profissional
+  const colKey = resolveTipoKey(ch.profTipo ?? "promotor de marketing");
+  
+  // Monta Set com nomes normalizados dos membros da equipe
+  const memberSet = new Set((team.members || []).map(m => norm(m)));
+  
+  if(memberSet.size === 0) return [];
+  
+  return allRows.filter(r => {
+    // Pega o valor da coluna correta no row
+    const who = (r[colKey] ?? "").toString().trim();
+    // Compara normalizado
+    return who !== "" && memberSet.has(norm(who));
+  });
+}
+
+function challengeMetricValue(ch, rowsTeam){
+  const s = statsFor(rowsTeam);
   switch(ch.metric){
-    case "casais": return { val: s.casais, fmt: v=>String(v|0) };
-    case "vgv": return { val: s.vgvTotal, fmt: fmtMoney };
-    case "casais_atendidos": return { val: s.totalLinhas, fmt: v=>String(v|0) };
-    case "eficiencia": return { val: s.eficiencia, fmt: fmtPctBR };
-    default: return { val: s.casais, fmt: v=>String(v|0) };
+    case "casais":           return { val: s.casais,      fmt: v => String(v|0) };
+    case "vgv":              return { val: s.vgvTotal,    fmt: fmtMoney };
+    case "casais_atendidos": return { val: s.totalLinhas, fmt: v => String(v|0) };
+    case "eficiencia":       return { val: s.eficiencia,  fmt: fmtPctBR };
+    default:                 return { val: s.casais,      fmt: v => String(v|0) };
   }
 }
 
 function applyFiltersForChallengeBase(rows){
-  const status  =el("statusSelect").value;
-  const ufSel   =el("ufSelect").value;
+  const status=el("statusSelect").value;
+  const ufSel=el("ufSelect").value;
   let f=rows.slice();
-  if(status!=="todos")   f=f.filter(r=>r._bucket===status);
-  if(ufSel !=="todos")   f=f.filter(r=>(r[KEY.uf]??"").toString().trim()===ufSel);
+  if(status!=="todos") f=f.filter(r=>r._bucket===status);
+  if(ufSel!=="todos")  f=f.filter(r=>(r[KEY.uf]??"").toString().trim()===ufSel);
   return f;
 }
 
-function renderChallengeResults(ch){
-  if(!ch){ el("chResults").innerHTML = `<div class="note">Selecione um desafio na lista para ver a apuração.</div>`; return; }
-
-  const base = applyFiltersForChallengeBase(state.rows);
-  const inPeriod = filterByRange(base, ch.start, ch.end);
-
-  const tipoKey = norm(ch.profTipo||norm("promotor de marketing"));
-  const teams = Array.isArray(ch.teams)?ch.teams:[];
-  const results = teams.map(t=>{
-    const members = (t.members||[]).map(x=>x.toString());
-    const memberSet = new Set(members.map(norm));
-
-    const rowsTeam = inPeriod.filter(r=>{
-      const who = (r[tipoKey]??"").toString().trim();
-      if(!who) return false;
-      return memberSet.has(norm(who));
+/* ─── Toggle de membros na tabela de resultados ─── */
+function attachMembersToggle(container){
+  container.querySelectorAll(".team-name-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const rowId=btn.dataset.membersRow;
+      const membersRow=container.querySelector(`tr[data-members-id="${rowId}"]`);
+      if(!membersRow) return;
+      const isHidden=membersRow.classList.contains("hidden");
+      membersRow.classList.toggle("hidden",!isHidden);
+      btn.classList.toggle("open",isHidden);
     });
+  });
+}
 
-    const met = challengeMetricValue(ch, rowsTeam);
+function buildResultsTableBody(sorted, ch, best, colCount){
+  return sorted.map((r,i)=>{
+    const pos=i+1;
+    const medal=pos===1?"🥇":pos===2?"🥈":pos===3?"🥉":"";
+    const delta=typeof r.valor==="number"&&typeof best==="number"?(r.valor-best):0;
+    const main=ch.metric==="vgv"?r.fmt(r.valor):ch.metric==="eficiencia"?r.fmt(r.valor):String(r.valor|0);
+    const rowId=`mr_${i}_${Date.now()}`;
+    const chipsHtml=r.members.length
+      ?r.members.map(m=>`<div class="mp-chip"><span class="dot"></span>${m}</div>`).join("")
+      :`<div class="mp-empty">Nenhum membro cadastrado</div>`;
 
-    return {
-      teamName: (t.name||"Equipe").trim() || "Equipe",
-      membersCount: members.length,
-      valor: met.val,
-      fmt: met.fmt,
-      stats: statsFor(rowsTeam),
+    let deltaStr="";
+    if(pos>1){
+      if(ch.metric==="vgv") deltaStr=fmtMoney(delta);
+      else if(ch.metric==="eficiencia") deltaStr=fmtNumBR(delta*100,1,1)+"%";
+      else deltaStr=String(delta|0);
+    }
+
+    return`
+      <tr data-result-row="${rowId}">
+        <td class="rank-col">${medal} ${pos}°</td>
+        <td class="name">
+          <button class="team-name-btn" data-members-row="${rowId}" title="Ver membros">
+            ${r.teamName}<span class="chevron">▶</span>
+          </button>
+        </td>
+        <td class="num">${r.membersCount}</td>
+        <td class="num"><b>${main}</b>${pos>1?`<span class="badge">dif.: ${deltaStr}</span>`:""}</td>
+        <td class="num">${r.stats.casais}</td>
+        <td class="num">${r.stats.vendas}</td>
+        <td class="num">${fmtMoney(r.stats.vgvTotal)}</td>
+        <td class="num"><span class="pill ${effPill(r.stats.eficiencia)}">${fmtPctBR(r.stats.eficiencia)}</span></td>
+      </tr>
+      <tr class="members-row hidden" data-members-id="${rowId}">
+        <td colspan="${colCount}">
+          <div class="members-panel">
+            <div class="mp-title">👥 Membros da equipe "${r.teamName}"</div>
+            <div class="mp-list">${chipsHtml}</div>
+          </div>
+        </td>
+      </tr>`;
+  }).join("");
+}
+
+function renderChallengeResults(ch){
+  if(!ch){
+    el("chResults").innerHTML=`<div class="note">Selecione um desafio na lista para ver a apuração.</div>`;
+    return;
+  }
+
+  // Base: aplica filtros globais (exceto período) e filtra pelo período do desafio
+  const base    = applyFiltersForChallengeBase(state.rows);
+  const inPeriod= filterByRange(base, ch.start, ch.end);
+
+  const teams=Array.isArray(ch.teams)?ch.teams:[];
+
+  // ★ Para cada equipe, filtra rows usando a coluna CORRETA do CSV
+  const results=teams.map(t=>{
+    const teamRows = rowsForTeam(inPeriod, ch, t);  // ← CORRIGIDO
+    const met      = challengeMetricValue(ch, teamRows);
+    return{
+      teamName  : (t.name||"Equipe").trim()||"Equipe",
+      members   : (t.members||[]).map(x=>x.toString()),
+      membersCount: (t.members||[]).length,
+      valor : met.val,
+      fmt   : met.fmt,
+      stats : statsFor(teamRows),
     };
   });
 
-  const sorted = results.slice().sort((a,b)=>{
-    const av = (typeof a.valor==="number")?a.valor:0;
-    const bv = (typeof b.valor==="number")?b.valor:0;
-    if(bv!==av) return bv-av;
-    return a.teamName.localeCompare(b.teamName,"pt-BR",{sensitivity:"base"});
+  const sorted=results.slice().sort((a,b)=>{
+    const av=typeof a.valor==="number"?a.valor:0;
+    const bv=typeof b.valor==="number"?b.valor:0;
+    return bv!==av?bv-av:a.teamName.localeCompare(b.teamName,"pt-BR",{sensitivity:"base"});
   });
 
-  const best = sorted[0]?.valor ?? 0;
+  const best=sorted[0]?.valor??0;
+  const COL_COUNT=8;
 
-  el("chResults").innerHTML = `
+  // Resolve a chave para mostrar no debug info
+  const colKeyUsed = resolveTipoKey(ch.profTipo ?? "");
+
+  el("chResults").innerHTML=`
     <div class="note">
-      <strong>${(ch.name||"Desafio").trim() || "Desafio"}</strong><br>
-      Período: <strong>${formatChallengePeriod(ch)}</strong> • Apuração: <strong>${metricLabel(ch.metric)}</strong> • Tipo: <strong>${ch.profTipo}</strong><br>
-      Filtros aplicados: Status=<strong>${el("statusSelect").value}</strong> • UF=<strong>${el("ufSelect").value}</strong>
+      <strong>${(ch.name||"Desafio").trim()||"Desafio"}</strong><br>
+      Período: <strong>${formatChallengePeriod(ch)}</strong> •
+      Apuração: <strong>${metricLabel(ch.metric)}</strong> •
+      Tipo: <strong>${ch.profTipo}</strong><br>
+      Filtros aplicados: Status=<strong>${el("statusSelect").value}</strong> •
+      UF=<strong>${el("ufSelect").value}</strong>
     </div>
-
+    <div class="note" style="padding:8px 16px;margin-bottom:4px;font-size:.85rem">
+      💡 Clique no <strong>nome da equipe</strong> para ver os membros. •
+      Total de registros no período: <strong>${inPeriod.length}</strong>
+    </div>
     <div class="table-wrap">
       <table>
         <thead>
@@ -1804,87 +1805,42 @@ function renderChallengeResults(ch){
             <th class="num">Eficiência</th>
           </tr>
         </thead>
-        <tbody>
-          ${sorted.map((r,i)=>{
-            const pos=i+1;
-            const medal = pos===1?"🥇":pos===2?"🥈":pos===3?"🥉":"";
-            const delta = (typeof r.valor==="number" && typeof best==="number") ? (r.valor-best) : 0;
-
-            const main = (ch.metric==="vgv") ? r.fmt(r.valor)
-                       : (ch.metric==="eficiencia") ? r.fmt(r.valor)
-                       : String(r.valor|0);
-
-            return `
-              <tr>
-                <td class="rank-col">${medal} ${pos}°</td>
-                <td class="name" title="${r.teamName}">${r.teamName}</td>
-                <td class="num">${r.membersCount}</td>
-                <td class="num">
-                  <b>${main}</b>
-                  ${pos>1 ? `<span class="badge">dif.: ${ch.metric==="vgv"?fmtMoney(delta):ch.metric==="eficiencia"?fmtNumBR(delta*100,1,1)+"%":String(delta|0)}</span>`:""}
-                </td>
-                <td class="num">${r.stats.casais}</td>
-                <td class="num">${r.stats.vendas}</td>
-                <td class="num">${fmtMoney(r.stats.vgvTotal)}</td>
-                <td class="num"><span class="pill ${effPill(r.stats.eficiencia)}">${fmtPctBR(r.stats.eficiencia)}</span></td>
-              </tr>
-            `;
-          }).join("")}
-        </tbody>
+        <tbody>${buildResultsTableBody(sorted, ch, best, COL_COUNT)}</tbody>
       </table>
-    </div>
-  `;
+    </div>`;
 
+  attachMembersToggle(el("chResults"));
+
+  // Sort handler
   el("chResults").querySelectorAll("thead th.sortable").forEach(th=>{
-    th.addEventListener("click", ()=>{
-      setSort("ch-results-table", th.dataset.sort);
-      const st = sortState["ch-results-table"] || {key:"valor",dir:"desc"};
-      const again = results.slice().sort((a,b)=>{
-        const key = st.key;
-        const dir = st.dir;
-        const va = a[key], vb = b[key];
-        const num = (x)=> (typeof x==="number")?x:0;
-        const cmp = (x,y)=> {
-          if(typeof x==="number" && typeof y==="number") return x-y;
-          return String(x??"").localeCompare(String(y??""),"pt-BR",{sensitivity:"base"});
-        };
-        const baseCmp = (key==="valor"||key==="membersCount") ? (num(va)-num(vb)) : cmp(va,vb);
-        return dir==="asc" ? baseCmp : -baseCmp;
+    th.addEventListener("click",()=>{
+      setSort("ch-results-table",th.dataset.sort);
+      const st=sortState["ch-results-table"]||{key:"valor",dir:"desc"};
+      const again=results.slice().sort((a,b)=>{
+        const key=st.key,dir=st.dir;
+        const num=x=>typeof x==="number"?x:0;
+        const cmpStr=(x,y)=>String(x??"").localeCompare(String(y??""),"pt-BR",{sensitivity:"base"});
+        let base=0;
+        if(key==="valor"||key==="membersCount") base=num(a[key])-num(b[key]);
+        else base=cmpStr(a[key],b[key]);
+        return dir==="asc"?base:-base;
       });
-
-      const tbody = el("chResults").querySelector("tbody");
-      tbody.innerHTML = again.map((r,i)=>{
-        const pos=i+1;
-        const medal = pos===1?"🥇":pos===2?"🥈":pos===3?"🥉":"";
-        const main = (ch.metric==="vgv") ? r.fmt(r.valor)
-                   : (ch.metric==="eficiencia") ? r.fmt(r.valor)
-                   : String(r.valor|0);
-        return `
-          <tr>
-            <td class="rank-col">${medal} ${pos}°</td>
-            <td class="name" title="${r.teamName}">${r.teamName}</td>
-            <td class="num">${r.membersCount}</td>
-            <td class="num"><b>${main}</b></td>
-            <td class="num">${r.stats.casais}</td>
-            <td class="num">${r.stats.vendas}</td>
-            <td class="num">${fmtMoney(r.stats.vgvTotal)}</td>
-            <td class="num"><span class="pill ${effPill(r.stats.eficiencia)}">${fmtPctBR(r.stats.eficiencia)}</span></td>
-          </tr>
-        `;
-      }).join("");
+      el("chResults").querySelector("tbody").innerHTML=
+        buildResultsTableBody(again, ch, again[0]?.valor??0, COL_COUNT);
+      attachMembersToggle(el("chResults"));
     });
   });
 }
 
 function renderDesafios(recalcTeamsEditor=true){
-  const arr = loadChallenges().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-  el("chList").innerHTML = arr.length ? arr.map(ch=>{
-    const active = (ch.id===currentChallengeId);
-    return `
-      <div class="challenge-item" style="${active?'border-color: rgba(124,92,255,.45); box-shadow: 0 18px 50px rgba(0,0,0,.35);':''}">
+  const arr=loadChallenges().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  el("chList").innerHTML=arr.length?arr.map(ch=>{
+    const active=(ch.id===currentChallengeId);
+    return`
+      <div class="challenge-item" style="${active?"border-color:rgba(124,92,255,.45);box-shadow:0 18px 50px rgba(0,0,0,.35);":""}">
         <div class="top">
           <div class="title">
-            <span>${(ch.name||"Sem nome").trim() || "Sem nome"}</span>
+            <span>${(ch.name||"Sem nome").trim()||"Sem nome"}</span>
             <span class="badge">${metricLabel(ch.metric)}</span>
             <span class="badge">${ch.profTipo||"—"}</span>
           </div>
@@ -1895,29 +1851,28 @@ function renderDesafios(recalcTeamsEditor=true){
           <button class="btn" data-ch-view="${encodeURIComponent(ch.id)}">Apurar</button>
           <button class="btn danger" data-ch-del="${encodeURIComponent(ch.id)}">Excluir</button>
         </div>
-      </div>
-    `;
-  }).join("") : `<div class="note" style="margin:0">Nenhum desafio criado ainda.</div>`;
+      </div>`;
+  }).join(""):`<div class="note" style="margin:0">Nenhum desafio criado ainda.</div>`;
 
   el("chList").querySelectorAll("button[data-ch-open]").forEach(b=>{
-    b.addEventListener("click", ()=>{
+    b.addEventListener("click",()=>{
       const id=decodeURIComponent(b.dataset.chOpen);
       const ch=loadChallenges().find(x=>x.id===id);
       if(ch) loadChallengeIntoForm(ch);
     });
   });
   el("chList").querySelectorAll("button[data-ch-view]").forEach(b=>{
-    b.addEventListener("click", ()=>{
+    b.addEventListener("click",()=>{
       const id=decodeURIComponent(b.dataset.chView);
       const ch=loadChallenges().find(x=>x.id===id);
       if(!ch) return;
-      currentChallengeId = id;
+      currentChallengeId=id;
       renderChallengeResults(ch);
       renderDesafios(false);
     });
   });
   el("chList").querySelectorAll("button[data-ch-del]").forEach(b=>{
-    b.addEventListener("click", ()=>{
+    b.addEventListener("click",()=>{
       const id=decodeURIComponent(b.dataset.chDel);
       if(!confirm("Excluir este desafio?")) return;
       deleteChallenge(id);
@@ -1926,10 +1881,13 @@ function renderDesafios(recalcTeamsEditor=true){
 
   if(recalcTeamsEditor) renderChallengeTeamsEditor();
 
-  const current = currentChallengeId ? loadChallenges().find(x=>x.id===currentChallengeId) : null;
+  const current=currentChallengeId?loadChallenges().find(x=>x.id===currentChallengeId):null;
   renderChallengeResults(current);
 }
 
+/* ═══════════════════════════════════════
+   UPDATE ALL
+═══════════════════════════════════════ */
 function updateAll(){
   state.filtered=applyFilters(state.rows);
   renderCards("stats",       state.filtered);
@@ -1948,6 +1906,9 @@ function updateAll(){
   renderDesafios(false);
 }
 
+/* ═══════════════════════════════════════
+   EVENTOS
+═══════════════════════════════════════ */
 function setup(){
   ["statusSelect","profNome","ufSelect","dateStart","dateEnd"].forEach(id=>el(id).addEventListener("change",updateAll));
   el("profTipo").addEventListener("change",()=>{ updateProfFilters("profTipo","profNome"); updateAll(); });
@@ -1984,101 +1945,70 @@ function setup(){
     saveTeamMap({}); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
   });
 
-  el("chTeamsCount").addEventListener("change", ()=>{
+  el("chTeamsCount").addEventListener("change",()=>{
     if(currentChallengeId){
       const arr=loadChallenges();
       const ch=arr.find(x=>x.id===currentChallengeId);
-      if(ch){
-        ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
-        ch.updatedAt = Date.now();
-        saveChallenges(arr);
-      }
+      if(ch){ ensureTeamsCount(ch,Number(el("chTeamsCount").value)||2); ch.updatedAt=Date.now(); saveChallenges(arr); }
     }
     renderDesafios(true);
   });
-  el("chProfTipo").addEventListener("change", ()=>{
+  el("chProfTipo").addEventListener("change",()=>{
     if(currentChallengeId){
       const arr=loadChallenges();
       const ch=arr.find(x=>x.id===currentChallengeId);
-      if(ch){
-        ch.profTipo = norm(el("chProfTipo").value);
-        ch.teams.forEach(t=>t.members=[]);
-        ch.updatedAt = Date.now();
-        saveChallenges(arr);
-      }
+      if(ch){ ch.profTipo=norm(el("chProfTipo").value); ch.teams.forEach(t=>t.members=[]); ch.updatedAt=Date.now(); saveChallenges(arr); }
     }
     renderDesafios(true);
   });
   ["chName","chStart","chEnd","chMetric"].forEach(id=>{
-    el(id).addEventListener("change", ()=>{
+    el(id).addEventListener("change",()=>{
       if(!currentChallengeId) return;
       const arr=loadChallenges();
       const ch=arr.find(x=>x.id===currentChallengeId);
       if(!ch) return;
-      ch.name = (el("chName").value||"").trim();
-      ch.start = el("chStart").value;
-      ch.end = el("chEnd").value;
-      ch.metric = el("chMetric").value;
-      ch.updatedAt = Date.now();
+      ch.name=(el("chName").value||"").trim();
+      ch.start=el("chStart").value;
+      ch.end=el("chEnd").value;
+      ch.metric=el("chMetric").value;
+      ch.updatedAt=Date.now();
       saveChallenges(arr);
       renderDesafios(false);
     });
   });
 
-  el("btnChNew").addEventListener("click", ()=>{
-    resetChallengeForm();
-    showChMsg("Pronto: preencha e salve um novo desafio.", "success");
-  });
+  el("btnChNew").addEventListener("click",()=>{ resetChallengeForm(); showChMsg("Pronto: preencha e salve um novo desafio.","success"); });
 
-  el("btnChSave").addEventListener("click", ()=>{
-    const form = readChallengeFromForm();
+  el("btnChSave").addEventListener("click",()=>{
+    const form=readChallengeFromForm();
+    if(!form.name){ showChMsg("Informe um nome para o desafio.","warn"); return; }
+    if(form.start&&form.end){
+      const d1=parseDateOnlyInput(form.start),d2=parseDateOnlyInput(form.end);
+      if(d1&&d2&&d2.getTime()<d1.getTime()){ showChMsg("Período inválido: a data final é menor que a inicial.","warn"); return; }
+    } else { showChMsg("Informe o período (início e fim) do desafio.","warn"); return; }
 
-    if(!form.name){ showChMsg("Informe um nome para o desafio.", "warn"); return; }
-    if(form.start && form.end){
-      const d1=parseDateOnlyInput(form.start), d2=parseDateOnlyInput(form.end);
-      if(d1 && d2 && d2.getTime() < d1.getTime()){ showChMsg("Período inválido: a data final é menor que a inicial.", "warn"); return; }
-    } else {
-      showChMsg("Informe o período (início e fim) do desafio.", "warn"); return;
-    }
-
-    const emptyTeams = form.teams.filter(t=>(t.members||[]).length===0).length;
-    if(emptyTeams>0){
-      if(!confirm("Existem equipes sem membros. Deseja salvar assim mesmo?")) return;
-    }
+    const emptyTeams=form.teams.filter(t=>(t.members||[]).length===0).length;
+    if(emptyTeams>0){ if(!confirm("Existem equipes sem membros. Deseja salvar assim mesmo?")) return; }
 
     const arr=loadChallenges();
     let ch=null;
+    if(currentChallengeId){ ch=arr.find(x=>x.id===currentChallengeId); if(!ch) currentChallengeId=null; }
+    if(!ch){ ch=newChallengeTemplate(); ch.id=uid(); arr.push(ch); currentChallengeId=ch.id; }
 
-    if(currentChallengeId){
-      ch = arr.find(x=>x.id===currentChallengeId);
-      if(!ch){ currentChallengeId=null; }
-    }
-
-    if(!ch){
-      ch = newChallengeTemplate();
-      ch.id = uid();
-      arr.push(ch);
-      currentChallengeId = ch.id;
-    }
-
-    ch.name = form.name;
-    ch.start = form.start;
-    ch.end = form.end;
-    ch.metric = form.metric;
-    ch.profTipo = form.profTipo;
-    ensureTeamsCount(ch, form.teamsCount);
+    ch.name=form.name; ch.start=form.start; ch.end=form.end;
+    ch.metric=form.metric; ch.profTipo=form.profTipo;
+    ensureTeamsCount(ch,form.teamsCount);
     ch.teams.forEach((t,i)=>{
-      t.name = (form.teams[i]?.name || `Equipe ${i+1}`).trim() || `Equipe ${i+1}`;
-      t.members = (form.teams[i]?.members || []).slice();
+      t.name=(form.teams[i]?.name||`Equipe ${i+1}`).trim()||`Equipe ${i+1}`;
+      t.members=(form.teams[i]?.members||[]).slice();
     });
-    ch.updatedAt = Date.now();
-
+    ch.updatedAt=Date.now();
     saveChallenges(arr);
-    showChMsg("Desafio salvo.", "success");
+    showChMsg("Desafio salvo.","success");
     renderDesafios(true);
   });
 
-  el("btnChClearAll").addEventListener("click", ()=>{
+  el("btnChClearAll").addEventListener("click",()=>{
     if(!confirm("Apagar TODOS os desafios salvos neste navegador?")) return;
     saveChallenges([]);
     resetChallengeForm();
@@ -2094,13 +2024,14 @@ function setup(){
       if(["curva","cancelamento"].includes(t.dataset.tab)){
         setTimeout(()=>{ try{charts.curva?.resize?.();charts.semana?.resize?.();charts.cancelamento?.resize?.();}catch(e){} },80);
       }
-      if(t.dataset.tab==="desafios"){
-        renderDesafios(true);
-      }
+      if(t.dataset.tab==="desafios") renderDesafios(true);
     });
   });
 }
 
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
 async function init(){
   try{
     el("loading").style.display="block";
@@ -2124,7 +2055,6 @@ async function init(){
 
     resetChallengeForm();
     renderDesafios(true);
-
     updateAll();
     el("loading").style.display="none";
   }catch(e){
