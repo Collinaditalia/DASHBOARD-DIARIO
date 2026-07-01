@@ -159,14 +159,16 @@
     /* ── Promotores lista inline ── */
     .promo-list{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;}
     .promo-row{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
       padding:12px 14px;border-radius:14px;
       border:1px solid rgba(255,255,255,.09);
       background:rgba(255,255,255,.03);
       transition:background .15s;
+      flex-wrap:wrap;
     }
     .promo-row:hover{background:rgba(255,255,255,.06);}
-    .promo-row .pr-name{font-weight:850;font-size:.97rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .promo-row .pr-left{display:flex;align-items:center;gap:10px;flex:1;min-width:200px;flex-wrap:wrap;}
+    .promo-row .pr-name{font-weight:850;font-size:.97rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .pr-tag{font-size:.78rem;font-family:var(--mono);font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;}
     .pr-tag.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.38);color:#c4b5ff;}
     .pr-tag.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
@@ -178,6 +180,30 @@
       cursor:pointer;min-width:180px;
     }
     .promo-row select.mini-sel:focus{border-color:var(--accent);}
+
+    /* ── Datas de inatividade ── */
+    .inativo-dates{
+      display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+      padding:8px 10px;border-radius:10px;
+      border:1px dashed rgba(255,176,32,.30);
+      background:rgba(255,176,32,.06);
+      margin-top:4px;width:100%;
+    }
+    .inativo-dates label{
+      font-size:0.72rem;color:var(--muted);font-weight:700;
+      text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;
+    }
+    .inativo-dates input[type="date"]{
+      padding:5px 8px;font-size:0.82rem;min-width:135px;
+      border-radius:8px;border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);color:var(--text);
+    }
+    .inativo-dates.hidden{display:none;}
+    .inativo-dates .inativo-badge{
+      font-size:.72rem;font-weight:800;color:#ffc966;
+      background:rgba(255,176,32,.12);padding:3px 8px;border-radius:999px;
+      white-space:nowrap;
+    }
 
     .config-panel{
       background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
@@ -513,6 +539,7 @@
       .promo-row select.mini-sel{min-width:140px;}
       .sup-compare-header,.sup-compare-row{grid-template-columns:130px 1fr 1fr 1fr;font-size:.85rem;}
       .sup-compare-row > div,.sup-compare-header > div{padding:10px 10px;}
+      .inativo-dates{flex-direction:column;align-items:stretch;}
     }
   </style>
 
@@ -682,12 +709,13 @@
       <div id="cancelamento-table"></div>
     </div>
 
-    <!-- ── EQUIPES DE CAPTAÇÃO (NOVO FORMATO) ── -->
+    <!-- ── EQUIPES DE CAPTAÇÃO ── -->
     <div id="tab-equipes" class="tab-content">
       <div class="note">
         <strong>Equipes de captação</strong> — defina abaixo a equipe de cada Promotor de marketing.<br>
         As opções são: <strong>Equipe Parque</strong>, <strong>Equipe Externa</strong> ou <strong>Inativo</strong>.<br>
-        Promotores marcados como <strong>Inativo</strong> não entram nas estatísticas das equipes ativas.<br>
+        Ao selecionar <strong>Inativo</strong>, informe o período de inatividade. Os registros nesse período serão contados como <strong>Inativo</strong>.<br>
+        Fora do período de inatividade, o profissional é contado na sua <strong>equipe base</strong> (Parque ou Externa).<br>
         Tudo fica salvo no seu navegador (localStorage).
       </div>
 
@@ -697,7 +725,7 @@
       <h3 style="margin:16px 0 6px">🔵 Equipe Externa</h3>
       <div class="stats" id="stats-equipe-externa"></div>
 
-      <h3 style="margin:16px 0 6px">🟡 Inativo</h3>
+      <h3 style="margin:16px 0 6px">🟡 Inativo (registros dentro do período de inatividade)</h3>
       <div class="stats" id="stats-equipe-inativo"></div>
 
       <div class="note warn">Promotores sem nenhuma marcação entram em <strong>Sem equipe</strong>.</div>
@@ -711,7 +739,10 @@
           <h4 style="margin:0">Lista completa de profissionais</h4>
           <button class="btn danger" id="btnLimparEquipes">🗑 Limpar tudo</button>
         </div>
-        <div class="tiny" style="margin-bottom:12px">Altere a equipe no seletor ao lado de cada nome. A alteração é salva automaticamente.</div>
+        <div class="tiny" style="margin-bottom:12px">
+          Altere a equipe no seletor ao lado de cada nome. Ao selecionar <strong>Inativo</strong>, preencha as datas de início e fim da inatividade.<br>
+          A alteração é salva automaticamente.
+        </div>
         <div id="teamMappingList" class="promo-list"></div>
       </div>
     </div>
@@ -724,7 +755,7 @@
       <div class="note">
         <strong>Promotores de Marketing — 2 Supervisores</strong><br>
         Comparativo lado a lado: Equipe Parque × Equipe Externa × Geral. Percentual de representação ao final.<br>
-        <em>Promotores marcados como "Inativo" ou sem equipe não entram neste comparativo.</em>
+        <em>Registros de profissionais no período de inatividade são contados como "Inativo" e não entram neste comparativo.</em>
       </div>
 
       <div class="section-title">
@@ -773,6 +804,9 @@
             <label>&nbsp;</label>
             <button class="btn danger" id="btnLimparEquipesSup">🗑 Limpar tudo</button>
           </div>
+        </div>
+        <div class="tiny" style="margin-top:8px">
+          Ao selecionar <strong>Inativo</strong> na lista abaixo, preencha as datas para definir o período de inatividade.
         </div>
       </div>
       <div class="config-panel" style="margin-top:0">
@@ -841,16 +875,13 @@
       </div>
 
       <div class="challenge-grid">
-        <!-- Criar/Editar -->
         <div class="challenge-card">
           <h3 id="challengeFormTitle">Criar desafio</h3>
-
           <div class="controls" style="margin:0;justify-content:flex-start">
             <div class="control-group" style="min-width:260px">
               <label>Nome do desafio</label>
               <input id="chName" placeholder="Ex.: Desafio Junho" />
             </div>
-
             <div class="control-group" style="min-width:330px">
               <label>Período do desafio</label>
               <div class="range-row">
@@ -859,7 +890,6 @@
                 <input id="chEnd" type="date" />
               </div>
             </div>
-
             <div class="control-group" style="min-width:220px">
               <label>Apuração</label>
               <select id="chMetric">
@@ -869,7 +899,6 @@
                 <option value="eficiencia">Eficiência</option>
               </select>
             </div>
-
             <div class="control-group" style="min-width:220px">
               <label>Qtd. de equipes</label>
               <select id="chTeamsCount">
@@ -880,7 +909,6 @@
                 <option value="6">6</option>
               </select>
             </div>
-
             <div class="control-group" style="min-width:180px">
               <label>Tipo de profissional</label>
               <select id="chProfTipo">
@@ -891,16 +919,12 @@
               <div class="tiny">A seleção abaixo lista apenas nomes desse tipo.</div>
             </div>
           </div>
-
           <div class="divider" style="margin:16px 0 14px"></div>
-
           <div class="section-title" style="margin-bottom:10px">
             Equipes <span class="pill-tag">nomes + membros</span>
           </div>
           <div id="chTeamsEditor" class="teams-wrap"></div>
-
           <div class="divider" style="margin:16px 0 14px"></div>
-
           <div class="controls" style="margin:0;justify-content:flex-start">
             <div class="control-group" style="min-width:180px">
               <label>&nbsp;</label>
@@ -915,17 +939,12 @@
               <button class="btn danger" id="btnChClearAll">🗑 Apagar todos</button>
             </div>
           </div>
-
           <div id="chFormMsg" class="note" style="display:none;margin-top:12px"></div>
         </div>
-
-        <!-- Lista + Resultado -->
         <div class="challenge-card">
           <h3>Meus desafios</h3>
           <div id="chList" class="challenge-list"></div>
-
           <div class="divider"></div>
-
           <h3>Apuração (no período do desafio)</h3>
           <div class="note warn" style="margin-top:10px">
             A apuração do desafio <strong>ignora</strong> o filtro global de período e usa o período definido no desafio.
@@ -1019,12 +1038,99 @@ const sortState = {
   "ch-results-table"   :{ key:"valor",     dir:"desc" },
 };
 
-/* ── localStorage ── */
-const TEAM_KEY    = "painel_equipes_promotores_v1";
-const loadTeamMap = () => { try{ const r=localStorage.getItem(TEAM_KEY); const o=r?JSON.parse(r):{}; return(o&&typeof o==="object")?o:{}; }catch(e){return{};} };
-const saveTeamMap = m  => localStorage.setItem(TEAM_KEY, JSON.stringify(m||{}));
+/* ═══════════════════════════════════════════════
+   localStorage — EQUIPES v2 (com inatividade)
+═══════════════════════════════════════════════ */
+const TEAM_KEY_V2 = "painel_equipes_promotores_v2";
 
-/* desafios */
+function loadTeamMapV2(){
+  try {
+    // Tenta carregar a nova versão primeiro
+    const r = localStorage.getItem(TEAM_KEY_V2);
+    if(r){
+      const o = JSON.parse(r);
+      if(o && typeof o === "object") return o;
+    }
+    // Migra da versão antiga (v1) se existir
+    const old = localStorage.getItem("painel_equipes_promotores_v1");
+    if(old){
+      const oldMap = JSON.parse(old);
+      if(oldMap && typeof oldMap === "object"){
+        const newMap = {};
+        for(const [k, v] of Object.entries(oldMap)){
+          if(typeof v === "string"){
+            newMap[k] = { equipe: v, inativoInicio: null, inativoFim: null };
+          } else if(v && typeof v === "object"){
+            newMap[k] = {
+              equipe: v.equipe || null,
+              inativoInicio: v.inativoInicio || null,
+              inativoFim: v.inativoFim || null
+            };
+          }
+        }
+        saveTeamMapV2(newMap);
+        return newMap;
+      }
+    }
+    return {};
+  } catch(e){ return {}; }
+}
+
+function saveTeamMapV2(m){
+  localStorage.setItem(TEAM_KEY_V2, JSON.stringify(m || {}));
+}
+
+/* Retorna o objeto de configuração normalizado para um promotor */
+function getTeamConfig(promotorNome){
+  const map = loadTeamMapV2();
+  const raw = map[promotorNome];
+  if(!raw) return null;
+  if(typeof raw === "string"){
+    return { equipe: raw, inativoInicio: null, inativoFim: null };
+  }
+  return {
+    equipe: raw.equipe || null,
+    inativoInicio: raw.inativoInicio || null,
+    inativoFim: raw.inativoFim || null,
+  };
+}
+
+function setTeamConfig(promotorNome, config){
+  const map = loadTeamMapV2();
+  map[promotorNome] = config;
+  saveTeamMapV2(map);
+}
+
+function removeTeamConfig(promotorNome){
+  const map = loadTeamMapV2();
+  delete map[promotorNome];
+  saveTeamMapV2(map);
+}
+
+/* Retorna a equipe EFETIVA considerando período de inatividade */
+function getEquipeEfetiva(promotorNome, dt){
+  const cfg = getTeamConfig(promotorNome);
+  if(!cfg || !cfg.equipe) return null; // sem equipe
+
+  const ini = cfg.inativoInicio ? parseDateOnlyInput(cfg.inativoInicio) : null;
+  const fim = cfg.inativoFim   ? parseDateOnlyInput(cfg.inativoFim)   : null;
+
+  // Se tem período de inatividade definido e a data do registro está nele
+  if(ini && fim && dt){
+    const d = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    const i = new Date(ini.getFullYear(), ini.getMonth(), ini.getDate());
+    const f = new Date(fim.getFullYear(), fim.getMonth(), fim.getDate());
+    if(d >= i && d <= f){
+      return "Inativo";
+    }
+  }
+
+  return cfg.equipe;
+}
+
+/* ═══════════════════════════════════════════════
+   DESAFIOS localStorage
+═══════════════════════════════════════════════ */
 const CH_KEY = "painel_desafios_v1";
 const loadChallenges = () => { try{ const r=localStorage.getItem(CH_KEY); const o=r?JSON.parse(r):[]; return Array.isArray(o)?o:[]; }catch(e){ return []; } };
 const saveChallenges = arr => localStorage.setItem(CH_KEY, JSON.stringify(Array.isArray(arr)?arr:[]));
@@ -1446,14 +1552,13 @@ function renderCancelamento(rows){
 }
 
 /* ═══════════════════════════════════════════════
-   EQUIPES DE CAPTAÇÃO
+   EQUIPES DE CAPTAÇÃO (com inatividade)
 ═══════════════════════════════════════════════ */
 function renderEquipes(){
-  const map=loadTeamMap();
-  renderCards("stats-equipe-parque",  state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; }));
-  renderCards("stats-equipe-externa", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; }));
-  renderCards("stats-equipe-inativo", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Inativo"; }));
-  renderCards("stats-equipe-sem",     state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return !map[p]; }));
+  renderCards("stats-equipe-parque",  state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p && getEquipeEfetiva(p, r._dt)==="Equipe Parque"; }));
+  renderCards("stats-equipe-externa", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p && getEquipeEfetiva(p, r._dt)==="Equipe Externa"; }));
+  renderCards("stats-equipe-inativo", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p && getEquipeEfetiva(p, r._dt)==="Inativo"; }));
+  renderCards("stats-equipe-sem",     state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return !getTeamConfig(p); }));
 }
 
 function listAllPromos(){
@@ -1472,39 +1577,105 @@ function listNamesByTipo(tipoKeyNorm){
 
 function renderTeamMappingUI(){
   const promos=listAllPromos();
-  const map=loadTeamMap();
 
   el("teamMappingList").innerHTML = promos.length
     ? promos.map(p=>{
-        const cur = map[p] || "";
+        const cfg = getTeamConfig(p);
+        const cur = cfg ? cfg.equipe : null;
+        const isInativo = (cur === "Inativo");
+        const inativoInicio = cfg ? (cfg.inativoInicio || "") : "";
+        const inativoFim   = cfg ? (cfg.inativoFim   || "") : "";
+
         const tagCls = cur==="Equipe Parque" ? "parque" : cur==="Equipe Externa" ? "externa" : cur==="Inativo" ? "inativo" : "none";
         const tagLbl = cur || "Sem equipe";
+
         return `
-        <div class="promo-row">
-          <span class="pr-name" title="${p}">${p}</span>
-          <span class="pr-tag ${tagCls}">${tagLbl}</span>
+        <div class="promo-row" data-promo-row="${encodeURIComponent(p)}">
+          <div class="pr-left">
+            <span class="pr-name" title="${p}">${p}</span>
+            <span class="pr-tag ${tagCls}">${tagLbl}</span>
+          </div>
           <select class="mini-sel" data-promo="${encodeURIComponent(p)}">
             <option value="">— sem equipe —</option>
             <option value="Equipe Parque"  ${cur==="Equipe Parque"  ? "selected" : ""}>Equipe Parque</option>
             <option value="Equipe Externa" ${cur==="Equipe Externa" ? "selected" : ""}>Equipe Externa</option>
             <option value="Inativo"        ${cur==="Inativo"        ? "selected" : ""}>Inativo</option>
           </select>
+          <div class="inativo-dates${isInativo ? '' : ' hidden'}" data-inativo-dates="${encodeURIComponent(p)}">
+            <span class="inativo-badge">📅 Período de inatividade</span>
+            <label>Início:</label>
+            <input type="date" class="inativo-inicio" data-promo="${encodeURIComponent(p)}" value="${inativoInicio}">
+            <label>Fim:</label>
+            <input type="date" class="inativo-fim" data-promo="${encodeURIComponent(p)}" value="${inativoFim}">
+          </div>
         </div>`;
       }).join("")
     : `<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
 
-  // listener: salva automaticamente ao alterar o select
+  /* Listeners: selects */
   el("teamMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
     sel.addEventListener("change", ()=>{
       const p = decodeURIComponent(sel.dataset.promo);
-      const m = loadTeamMap();
-      if(sel.value) m[p] = sel.value;
-      else delete m[p];
-      saveTeamMap(m);
-      // re-render para atualizar tag e estilos
+      const newEquipe = sel.value; // "" | "Equipe Parque" | "Equipe Externa" | "Inativo"
+
+      const existingCfg = getTeamConfig(p);
+      let equipeBase = existingCfg ? existingCfg.equipe : null;
+      let ini = existingCfg ? existingCfg.inativoInicio : null;
+      let fim = existingCfg ? existingCfg.inativoFim : null;
+
+      if(newEquipe === "Inativo"){
+        // Mantém a equipe base anterior (se era Parque ou Externa), senão usa Parque como padrão
+        if(equipeBase === "Inativo" || !equipeBase || equipeBase === ""){
+          equipeBase = "Equipe Parque";
+        }
+        // Não altera ini/fim aqui — o usuário vai preencher
+      } else if(newEquipe === ""){
+        // Remove
+        removeTeamConfig(p);
+        renderTeamMappingUI();
+        renderEquipes();
+        renderSupervisores();
+        return;
+      } else {
+        // Equipe Parque ou Externa
+        equipeBase = newEquipe;
+        ini = null;
+        fim = null;
+      }
+
+      setTeamConfig(p, {
+        equipe: newEquipe === "Inativo" ? equipeBase : newEquipe,
+        inativoInicio: ini,
+        inativoFim: fim,
+      });
+
       renderTeamMappingUI();
       renderEquipes();
       renderSupervisores();
+    });
+  });
+
+  /* Listeners: datas de inatividade */
+  el("teamMappingList").querySelectorAll(".inativo-inicio, .inativo-fim").forEach(inp=>{
+    inp.addEventListener("change", ()=>{
+      const p = decodeURIComponent(inp.dataset.promo);
+      const cfg = getTeamConfig(p);
+      if(!cfg) return;
+
+      const row = el("teamMappingList").querySelector(`[data-promo-row="${encodeURIComponent(p)}"]`);
+      const iniInput = row ? row.querySelector(".inativo-inicio") : null;
+      const fimInput = row ? row.querySelector(".inativo-fim") : null;
+
+      setTeamConfig(p, {
+        equipe: cfg.equipe,
+        inativoInicio: iniInput ? iniInput.value : (cfg.inativoInicio || null),
+        inativoFim:   fimInput ? fimInput.value : (cfg.inativoFim   || null),
+      });
+
+      renderEquipes();
+      renderSupervisores();
+      // Re-render leve só dessa linha (atualiza tag)
+      renderTeamMappingUI();
     });
   });
 }
@@ -1513,9 +1684,8 @@ function renderTeamMappingUI(){
    SUPERVISORES
 ═══════════════════════════════════════════════ */
 function renderSupervisores(){
-  const map=loadTeamMap();
-  const rowP = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; });
-  const rowE = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; });
+  const rowP = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p && getEquipeEfetiva(p, r._dt)==="Equipe Parque"; });
+  const rowE = state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p && getEquipeEfetiva(p, r._dt)==="Equipe Externa"; });
   const rowG = rowP.concat(rowE);
 
   const sP=statsFor(rowP), sE=statsFor(rowE), sG=statsFor(rowG);
@@ -1611,32 +1781,97 @@ function renderSupervisores(){
 
   const promos=listAllPromos();
   el("supPromotorSelect").innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
+
+  /* Lista completa supervisores — mesmo formato com datas de inatividade */
   el("supMappingList").innerHTML=promos.length?promos.map(p=>{
-    const cur=map[p]||"";
+    const cfg = getTeamConfig(p);
+    const cur = cfg ? cfg.equipe : null;
+    const isInativo = (cur === "Inativo");
+    const inativoInicio = cfg ? (cfg.inativoInicio || "") : "";
+    const inativoFim   = cfg ? (cfg.inativoFim   || "") : "";
+
     const tagCls=cur==="Equipe Parque"?"parque":cur==="Equipe Externa"?"externa":cur==="Inativo"?"inativo":"none";
     const tagLbl=cur||"Sem equipe";
-    return`<div class="promo-row">
-      <span class="pr-name" title="${p}">${p}</span>
-      <span class="pr-tag ${tagCls}">${tagLbl}</span>
-      <select class="mini-sel" data-promo="${encodeURIComponent(p)}">
+    return`
+    <div class="promo-row" data-sup-promo-row="${encodeURIComponent(p)}">
+      <div class="pr-left">
+        <span class="pr-name" title="${p}">${p}</span>
+        <span class="pr-tag ${tagCls}">${tagLbl}</span>
+      </div>
+      <select class="mini-sel" data-sup-promo="${encodeURIComponent(p)}">
         <option value="">— sem equipe —</option>
         <option value="Equipe Parque"  ${cur==="Equipe Parque" ?"selected":""}>Equipe Parque</option>
         <option value="Equipe Externa" ${cur==="Equipe Externa"?"selected":""}>Equipe Externa</option>
         <option value="Inativo"        ${cur==="Inativo"       ?"selected":""}>Inativo</option>
       </select>
+      <div class="inativo-dates${isInativo ? '' : ' hidden'}" data-sup-inativo-dates="${encodeURIComponent(p)}">
+        <span class="inativo-badge">📅 Período de inatividade</span>
+        <label>Início:</label>
+        <input type="date" class="inativo-inicio" data-sup-promo="${encodeURIComponent(p)}" value="${inativoInicio}">
+        <label>Fim:</label>
+        <input type="date" class="inativo-fim" data-sup-promo="${encodeURIComponent(p)}" value="${inativoFim}">
+      </div>
     </div>`;
   }).join(""):`<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
 
+  /* Listeners supervisores */
   el("supMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
     sel.addEventListener("change",()=>{
-      const p=decodeURIComponent(sel.dataset.promo);
-      const m=loadTeamMap();
-      if(sel.value) m[p]=sel.value; else delete m[p];
-      saveTeamMap(m);
+      const p=decodeURIComponent(sel.dataset.supPromo);
+      const newEquipe = sel.value;
+
+      const existingCfg = getTeamConfig(p);
+      let equipeBase = existingCfg ? existingCfg.equipe : null;
+      let ini = existingCfg ? existingCfg.inativoInicio : null;
+      let fim = existingCfg ? existingCfg.inativoFim : null;
+
+      if(newEquipe === "Inativo"){
+        if(equipeBase === "Inativo" || !equipeBase || equipeBase === ""){
+          equipeBase = "Equipe Parque";
+        }
+      } else if(newEquipe === ""){
+        removeTeamConfig(p);
+        renderSupervisores();
+        renderEquipes();
+        renderTeamMappingUI();
+        return;
+      } else {
+        equipeBase = newEquipe;
+        ini = null;
+        fim = null;
+      }
+
+      setTeamConfig(p, {
+        equipe: newEquipe === "Inativo" ? equipeBase : newEquipe,
+        inativoInicio: ini,
+        inativoFim: fim,
+      });
+
       renderSupervisores();
       renderEquipes();
       renderTeamMappingUI();
-      renderDesafios();
+    });
+  });
+
+  el("supMappingList").querySelectorAll(".inativo-inicio, .inativo-fim").forEach(inp=>{
+    inp.addEventListener("change", ()=>{
+      const p = decodeURIComponent(inp.dataset.supPromo);
+      const cfg = getTeamConfig(p);
+      if(!cfg) return;
+
+      const row = el("supMappingList").querySelector(`[data-sup-promo-row="${encodeURIComponent(p)}"]`);
+      const iniInput = row ? row.querySelector(".inativo-inicio") : null;
+      const fimInput = row ? row.querySelector(".inativo-fim") : null;
+
+      setTeamConfig(p, {
+        equipe: cfg.equipe,
+        inativoInicio: iniInput ? iniInput.value : (cfg.inativoInicio || null),
+        inativoFim:   fimInput ? fimInput.value : (cfg.inativoFim   || null),
+      });
+
+      renderEquipes();
+      renderSupervisores();
+      renderTeamMappingUI();
     });
   });
 }
@@ -1725,7 +1960,7 @@ function updateUFFilter(){
 }
 
 /* ═══════════════════════════════════════════════
-   NOVA ABA: INDIVIDUAL MÊS/MÊS (LÓGICA)
+   NOVA ABA: INDIVIDUAL MÊS/MÊS
 ═══════════════════════════════════════════════ */
 const MM = {
   selectedMonths: new Set(),
@@ -2393,21 +2628,44 @@ function setup(){
 
   /* equipes — limpar tudo */
   el("btnLimparEquipes").addEventListener("click",()=>{
-    if(!confirm("Limpar todas as marcações de equipe?")) return;
-    saveTeamMap({});
+    if(!confirm("Limpar todas as marcações de equipe (incluindo períodos de inatividade)?")) return;
+    saveTeamMapV2({});
     renderTeamMappingUI();
     renderEquipes();
     renderSupervisores();
   });
 
-  /* supervisores */
+  /* supervisores — salvar rápido */
   el("btnSalvarEquipeSup").addEventListener("click",()=>{
-    const p=el("supPromotorSelect").value,t=el("supEquipeSelect").value;
-    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
+    const p=el("supPromotorSelect").value;
+    const t=el("supEquipeSelect").value;
+    if(!p) return;
+
+    if(t === "Inativo"){
+      const existingCfg = getTeamConfig(p);
+      const equipeBase = (existingCfg && existingCfg.equipe && existingCfg.equipe !== "Inativo") ? existingCfg.equipe : "Equipe Parque";
+      setTeamConfig(p, {
+        equipe: equipeBase,
+        inativoInicio: existingCfg ? existingCfg.inativoInicio : null,
+        inativoFim: existingCfg ? existingCfg.inativoFim : null,
+      });
+    } else if(t === ""){
+      removeTeamConfig(p);
+    } else {
+      setTeamConfig(p, { equipe: t, inativoInicio: null, inativoFim: null });
+    }
+
+    renderSupervisores();
+    renderEquipes();
+    renderTeamMappingUI();
   });
+
   el("btnLimparEquipesSup").addEventListener("click",()=>{
     if(!confirm("Limpar todas as marcações de equipe?")) return;
-    saveTeamMap({}); renderSupervisores(); renderEquipes(); renderTeamMappingUI();
+    saveTeamMapV2({});
+    renderSupervisores();
+    renderEquipes();
+    renderTeamMappingUI();
   });
 
   /* desafios */
