@@ -170,11 +170,12 @@
     .pr-tag{font-size:.78rem;font-family:var(--mono);font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;}
     .pr-tag.parque{background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.38);color:#c4b5ff;}
     .pr-tag.externa{background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35);color:#7eedff;}
+    .pr-tag.inativo{background:rgba(255,176,32,.10);border:1px solid rgba(255,176,32,.28);color:#ffc966;}
     .pr-tag.none{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);}
     .promo-row select.mini-sel{
       padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.06);color:var(--text);font-size:.9rem;font-weight:750;
-      cursor:pointer;min-width:160px;
+      cursor:pointer;min-width:180px;
     }
     .promo-row select.mini-sel:focus{border-color:var(--accent);}
 
@@ -575,10 +576,7 @@
       <div class="tab" data-tab="cancelamento">❌ Análise de cancelamento</div>
       <div class="tab" data-tab="equipes">🧲 Equipes de captação</div>
       <div class="tab" data-tab="equipes-supervisores">🧑‍✈️ Promotores (2 supervisores)</div>
-
-      <!-- NOVA ABA (inclusão) -->
       <div class="tab" data-tab="individual-mes-mes">🗓️ Individual mês/mês</div>
-
       <div class="tab" data-tab="desafios">🏁 Desafios</div>
       <div class="tab" data-tab="ranking-promotor">🎯 Ranking Promotor</div>
       <div class="tab" data-tab="ranking-liner">💬 Ranking Liner</div>
@@ -684,46 +682,37 @@
       <div id="cancelamento-table"></div>
     </div>
 
-    <!-- ── EQUIPES DE CAPTAÇÃO ── -->
+    <!-- ── EQUIPES DE CAPTAÇÃO (NOVO FORMATO) ── -->
     <div id="tab-equipes" class="tab-content">
-      <div class="note"><strong>Equipes de captação</strong> — marque a equipe de cada Promotor de marketing. Salvo no seu navegador.</div>
-      <h3 style="margin:10px 0 6px">Equipe Parque</h3>
+      <div class="note">
+        <strong>Equipes de captação</strong> — defina abaixo a equipe de cada Promotor de marketing.<br>
+        As opções são: <strong>Equipe Parque</strong>, <strong>Equipe Externa</strong> ou <strong>Inativo</strong>.<br>
+        Promotores marcados como <strong>Inativo</strong> não entram nas estatísticas das equipes ativas.<br>
+        Tudo fica salvo no seu navegador (localStorage).
+      </div>
+
+      <h3 style="margin:10px 0 6px">🟣 Equipe Parque</h3>
       <div class="stats" id="stats-equipe-parque"></div>
-      <h3 style="margin:16px 0 6px">Equipe Externa</h3>
+
+      <h3 style="margin:16px 0 6px">🔵 Equipe Externa</h3>
       <div class="stats" id="stats-equipe-externa"></div>
-      <div class="note warn">Promotores sem equipe marcada entram em <strong>Sem equipe</strong>.</div>
-      <h3 style="margin:10px 0 6px">Sem equipe</h3>
+
+      <h3 style="margin:16px 0 6px">🟡 Inativo</h3>
+      <div class="stats" id="stats-equipe-inativo"></div>
+
+      <div class="note warn">Promotores sem nenhuma marcação entram em <strong>Sem equipe</strong>.</div>
+      <h3 style="margin:10px 0 6px">⚪ Sem equipe</h3>
       <div class="stats" id="stats-equipe-sem"></div>
+
       <div class="divider"></div>
-      <div class="team-grid">
-        <div class="team-card">
-          <h3>Marcar equipe</h3>
-          <div class="controls" style="margin:0;justify-content:flex-start">
-            <div class="control-group" style="min-width:260px">
-              <label>Promotor</label>
-              <select id="teamPromotorSelect"><option value="">Carregando...</option></select>
-            </div>
-            <div class="control-group" style="min-width:220px">
-              <label>Equipe</label>
-              <select id="teamEquipeSelect">
-                <option value="Equipe Parque">Equipe Parque</option>
-                <option value="Equipe Externa">Equipe Externa</option>
-              </select>
-            </div>
-            <div class="control-group" style="min-width:160px">
-              <label>&nbsp;</label>
-              <button class="btn primary" id="btnSalvarEquipe">💾 Salvar</button>
-            </div>
-            <div class="control-group" style="min-width:180px">
-              <label>&nbsp;</label>
-              <button class="btn danger" id="btnLimparEquipes">🗑 Limpar tudo</button>
-            </div>
-          </div>
+
+      <div class="config-panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <h4 style="margin:0">Lista completa de profissionais</h4>
+          <button class="btn danger" id="btnLimparEquipes">🗑 Limpar tudo</button>
         </div>
-        <div class="team-card">
-          <h3>Marcações atuais</h3>
-          <div id="teamMappingList"></div>
-        </div>
+        <div class="tiny" style="margin-bottom:12px">Altere a equipe no seletor ao lado de cada nome. A alteração é salva automaticamente.</div>
+        <div id="teamMappingList" class="promo-list"></div>
       </div>
     </div>
 
@@ -734,7 +723,8 @@
 
       <div class="note">
         <strong>Promotores de Marketing — 2 Supervisores</strong><br>
-        Comparativo lado a lado: Equipe Parque × Equipe Externa × Geral. Percentual de representação ao final.
+        Comparativo lado a lado: Equipe Parque × Equipe Externa × Geral. Percentual de representação ao final.<br>
+        <em>Promotores marcados como "Inativo" ou sem equipe não entram neste comparativo.</em>
       </div>
 
       <div class="section-title">
@@ -772,6 +762,7 @@
             <select id="supEquipeSelect">
               <option value="Equipe Parque">Equipe Parque</option>
               <option value="Equipe Externa">Equipe Externa</option>
+              <option value="Inativo">Inativo</option>
             </select>
           </div>
           <div class="control-group" style="min-width:150px">
@@ -1025,8 +1016,6 @@ const sortState = {
   "profissionais-table":{ key:"vendas",    dir:"desc" },
   "perfil-renda"       :{ key:"vgvTotal",  dir:"desc" },
   "cancelamento-table" :{ key:"cotasTotal",dir:"desc" },
-
-  /* desafios */
   "ch-results-table"   :{ key:"valor",     dir:"desc" },
 };
 
@@ -1200,7 +1189,7 @@ function statsFor(rows){
     eficiencia:eff,pctCancel:q.total?(q.cancelado/q.total):0,
     ticketMedio:q.total?(vgv.total/q.total):0,
     rendaMed:avgRenda(rows),mediaCasaisPeriodo:avgCasais(rows),
-    pctCancelamentosVendas: q.total ? (q.cancelado / q.total) : 0, /* inclusão solicitada */
+    pctCancelamentosVendas: q.total ? (q.cancelado / q.total) : 0,
   };
 }
 
@@ -1300,7 +1289,7 @@ function rendaBucket(v){
   return "Acima de R$ 50,1 mil";
 }
 function renderPerfilRenda(rows,cid){
-  const order=["Abaixo de R$ 9 mil","R$ 9 mil a R$ 9,9 mil","R$ 10 mil a R$ 11,9 mil","R$ 12 mil a R$ 14,9 mil","R$ 15 mil a R$ 19,9 mil","R$ 20 mil a R$ 50 mil","Acima de R$  50,1 mil"];
+  const order=["Abaixo de R$ 9 mil","R$ 9 mil a R$ 9,9 mil","R$ 10 mil a R$ 11,9 mil","R$ 12 mil a R$ 14,9 mil","R$ 15 mil a R$ 19,9 mil","R$ 20 mil a R$ 50 mil","Acima de R$ 50,1 mil"];
   const map=new Map(order.map(k=>[k,[]]));
   rows.forEach(r=>{ const b=rendaBucket(r._renda); if(map.has(b)) map.get(b).push(r); });
   const list=order.map(k=>{ const s=statsFor(map.get(k)||[]); return{faixa:k,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed}; });
@@ -1463,6 +1452,7 @@ function renderEquipes(){
   const map=loadTeamMap();
   renderCards("stats-equipe-parque",  state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Parque"; }));
   renderCards("stats-equipe-externa", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Equipe Externa"; }));
+  renderCards("stats-equipe-inativo", state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return p&&map[p]==="Inativo"; }));
   renderCards("stats-equipe-sem",     state.filtered.filter(r=>{ const p=(r[KEY.promotor]??"").toString().trim(); return !map[p]; }));
 }
 
@@ -1482,17 +1472,40 @@ function listNamesByTipo(tipoKeyNorm){
 
 function renderTeamMappingUI(){
   const promos=listAllPromos();
-  const sel=el("teamPromotorSelect");
-  sel.innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
   const map=loadTeamMap();
-  const entries=Object.entries(map).filter(([k,v])=>k&&v).sort((a,b)=>a[0].localeCompare(b[0],"pt-BR",{sensitivity:"base"}));
-  el("teamMappingList").innerHTML=entries.length?entries.map(([p,t])=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);margin-bottom:8px">
-      <div><div style="font-weight:850">${p}</div><div style="color:var(--muted);font-size:.82rem">${t}</div></div>
-      <button class="btn" type="button" data-rm="${encodeURIComponent(p)}">Remover</button>
-    </div>`).join(""):`<div class="note" style="margin:0">Nenhuma marcação salva.</div>`;
-  el("teamMappingList").querySelectorAll("button[data-rm]").forEach(btn=>{
-    btn.addEventListener("click",()=>{ const m=loadTeamMap(); delete m[decodeURIComponent(btn.dataset.rm)]; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores(); });
+
+  el("teamMappingList").innerHTML = promos.length
+    ? promos.map(p=>{
+        const cur = map[p] || "";
+        const tagCls = cur==="Equipe Parque" ? "parque" : cur==="Equipe Externa" ? "externa" : cur==="Inativo" ? "inativo" : "none";
+        const tagLbl = cur || "Sem equipe";
+        return `
+        <div class="promo-row">
+          <span class="pr-name" title="${p}">${p}</span>
+          <span class="pr-tag ${tagCls}">${tagLbl}</span>
+          <select class="mini-sel" data-promo="${encodeURIComponent(p)}">
+            <option value="">— sem equipe —</option>
+            <option value="Equipe Parque"  ${cur==="Equipe Parque"  ? "selected" : ""}>Equipe Parque</option>
+            <option value="Equipe Externa" ${cur==="Equipe Externa" ? "selected" : ""}>Equipe Externa</option>
+            <option value="Inativo"        ${cur==="Inativo"        ? "selected" : ""}>Inativo</option>
+          </select>
+        </div>`;
+      }).join("")
+    : `<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
+
+  // listener: salva automaticamente ao alterar o select
+  el("teamMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
+    sel.addEventListener("change", ()=>{
+      const p = decodeURIComponent(sel.dataset.promo);
+      const m = loadTeamMap();
+      if(sel.value) m[p] = sel.value;
+      else delete m[p];
+      saveTeamMap(m);
+      // re-render para atualizar tag e estilos
+      renderTeamMappingUI();
+      renderEquipes();
+      renderSupervisores();
+    });
   });
 }
 
@@ -1600,7 +1613,7 @@ function renderSupervisores(){
   el("supPromotorSelect").innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
   el("supMappingList").innerHTML=promos.length?promos.map(p=>{
     const cur=map[p]||"";
-    const tagCls=cur==="Equipe Parque"?"parque":cur==="Equipe Externa"?"externa":"none";
+    const tagCls=cur==="Equipe Parque"?"parque":cur==="Equipe Externa"?"externa":cur==="Inativo"?"inativo":"none";
     const tagLbl=cur||"Sem equipe";
     return`<div class="promo-row">
       <span class="pr-name" title="${p}">${p}</span>
@@ -1609,6 +1622,7 @@ function renderSupervisores(){
         <option value="">— sem equipe —</option>
         <option value="Equipe Parque"  ${cur==="Equipe Parque" ?"selected":""}>Equipe Parque</option>
         <option value="Equipe Externa" ${cur==="Equipe Externa"?"selected":""}>Equipe Externa</option>
+        <option value="Inativo"        ${cur==="Inativo"       ?"selected":""}>Inativo</option>
       </select>
     </div>`;
   }).join(""):`<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
@@ -1622,7 +1636,7 @@ function renderSupervisores(){
       renderSupervisores();
       renderEquipes();
       renderTeamMappingUI();
-      renderDesafios(); // atualiza apuração se estiver em desafio
+      renderDesafios();
     });
   });
 }
@@ -1714,7 +1728,7 @@ function updateUFFilter(){
    NOVA ABA: INDIVIDUAL MÊS/MÊS (LÓGICA)
 ═══════════════════════════════════════════════ */
 const MM = {
-  selectedMonths: new Set(), // keys "YYYY-MM"
+  selectedMonths: new Set(),
 };
 
 function monthKey(dt){
@@ -1732,7 +1746,6 @@ function monthShort(ym){
   return `${mon}/${String(y).slice(2)}`;
 }
 function rowsBaseForMM(){
-  // respeita Status + UF globais; e período global para limitar meses (se houver)
   const status  = el("statusSelect").value;
   const ufSel   = el("ufSelect").value;
   const d1 = parseDateOnlyInput(el("dateStart").value);
@@ -1753,7 +1766,7 @@ function availableMonthsForMM(){
   const base = rowsBaseForMM();
   const set = new Set();
   base.forEach(r=>{ if(r._dt) set.add(monthKey(r._dt)); });
-  return [...set].sort(); // asc
+  return [...set].sort();
 }
 function updateMMNameSelect(){
   const tipo = norm(el("mmProfTipo").value);
@@ -1775,7 +1788,6 @@ function renderMMMonths(){
     return;
   }
 
-  // se seleção está vazia, default: últimos 3
   if(MM.selectedMonths.size===0){
     months.slice(-3).forEach(m=>MM.selectedMonths.add(m));
   }
@@ -1824,7 +1836,6 @@ function renderMMGrid(){
 
   const mine = base.filter(r => norm(r[tipo]??"") === norm(nome));
 
-  // agrupar por mês
   const byMonth = new Map();
   mine.forEach(r=>{
     if(!r._dt) return;
@@ -1870,7 +1881,6 @@ function renderMMGrid(){
   }).join("");
 }
 function renderIndividualMesMes(){
-  // re-render completo da aba (meses + grid)
   renderMMMonths();
   renderMMGrid();
 }
@@ -1945,8 +1955,6 @@ function renderChallengeTeamsEditor(){
 
   const teamsCount = Number(el("chTeamsCount").value)||2;
 
-  // se estiver criando novo (ainda não salvo), renderiza com base nos inputs (sem storage)
-  // mas para simplificar: quando não existe no storage, usamos um objeto temporário.
   const tmp = ch ? structuredClone(ch) : newChallengeTemplate();
   tmp.profTipo = tipo;
   ensureTeamsCount(tmp, teamsCount);
@@ -1987,8 +1995,6 @@ function renderChallengeTeamsEditor(){
     `;
   }).join("");
 
-  // listeners (inputs/checkboxes) -> atualiza objeto no storage (se existir) ou um draft em memória via dataset
-  // Implementação: gravar direto no storage quando currentChallengeId existe; caso contrário, só atualiza UI e salvar na hora.
   el("chTeamsEditor").querySelectorAll("input[data-team-name]").forEach(inp=>{
     inp.addEventListener("input", ()=>{
       if(!currentChallengeId) return;
@@ -2009,17 +2015,14 @@ function renderChallengeTeamsEditor(){
       const tIdx = Number(cb.dataset.teamMember);
       const member = decodeURIComponent(cb.dataset.member);
 
-      // atualiza no storage se editando existente; senão ignora (vai ser lido ao salvar)
       if(currentChallengeId){
         const arr=loadChallenges();
         const ch=arr.find(x=>x.id===currentChallengeId);
         if(!ch) return;
         ensureTeamsCount(ch, Number(el("chTeamsCount").value)||2);
 
-        // remove de todas as equipes (garante exclusividade)
         ch.teams.forEach(t=>t.members = (t.members||[]).filter(x=>norm(x)!==norm(member)));
 
-        // adiciona se checked
         if(cb.checked){
           ch.teams[tIdx].members.push(member);
         }
@@ -2027,7 +2030,6 @@ function renderChallengeTeamsEditor(){
         saveChallenges(arr);
       }
 
-      // re-render para aplicar disable/contadores
       renderDesafios(false);
     });
   });
@@ -2043,28 +2045,23 @@ function readChallengeFromForm(){
 
   const names = listNamesByTipo(profTipo);
 
-  // montar times lendo editor atual (inputs/checkboxes)
   const teams = [];
   for(let i=0;i<teamsCount;i++){
     teams.push({ name:`Equipe ${i+1}`, members:[] });
   }
-  // nomes
   document.querySelectorAll("#chTeamsEditor input[data-team-name]").forEach(inp=>{
     const idx=Number(inp.dataset.teamName);
     if(Number.isFinite(idx) && teams[idx]) teams[idx].name = (inp.value||`Equipe ${idx+1}`).trim() || `Equipe ${idx+1}`;
   });
-  // membros
   document.querySelectorAll("#chTeamsEditor input[type='checkbox'][data-team-member]").forEach(cb=>{
     if(!cb.checked) return;
     const tIdx=Number(cb.dataset.teamMember);
     const member=decodeURIComponent(cb.dataset.member);
     if(!teams[tIdx]) return;
-    // valida membro existir na lista do tipo (evita lixo)
     if(!names.some(n=>norm(n)===norm(member))) return;
     teams[tIdx].members.push(member);
   });
 
-  // garantir exclusividade (caso alguma checagem tenha escapado)
   const seen=new Set();
   teams.forEach(t=>{
     t.members = t.members.filter(m=>{
@@ -2124,7 +2121,6 @@ function challengeMetricValue(ch, rowsForTeam){
     case "casais": return { val: s.casais, fmt: v=>String(v|0) };
     case "vgv": return { val: s.vgvTotal, fmt: fmtMoney };
     case "casais_atendidos":
-      // aqui interpretamos como "linhas totais" (inclui NoTour)
       return { val: s.totalLinhas, fmt: v=>String(v|0) };
     case "eficiencia": return { val: s.eficiencia, fmt: fmtPctBR };
     default: return { val: s.casais, fmt: v=>String(v|0) };
@@ -2132,7 +2128,6 @@ function challengeMetricValue(ch, rowsForTeam){
 }
 
 function applyFiltersForChallengeBase(rows){
-  // desafio: IGNORA período global; respeita status e UF globais
   const status  =el("statusSelect").value;
   const ufSel   =el("ufSelect").value;
   let f=rows.slice();
@@ -2147,7 +2142,6 @@ function renderChallengeResults(ch){
   const base = applyFiltersForChallengeBase(state.rows);
   const inPeriod = filterByRange(base, ch.start, ch.end);
 
-  // agrupar por time, filtrando por profissional do tipo escolhido
   const tipoKey = norm(ch.profTipo||norm("promotor de marketing"));
   const teams = Array.isArray(ch.teams)?ch.teams:[];
   const results = teams.map(t=>{
@@ -2171,7 +2165,6 @@ function renderChallengeResults(ch){
     };
   });
 
-  // ordenar por valor (desc), desempate por nome
   const sorted = results.slice().sort((a,b)=>{
     const av = (typeof a.valor==="number")?a.valor:0;
     const bv = (typeof b.valor==="number")?b.valor:0;
@@ -2233,11 +2226,9 @@ function renderChallengeResults(ch){
     </div>
   `;
 
-  // sort (simples) para tabela de desafios
   el("chResults").querySelectorAll("thead th.sortable").forEach(th=>{
     th.addEventListener("click", ()=>{
       setSort("ch-results-table", th.dataset.sort);
-      // aplicar sortState manualmente
       const st = sortState["ch-results-table"] || {key:"valor",dir:"desc"};
       const again = results.slice().sort((a,b)=>{
         const key = st.key;
@@ -2252,7 +2243,6 @@ function renderChallengeResults(ch){
         return dir==="asc" ? baseCmp : -baseCmp;
       });
 
-      // re-render só o tbody rapidamente
       const tbody = el("chResults").querySelector("tbody");
       tbody.innerHTML = again.map((r,i)=>{
         const pos=i+1;
@@ -2278,7 +2268,6 @@ function renderChallengeResults(ch){
 }
 
 function renderDesafios(recalcTeamsEditor=true){
-  // lista
   const arr = loadChallenges().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   el("chList").innerHTML = arr.length ? arr.map(ch=>{
     const active = (ch.id===currentChallengeId);
@@ -2314,7 +2303,6 @@ function renderDesafios(recalcTeamsEditor=true){
       const ch=loadChallenges().find(x=>x.id===id);
       if(!ch) return;
       currentChallengeId = id;
-      // mantém form como está (se não estava editando), mas mostra apuração
       renderChallengeResults(ch);
       renderDesafios(false);
     });
@@ -2327,10 +2315,8 @@ function renderDesafios(recalcTeamsEditor=true){
     });
   });
 
-  // editor de equipes
   if(recalcTeamsEditor) renderChallengeTeamsEditor();
 
-  // apuração do selecionado
   const current = currentChallengeId ? loadChallenges().find(x=>x.id===currentChallengeId) : null;
   renderChallengeResults(current);
 }
@@ -2353,9 +2339,7 @@ function updateAll(){
   renderEquipes();
   renderSupervisores();
   renderComparativo();
-  renderDesafios(false); // desafios respeitam status/UF globais na apuração
-
-  // NOVA ABA: mês/mês depende dos filtros globais
+  renderDesafios(false);
   renderIndividualMesMes();
 }
 
@@ -2384,7 +2368,6 @@ function setup(){
   el("mmProfTipo").addEventListener("change", ()=>{
     updateMMNameSelect();
     el("mmProfNome").value = "";
-    // mantém meses selecionados, mas re-render
     renderIndividualMesMes();
   });
   el("mmProfNome").addEventListener("change", renderIndividualMesMes);
@@ -2408,14 +2391,13 @@ function setup(){
     renderIndividualMesMes();
   });
 
-  /* equipes */
-  el("btnSalvarEquipe").addEventListener("click",()=>{
-    const p=el("teamPromotorSelect").value,t=el("teamEquipeSelect").value;
-    if(!p) return; const m=loadTeamMap(); m[p]=t; saveTeamMap(m); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
-  });
+  /* equipes — limpar tudo */
   el("btnLimparEquipes").addEventListener("click",()=>{
-    if(!confirm("Limpar todas as marcações?")) return;
-    saveTeamMap({}); renderTeamMappingUI(); renderEquipes(); renderSupervisores();
+    if(!confirm("Limpar todas as marcações de equipe?")) return;
+    saveTeamMap({});
+    renderTeamMappingUI();
+    renderEquipes();
+    renderSupervisores();
   });
 
   /* supervisores */
@@ -2447,7 +2429,6 @@ function setup(){
       const ch=arr.find(x=>x.id===currentChallengeId);
       if(ch){
         ch.profTipo = norm(el("chProfTipo").value);
-        // ao trocar tipo, limpa membros (para evitar membros inexistentes)
         ch.teams.forEach(t=>t.members=[]);
         ch.updatedAt = Date.now();
         saveChallenges(arr);
@@ -2487,7 +2468,6 @@ function setup(){
       showChMsg("Informe o período (início e fim) do desafio.", "warn"); return;
     }
 
-    // valida: não permitir equipe vazia? (vou permitir, mas avisar)
     const emptyTeams = form.teams.filter(t=>(t.members||[]).length===0).length;
     if(emptyTeams>0){
       if(!confirm("Existem equipes sem membros. Deseja salvar assim mesmo?")) return;
@@ -2514,7 +2494,6 @@ function setup(){
     ch.metric = form.metric;
     ch.profTipo = form.profTipo;
     ensureTeamsCount(ch, form.teamsCount);
-    // aplica nomes e membros
     ch.teams.forEach((t,i)=>{
       t.name = (form.teams[i]?.name || `Equipe ${i+1}`).trim() || `Equipe ${i+1}`;
       t.members = (form.teams[i]?.members || []).slice();
@@ -2544,7 +2523,6 @@ function setup(){
         setTimeout(()=>{ try{charts.curva?.resize?.();charts.semana?.resize?.();charts.cancelamento?.resize?.();}catch(e){} },80);
       }
       if(t.dataset.tab==="desafios"){
-        // garante render atual no abrir
         renderDesafios(true);
       }
       if(t.dataset.tab==="individual-mes-mes"){
@@ -2578,11 +2556,9 @@ async function init(){
     el("cmpXStart").value=toISO(sX); el("cmpXEnd").value=toISO(e);
     el("cmpYStart").value=toISO(sY); el("cmpYEnd").value=toISO(eY);
 
-    // init desafios
-    resetChallengeForm(); // prepara editor
+    resetChallengeForm();
     renderDesafios(true);
 
-    // init nova aba mês/mês
     updateMMNameSelect();
     MM.selectedMonths.clear();
 
