@@ -156,6 +156,74 @@
     .p-med{background:rgba(255,176,32,.12);color:var(--med);border-color:rgba(255,176,32,.28);}
     .p-good{background:rgba(92,255,176,.12);color:var(--good);border-color:rgba(92,255,176,.28);}
 
+    /* ── Nome clicável no ranking ── */
+    .name.clickable{cursor:pointer;transition:all 0.15s ease;}
+    .name.clickable:hover{color:var(--accent2);text-decoration:underline;}
+
+    /* ── Painel de detalhe de clientes ── */
+    .client-detail-panel{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      margin:0 0 20px;
+      overflow:hidden;
+      backdrop-filter:blur(10px);
+      animation:fadeIn 0.25s ease;
+    }
+    .client-detail-header{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 18px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      flex-wrap:wrap;
+    }
+    .client-detail-header strong{color:var(--accent2);}
+    .client-detail-close{
+      cursor:pointer;
+      padding:6px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:750;
+      font-size:.88rem;
+      transition:all 0.15s ease;
+      user-select:none;
+    }
+    .client-detail-close:hover{
+      background:rgba(255,45,85,.15);
+      border-color:rgba(255,45,85,.40);
+      color:#ffd0db;
+    }
+    .client-detail-section{
+      padding:14px 18px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .client-detail-section:last-child{border-bottom:none;}
+    .client-detail-section h4{
+      margin:0 0 10px;
+      font-size:.95rem;
+      font-weight:900;
+      display:flex;align-items:center;gap:8px;
+    }
+    .client-detail-section h4 .badge{
+      font-size:.78rem;
+      padding:2px 10px;
+      border-radius:999px;
+      background:rgba(124,92,255,.18);
+      border:1px solid rgba(124,92,255,.35);
+      color:var(--accent);
+      font-weight:800;
+      margin-left:0;
+    }
+    .client-detail-section .table-wrap{
+      margin:0;
+      max-height:45vh;
+      border-radius:var(--radius2);
+    }
+    .client-detail-section .table-wrap table{min-width:700px;}
+    .client-detail-section .note{margin:0;}
+
     /* ── Promotores lista inline ── */
     .promo-list{display:flex;flex-direction:column;gap:8px;margin:0 0 6px;}
     .promo-row{
@@ -540,6 +608,7 @@
       .sup-compare-header,.sup-compare-row{grid-template-columns:130px 1fr 1fr 1fr;font-size:.85rem;}
       .sup-compare-row > div,.sup-compare-header > div{padding:10px 10px;}
       .inativo-dates{flex-direction:column;align-items:stretch;}
+      .client-detail-section .table-wrap table{min-width:600px;}
     }
   </style>
 
@@ -957,19 +1026,19 @@
 
     <!-- ── RANKING PROMOTOR ── -->
     <div id="tab-ranking-promotor" class="tab-content">
-      <div class="note">Ranking por <span class="badge">Promotor de marketing</span>. Clique nos cabeçalhos para ordenar.</div>
+      <div class="note">Ranking por <span class="badge">Promotor de marketing</span>. Clique nos cabeçalhos para ordenar. <strong>Clique no nome do profissional para ver os clientes.</strong></div>
       <div id="ranking-promotor"></div>
     </div>
 
     <!-- ── RANKING LINER ── -->
     <div id="tab-ranking-liner" class="tab-content">
-      <div class="note">Ranking por <span class="badge">Liner</span>. Clique nos cabeçalhos para ordenar.</div>
+      <div class="note">Ranking por <span class="badge">Liner</span>. Clique nos cabeçalhos para ordenar. <strong>Clique no nome do profissional para ver os clientes.</strong></div>
       <div id="ranking-liner"></div>
     </div>
 
     <!-- ── RANKING CLOSER ── -->
     <div id="tab-ranking-closer" class="tab-content">
-      <div class="note">Ranking por <span class="badge">Closer</span>. Clique nos cabeçalhos para ordenar.</div>
+      <div class="note">Ranking por <span class="badge">Closer</span>. Clique nos cabeçalhos para ordenar. <strong>Clique no nome do profissional para ver os clientes.</strong></div>
       <div id="ranking-closer"></div>
     </div>
 
@@ -1026,7 +1095,7 @@ const KEY = {
   closer  : norm("closer"),
 };
 
-const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null } };
+const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null }, expandedRanking:{cid:null,name:null} };
 const charts  = { curva:null, semana:null, cancelamento:null };
 const sortState = {
   "ranking-promotor"   :{ key:"vendas",    dir:"desc" },
@@ -1045,13 +1114,11 @@ const TEAM_KEY_V2 = "painel_equipes_promotores_v2";
 
 function loadTeamMapV2(){
   try {
-    // Tenta carregar a nova versão primeiro
     const r = localStorage.getItem(TEAM_KEY_V2);
     if(r){
       const o = JSON.parse(r);
       if(o && typeof o === "object") return o;
     }
-    // Migra da versão antiga (v1) se existir
     const old = localStorage.getItem("painel_equipes_promotores_v1");
     if(old){
       const oldMap = JSON.parse(old);
@@ -1080,7 +1147,6 @@ function saveTeamMapV2(m){
   localStorage.setItem(TEAM_KEY_V2, JSON.stringify(m || {}));
 }
 
-/* Retorna o objeto de configuração normalizado para um promotor */
 function getTeamConfig(promotorNome){
   const map = loadTeamMapV2();
   const raw = map[promotorNome];
@@ -1107,15 +1173,13 @@ function removeTeamConfig(promotorNome){
   saveTeamMapV2(map);
 }
 
-/* Retorna a equipe EFETIVA considerando período de inatividade */
 function getEquipeEfetiva(promotorNome, dt){
   const cfg = getTeamConfig(promotorNome);
-  if(!cfg || !cfg.equipe) return null; // sem equipe
+  if(!cfg || !cfg.equipe) return null;
 
   const ini = cfg.inativoInicio ? parseDateOnlyInput(cfg.inativoInicio) : null;
   const fim = cfg.inativoFim   ? parseDateOnlyInput(cfg.inativoFim)   : null;
 
-  // Se tem período de inatividade definido e a data do registro está nele
   if(ini && fim && dt){
     const d = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
     const i = new Date(ini.getFullYear(), ini.getMonth(), ini.getDate());
@@ -1342,9 +1406,103 @@ function sortedList(list,tid,defKey="vendas"){
 const effPill = f => { const p=(f||0)*100; return p<15?"p-bad":p<25?"p-med":"p-good"; };
 const canPill = f => { const p=(f||0)*100; return p<20?"p-good":p<=30?"p-med":"p-bad"; };
 
+/* ═══════════════════════════════════════════════
+   MAPEAMENTO CID -> fieldKey
+═══════════════════════════════════════════════ */
+function getFieldKeyForRankingCid(cid){
+  if(cid==="ranking-promotor") return KEY.promotor;
+  if(cid==="ranking-liner")    return KEY.liner;
+  if(cid==="ranking-closer")   return KEY.closer;
+  return null;
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER DETALHE DE CLIENTES DO RANKING
+═══════════════════════════════════════════════ */
+function renderClientDetailForRanking(profName, cid){
+  const fieldKey = getFieldKeyForRankingCid(cid);
+  if(!fieldKey) return "";
+
+  const rows = state.filtered.filter(r => {
+    const n = (r[fieldKey] ?? "").toString().trim();
+    return n === profName;
+  });
+
+  const comprou    = rows.filter(r => (r._quotas?.total ?? 0) > 0);
+  const naoComprou = rows.filter(r => (r._quotas?.total ?? 0) === 0);
+
+  const clientRow = (r, idx) => {
+    const clientName = r._clientName || `Cliente #${idx + 1}`;
+    const dt         = r._dt ? toISO(r._dt) : "—";
+    const quotas     = r._quotas?.total ?? 0;
+    const vgv        = r._valorVgv ?? 0;
+    const statusContrato = (r[KEY.statusContrato] ?? "").toString().trim() || "—";
+    const statusAt   = (r[KEY.statusAtendimento] ?? "").toString().trim() || "—";
+    return `
+      <tr>
+        <td class="name" style="max-width:300px" title="${clientName.replace(/"/g,"&quot;")}">${clientName}</td>
+        <td>${fmtBR(dt)}</td>
+        <td class="num">${quotas}</td>
+        <td class="num">${fmtMoney(vgv)}</td>
+        <td>${statusContrato}</td>
+        <td>${statusAt}</td>
+      </tr>`;
+  };
+
+  const sectionTable = (title, icon, list, emptyMsg) => {
+    if(!list.length){
+      return `
+      <div class="client-detail-section">
+        <h4>${icon} ${title} <span class="badge">0</span></h4>
+        <div class="note" style="margin:0">${emptyMsg}</div>
+      </div>`;
+    }
+    return `
+    <div class="client-detail-section">
+      <h4>${icon} ${title} <span class="badge">${list.length}</span></h4>
+      <div class="table-wrap" style="max-height:45vh;margin-bottom:0">
+        <table>
+          <thead><tr>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th class="num">Cotas</th>
+            <th class="num">VGV</th>
+            <th>Status Contrato</th>
+            <th>Status Atend.</th>
+          </tr></thead>
+          <tbody>${list.map(clientRow).join("")}</tbody>
+        </table>
+      </div>
+    </div>`;
+  };
+
+  return `
+    <div class="client-detail-panel" id="client-detail-${cid}">
+      <div class="client-detail-header">
+        <span>👤 <strong>${profName}</strong> — ${rows.length} cliente(s) no período</span>
+        <span class="client-detail-close" data-close-ranking="${cid}">✕ Fechar</span>
+      </div>
+      ${sectionTable("Compraram", "✅", comprou, "Nenhum cliente com compra neste período.")}
+      ${sectionTable("Não compraram", "❌", naoComprou, "Nenhum cliente sem compra neste período.")}
+    </div>`;
+}
+
+function closeRankingDetail(cid){
+  state.expandedRanking = {cid:null, name:null};
+  const detailEl = el(`client-detail-${cid}`);
+  if(detailEl) detailEl.remove();
+}
+
 function renderRanking(list,cid,badge){
   const c=el(cid);
   if(!list.length){c.innerHTML='<div class="note">Nenhum dado para o filtro.</div>';return;}
+
+  // Verifica se expanded é válido (prof ainda existe na lista)
+  if(state.expandedRanking.cid===cid){
+    const stillExists = list.some(it => it.name === state.expandedRanking.name);
+    if(!stillExists) state.expandedRanking = {cid:null, name:null};
+  }
+
   const ord=sortedList(list,cid,"vendas");
   c.innerHTML=`
     <div class="table-wrap"><table>
@@ -1362,9 +1520,10 @@ function renderRanking(list,cid,badge){
       </tr></thead>
       <tbody>${ord.map((it,i)=>{
         const p=i+1,tr=p===1?"🥇":p===2?"🥈":p===3?"🥉":"";
+        const escapedName = it.name.replace(/"/g,"&quot;");
         return`<tr>
           <td class="rank-col">${tr} ${p}°</td>
-          <td class="name" title="${it.name}">${it.name}</td>
+          <td class="name clickable" title="Clique para ver os clientes de ${escapedName}" data-prof-name="${escapedName}">${it.name}</td>
           <td class="num">${it.casais}</td>
           <td class="num">${it.vendas}</td>
           <td class="num">${it.cotasCanceladas}</td>
@@ -1376,9 +1535,60 @@ function renderRanking(list,cid,badge){
         </tr>`;}).join("")}
       </tbody>
     </table></div>`;
+
+  // Listeners de ordenação
   c.querySelector("table").querySelectorAll("thead th.sortable").forEach(th=>{
     th.addEventListener("click",()=>{ setSort(cid,th.dataset.sort); renderRanking(list,cid,badge); });
   });
+
+  // Listeners de clique nos nomes
+  c.querySelectorAll("td.name.clickable").forEach(td=>{
+    td.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const profName = td.dataset.profName;
+
+      if(state.expandedRanking.cid===cid && state.expandedRanking.name===profName){
+        // Fecha se clicar no mesmo
+        closeRankingDetail(cid);
+        return;
+      }
+
+      // Remove detalhe anterior se existir
+      if(state.expandedRanking.cid){
+        const prevEl = el(`client-detail-${state.expandedRanking.cid}`);
+        if(prevEl) prevEl.remove();
+      }
+
+      state.expandedRanking = {cid, name:profName};
+
+      // Insere o detalhe após a table-wrap
+      const tableWrap = c.querySelector(".table-wrap");
+      const detailHTML = renderClientDetailForRanking(profName, cid);
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = detailHTML;
+      const detailNode = tempDiv.firstElementChild;
+      tableWrap.insertAdjacentElement("afterend", detailNode);
+
+      // Listener do botão fechar
+      detailNode.querySelector(".client-detail-close").addEventListener("click", ()=>{
+        closeRankingDetail(cid);
+      });
+    });
+  });
+
+  // Se já tem um expanded para este cid, re-renderiza o detalhe
+  if(state.expandedRanking.cid===cid && state.expandedRanking.name){
+    const tableWrap = c.querySelector(".table-wrap");
+    const detailHTML = renderClientDetailForRanking(state.expandedRanking.name, cid);
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = detailHTML;
+    const detailNode = tempDiv.firstElementChild;
+    tableWrap.insertAdjacentElement("afterend", detailNode);
+
+    detailNode.querySelector(".client-detail-close").addEventListener("click", ()=>{
+      closeRankingDetail(cid);
+    });
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -1612,11 +1822,10 @@ function renderTeamMappingUI(){
       }).join("")
     : `<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
 
-  /* Listeners: selects */
   el("teamMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
     sel.addEventListener("change", ()=>{
       const p = decodeURIComponent(sel.dataset.promo);
-      const newEquipe = sel.value; // "" | "Equipe Parque" | "Equipe Externa" | "Inativo"
+      const newEquipe = sel.value;
 
       const existingCfg = getTeamConfig(p);
       let equipeBase = existingCfg ? existingCfg.equipe : null;
@@ -1624,20 +1833,16 @@ function renderTeamMappingUI(){
       let fim = existingCfg ? existingCfg.inativoFim : null;
 
       if(newEquipe === "Inativo"){
-        // Mantém a equipe base anterior (se era Parque ou Externa), senão usa Parque como padrão
         if(equipeBase === "Inativo" || !equipeBase || equipeBase === ""){
           equipeBase = "Equipe Parque";
         }
-        // Não altera ini/fim aqui — o usuário vai preencher
       } else if(newEquipe === ""){
-        // Remove
         removeTeamConfig(p);
         renderTeamMappingUI();
         renderEquipes();
         renderSupervisores();
         return;
       } else {
-        // Equipe Parque ou Externa
         equipeBase = newEquipe;
         ini = null;
         fim = null;
@@ -1655,7 +1860,6 @@ function renderTeamMappingUI(){
     });
   });
 
-  /* Listeners: datas de inatividade */
   el("teamMappingList").querySelectorAll(".inativo-inicio, .inativo-fim").forEach(inp=>{
     inp.addEventListener("change", ()=>{
       const p = decodeURIComponent(inp.dataset.promo);
@@ -1674,7 +1878,6 @@ function renderTeamMappingUI(){
 
       renderEquipes();
       renderSupervisores();
-      // Re-render leve só dessa linha (atualiza tag)
       renderTeamMappingUI();
     });
   });
@@ -1782,7 +1985,6 @@ function renderSupervisores(){
   const promos=listAllPromos();
   el("supPromotorSelect").innerHTML=`<option value="">Selecione...</option>`+promos.map(p=>`<option value="${p}">${p}</option>`).join("");
 
-  /* Lista completa supervisores — mesmo formato com datas de inatividade */
   el("supMappingList").innerHTML=promos.length?promos.map(p=>{
     const cfg = getTeamConfig(p);
     const cur = cfg ? cfg.equipe : null;
@@ -1814,7 +2016,6 @@ function renderSupervisores(){
     </div>`;
   }).join(""):`<div class="note" style="margin:0">Nenhum promotor encontrado no CSV.</div>`;
 
-  /* Listeners supervisores */
   el("supMappingList").querySelectorAll("select.mini-sel").forEach(sel=>{
     sel.addEventListener("change",()=>{
       const p=decodeURIComponent(sel.dataset.supPromo);
@@ -2561,6 +2762,10 @@ function renderDesafios(recalcTeamsEditor=true){
 ═══════════════════════════════════════════════ */
 function updateAll(){
   state.filtered=applyFilters(state.rows);
+
+  // Limpa detalhe de ranking expandido se os filtros mudaram
+  state.expandedRanking = {cid:null, name:null};
+
   renderCards("stats",       state.filtered);
   renderCards("stats-curva", state.filtered);
   renderRanking(groupRanking(state.filtered,KEY.promotor),"ranking-promotor","Promotor");
