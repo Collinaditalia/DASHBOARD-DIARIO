@@ -653,18 +653,18 @@
   <!-- ABAS -->
   <div class="tabs-wrap">
     <div class="tabs">
-      <div class="tab active" data-tab="resumo"> Resumo</div>
+      <div class="tab active" data-tab="resumo">📊 Resumo</div>
       <div class="tab" data-tab="comparativo">🆚 Comparativo de períodos</div>
       <div class="tab" data-tab="curva">📈 Curva de casais e vendas</div>
-      <div class="tab" data-tab="cancelamento"> Análise de cancelamento</div>
+      <div class="tab" data-tab="cancelamento">❌ Análise de cancelamento</div>
       <div class="tab" data-tab="equipes">🧲 Equipes de captação</div>
       <div class="tab" data-tab="equipes-supervisores">🧑‍✈️ Promotores (2 supervisores)</div>
-      <div class="tab" data-tab="individual-mes-mes">️ Individual mês/mês</div>
+      <div class="tab" data-tab="individual-mes-mes">🗓️ Individual mês/mês</div>
       <div class="tab" data-tab="desafios">🏁 Desafios</div>
       <div class="tab" data-tab="ranking-promotor">🎯 Ranking Promotor</div>
       <div class="tab" data-tab="ranking-liner">💬 Ranking Liner</div>
-      <div class="tab" data-tab="ranking-closer"> Ranking Closer</div>
-      <div class="tab" data-tab="perfil-renda"> Perfil de renda</div>
+      <div class="tab" data-tab="ranking-closer">🤝 Ranking Closer</div>
+      <div class="tab" data-tab="perfil-renda">💸 Perfil de renda</div>
       <div class="tab" data-tab="profissionais">👥 Profissionais</div>
     </div>
   </div>
@@ -780,10 +780,10 @@
       <h3 style="margin:10px 0 6px">🟣 Equipe Parque</h3>
       <div class="stats" id="stats-equipe-parque"></div>
 
-      <h3 style="margin:16px 0 6px"> Equipe Externa</h3>
+      <h3 style="margin:16px 0 6px">🔵 Equipe Externa</h3>
       <div class="stats" id="stats-equipe-externa"></div>
 
-      <h3 style="margin:16px 0 6px"> Inativo (registros dentro do período de inatividade)</h3>
+      <h3 style="margin:16px 0 6px">🟡 Inativo (registros dentro do período de inatividade)</h3>
       <div class="stats" id="stats-equipe-inativo"></div>
 
       <div class="note warn">Promotores sem nenhuma marcação entram em <strong>Sem equipe</strong>.</div>
@@ -795,7 +795,7 @@
       <div class="config-panel">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
           <h4 style="margin:0">Lista completa de profissionais</h4>
-          <button class="btn danger" id="btnLimparEquipes"> Limpar tudo</button>
+          <button class="btn danger" id="btnLimparEquipes">🗑 Limpar tudo</button>
         </div>
         <div class="tiny" style="margin-bottom:12px">
           Altere a equipe no seletor ao lado de cada nome. Ao selecionar <strong>Inativo</strong>, preencha as datas de início e fim da inatividade.<br>
@@ -818,9 +818,9 @@
       <div class="sup-compare-wrap">
         <div class="sup-compare-header">
           <div class="col-label">Indicador</div>
-          <div class="col-parque"> Equipe Parque</div>
+          <div class="col-parque">🟣 Equipe Parque</div>
           <div class="col-externa">🔵 Equipe Externa</div>
-          <div class="col-geral"> Geral</div>
+          <div class="col-geral">⚪ Geral</div>
         </div>
         <div id="supCompareRows"></div>
       </div>
@@ -853,7 +853,7 @@
           </div>
           <div class="control-group" style="min-width:180px">
             <label>&nbsp;</label>
-            <button class="btn danger" id="btnLimparEquipesSup"> Limpar tudo</button>
+            <button class="btn danger" id="btnLimparEquipesSup">🗑 Limpar tudo</button>
           </div>
         </div>
         <div class="tiny" style="margin-top:8px">
@@ -975,7 +975,7 @@
             </div>
             <div class="control-group" style="min-width:220px">
               <label>&nbsp;</label>
-              <button class="btn" id="btnChNew"> Novo</button>
+              <button class="btn" id="btnChNew">➕ Novo</button>
             </div>
             <div class="control-group" style="min-width:220px">
               <label>&nbsp;</label>
@@ -1054,163 +1054,10 @@
 const el   = id => document.getElementById(id);
 const norm = s  => (s ?? "").toString().toLowerCase().trim().replace(/\s+/g," ");
 
-// Lista MUITO ampliada de possíveis nomes da coluna de cliente/cessionário no CSV
 const CLIENT_NAME_HEADERS = [
-  norm("nome do cliente"),
-  norm("cliente"),
-  norm("nome"),
-  norm("casal"),
-  norm("nome completo"),
-  norm("nome do casal"),
-  norm("cessionário"),
-  norm("cessionario"),
-  norm("1º cessionário"),
-  norm("1o cessionario"),
-  norm("primeiro cessionário"),
-  norm("primeiro cessionario"),
-  norm("1º cessionario"),
-  norm("1o cessionário"),
-  norm("nome do cessionário"),
-  norm("nome do cessionario"),
-  norm("nome do 1º cessionário"),
-  norm("nome do 1o cessionario"),
-  norm("nome do primeiro cessionário"),
-  norm("nome do primeiro cessionario"),
-  norm("titular"),
-  norm("nome do titular"),
-  norm("comprador"),
-  norm("nome do comprador"),
-  norm("nome do 1º titular"),
-  norm("nome do 1o titular"),
-  norm("1º titular"),
-  norm("1o titular"),
-  norm("proprietário"),
-  norm("proprietario"),
-  norm("nome do proprietário"),
-  norm("nome do proprietario"),
-  norm("contratante"),
-  norm("nome do contratante"),
-  norm("beneficiário"),
-  norm("beneficiario"),
-  norm("nome do beneficiário"),
-  norm("nome do beneficiario"),
-  norm("adquirente"),
-  norm("nome do adquirente"),
-  norm("participante"),
-  norm("nome do participante"),
-  norm("associado"),
-  norm("nome do associado"),
-  norm("cotista"),
-  norm("nome do cotista"),
-  norm("investidor"),
-  norm("nome do investidor"),
-  norm("pessoa"),
-  norm("nome da pessoa"),
-  norm("nome pessoa"),
-  norm("nome cliente"),
-  norm("nome do cliente"),
-  norm("nome do casal"),
-  norm("casal nome"),
-  norm("nome casal"),
-  norm("nome completo do cliente"),
-  norm("nome completo do casal"),
-  norm("nome completo casal"),
-  norm("nome completo cliente"),
+  norm("nome do cliente"),norm("cliente"),norm("nome"),norm("casal"),
+  norm("nome completo"),norm("nome do casal"),
 ];
-
-// Colunas conhecidas que NÃO são o nome do cliente (para fallback inteligente)
-const KNOWN_NON_CLIENT_KEYS = new Set([
-  norm("data de atendimento"),
-  norm("data atendimento"),
-  norm("data"),
-  norm("status do contrato"),
-  norm("status contrato"),
-  norm("status atendimento"),
-  norm("status"),
-  norm("renda"),
-  norm("renda familiar"),
-  norm("renda mensal"),
-  norm("uf"),
-  norm("estado"),
-  norm("promotor de marketing"),
-  norm("promotor"),
-  norm("liner"),
-  norm("closer"),
-  norm("equipe"),
-  norm("equipe de captação"),
-  norm("equipe de captacao"),
-  norm("supervisor"),
-  norm("gerente"),
-  norm("corretor"),
-  norm("consultor"),
-  norm("telefone"),
-  norm("tel"),
-  norm("celular"),
-  norm("email"),
-  norm("e-mail"),
-  norm("cpf"),
-  norm("cnpj"),
-  norm("documento"),
-  norm("idade"),
-  norm("sexo"),
-  norm("gênero"),
-  norm("genero"),
-  norm("cidade"),
-  norm("bairro"),
-  norm("endereço"),
-  norm("endereco"),
-  norm("cep"),
-  norm("número de cotas"),
-  norm("numero de cotas"),
-  norm("qtd cotas"),
-  norm("quantidade cotas"),
-  norm("cotas"),
-  norm("valor"),
-  norm("valor da cota"),
-  norm("valor cota"),
-  norm("preço"),
-  norm("preco"),
-  norm("total"),
-  norm("vgv"),
-  norm("observação"),
-  norm("observacao"),
-  norm("obs"),
-  norm("id"),
-  norm("código"),
-  norm("codigo"),
-  norm("protocolo"),
-  norm("número"),
-  norm("numero"),
-  norm("nº"),
-  norm("no"),
-  norm("notour"),
-  norm("no tour"),
-  norm("atendimento"),
-  norm("tipo atendimento"),
-  norm("origem"),
-  norm("canal"),
-  norm("campanha"),
-  norm("produto"),
-  norm("empreendimento"),
-  norm("projeto"),
-  norm("unidade"),
-  norm("bloco"),
-  norm("torre"),
-  norm("apartamento"),
-  norm("vaga"),
-  norm("fração"),
-  norm("fracao"),
-  norm("lote"),
-  norm("quadra"),
-  norm("matrícula"),
-  norm("matricula"),
-  norm("registro"),
-  norm("contrato"),
-  norm("nº contrato"),
-  norm("numero contrato"),
-  norm("n contrato"),
-]);
-
 const KEY = {
   dataAtendimento  : norm("data de atendimento"),
   statusContrato   : norm("status do contrato"),
@@ -1222,7 +1069,7 @@ const KEY = {
   closer  : norm("closer"),
 };
 
-const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null, clientColKey:null }, expandedRanking:{cid:null,name:null} };
+const state   = { rows:[], filtered:[], meta:{ vgvColKey:null, firstColKey:null }, expandedRanking:{cid:null,name:null} };
 const charts  = { curva:null, semana:null, cancelamento:null };
 const sortState = {
   "ranking-promotor"   :{ key:"vendas",    dir:"desc" },
@@ -1326,7 +1173,7 @@ const CH_KEY = "painel_desafios_v1";
 const loadChallenges = () => { try{ const r=localStorage.getItem(CH_KEY); const o=r?JSON.parse(r):[]; return Array.isArray(o)?o:[]; }catch(e){ return []; } };
 const saveChallenges = arr => localStorage.setItem(CH_KEY, JSON.stringify(Array.isArray(arr)?arr:[]));
 
-/* ══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    PARSE CSV
 ═══════════════════════════════════════════════ */
 function parseDelimited(text, delimiter=";"){
@@ -1354,69 +1201,6 @@ function parseDelimited(text, delimiter=";"){
   state.meta.firstColKey=keys[0]||null;
   state.meta.vgvColKey  =keys[6]||null;
   if(!state.meta.vgvColKey) throw new Error("CSV precisa ter pelo menos 7 colunas (VGV na coluna G).");
-
-  // Debug: log das colunas detectadas
-  console.log("📊 Colunas do CSV:", keys);
-  console.log("📊 Primeira coluna:", state.meta.firstColKey);
-  console.log(" Coluna VGV (G):", state.meta.vgvColKey);
-
-  // Detectar coluna de cliente/cessionário
-  state.meta.clientColKey = null;
-  
-  // 1. Tentar nomes conhecidos
-  for(const candidate of CLIENT_NAME_HEADERS){
-    if(keys.includes(candidate)){
-      state.meta.clientColKey = candidate;
-      console.log("✅ Coluna cliente detectada por nome:", candidate);
-      break;
-    }
-  }
-  
-  // 2. Fallback inteligente: primeira coluna que não seja uma das conhecidas
-  if(!state.meta.clientColKey){
-    console.log("⚠️ Coluna cliente não encontrada por nome, tentando fallback...");
-    for(const k of keys){
-      if(KNOWN_NON_CLIENT_KEYS.has(k)) {
-        console.log("⏭️ Pulando coluna conhecida:", k);
-        continue;
-      }
-      // Verificar se a coluna tem valores que parecem nomes
-      const sample = data.slice(0, 30).map(r => r[k] ?? "").filter(Boolean);
-      const hasNames = sample.some(v => {
-        // Nome deve ter letras, ter mais de 3 caracteres, não ser só números
-        return /[a-zA-ZÀ-ÿ]{3,}/.test(v) && v.length > 3 && !/^\d+$/.test(v) && !/^\d+[\.,]\d+$/.test(v);
-      });
-      if(hasNames){
-        state.meta.clientColKey = k;
-        console.log("✅ Coluna cliente detectada por fallback:", k);
-        break;
-      }
-    }
-  }
-  
-  // 3. Último recurso: usar a primeira coluna se ela parecer conter nomes
-  if(!state.meta.clientColKey){
-    console.log("⚠️ Fallback falhou, tentando primeira coluna...");
-    const firstKey = keys[0];
-    if(firstKey){
-      const sample = data.slice(0, 30).map(r => r[firstKey] ?? "").filter(Boolean);
-      const hasNames = sample.some(v => /[a-zA-ZÀ-ÿ]{3,}/.test(v) && v.length > 3);
-      if(hasNames){
-        state.meta.clientColKey = firstKey;
-        console.log("✅ Coluna cliente detectada como primeira coluna:", firstKey);
-      }
-    }
-  }
-  
-  if(!state.meta.clientColKey){
-    console.error("❌ Não foi possível detectar a coluna do cliente!");
-    console.error("Colunas disponíveis:", keys);
-    console.error("Amostras das primeiras colunas:");
-    keys.slice(0, 5).forEach(k => {
-      console.error(`  ${k}:`, data.slice(0, 3).map(r => r[k]));
-    });
-  }
-
   return data;
 }
 
@@ -1480,8 +1264,7 @@ function contractBucket(s){
 ═══════════════════════════════════════════════ */
 function buildObjects(rows){
   if(!rows.length) throw new Error("CSV vazio.");
-  const cnk = state.meta.clientColKey;
-  console.log(" Construindo objetos com clientColKey:", cnk);
+  const cnk=(()=>{ const ks=Object.keys(rows[0]); for(const c of CLIENT_NAME_HEADERS) if(ks.includes(c)) return c; return null; })();
   return rows.map(r=>{
     const o={...r};
     o._dt        =parseBRDateTime(o[KEY.dataAtendimento])||parseBRDateTime(o[state.meta.firstColKey]);
@@ -1577,7 +1360,7 @@ function renderCards(cid,rows){
     <div class="stat-card"><div class="stat-value">${s.noTour}</div><div class="stat-label">NoTour</div></div>`;
 }
 
-/* ══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    RANKING
 ═══════════════════════════════════════════════ */
 function groupRanking(rows,fieldKey){
@@ -1623,7 +1406,6 @@ function renderClientDetailForRanking(profName, cid){
   const naoComprou = rows.filter(r => (r._quotas?.total ?? 0) === 0);
 
   const clientRow = (r, idx) => {
-    // Usar o nome real do cliente se disponível, senão fallback para Cliente #N
     const clientName = r._clientName || `Cliente #${idx + 1}`;
     const dt         = r._dt ? toISO(r._dt) : "—";
     const quotas     = r._quotas?.total ?? 0;
@@ -1675,7 +1457,7 @@ function renderClientDetailForRanking(profName, cid){
         <span class="client-detail-close" data-close-ranking="${cid}">✕ Fechar</span>
       </div>
       ${sectionTable("Compraram", "✅", comprou, "Nenhum cliente com compra neste período.")}
-      ${sectionTable("Não compraram", "", naoComprou, "Nenhum cliente sem compra neste período.")}
+      ${sectionTable("Não compraram", "❌", naoComprou, "Nenhum cliente sem compra neste período.")}
     </div>`;
 }
 
@@ -1971,7 +1753,7 @@ function renderSemana(rows){
   });
 }
 
-/* ══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    CANCELAMENTO
 ═══════════════════════════════════════════════ */
 function renderCancelamento(rows){
@@ -2335,7 +2117,7 @@ function salvarSupRow(row){
   refreshTab("equipes-supervisores");
 }
 
-/* ══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    INDIVIDUAL MÊS/MÊS
 ═══════════════════════════════════════════════ */
 let mmSelectedMonths = [];
@@ -2642,4 +2424,345 @@ function renderChResults(results, metric){
     <tbody>${sorted.map((r,i)=>`<tr>
       <td class="rank-col">${i+1}</td>
       <td class="name">${r.team}</td>
-      <td class="num"><span class="pill
+      <td class="num"><span class="pill ${metric==="aproveitamento"?aprPill(r.valor/100):r.valor>0?"p-good":"p-bad"}">${metric==="eficiencia"||metric==="aproveitamento"?fmtPctBR(r.valor/100):metric==="vgv"?fmtMoney(r.valor):fmtNumBR(r.valor,1,1)}</span></td>
+      <td class="num">${r.st.casais}</td>
+      <td class="num">${r.st.vendas}</td>
+      <td class="num">${fmtMoney(r.st.vgvTotal)}</td>
+      <td class="num">${fmtMoney(r.st.vgvAtivo)}</td>
+      <td class="num"><span class="pill ${effPill(r.st.eficiencia)}">${fmtPctBR(r.st.eficiencia)}</span></td>
+      <td class="num"><span class="pill ${aprPill(r.st.aproveitamento)}">${fmtPctBR(r.st.aproveitamento)}</span></td>
+    </tr>`).join("")}</tbody></table></div>`;
+
+  el("chResults").querySelectorAll("[data-sort]").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      setSort("ch-results-table", th.dataset.sort);
+      renderChResults(results, metric);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   COMPARATIVO
+═══════════════════════════════════════════════ */
+function getFilteredForPeriod(d1,d2){
+  if(!d1||!d2) return [];
+  const s = d1.getTime();
+  const e = new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),23,59,59,999).getTime();
+  const status  = el("statusSelect").value;
+  const ufSel   = el("ufSelect").value;
+  return state.rows.filter(r=>{
+    if(!r._dt || r._dt.getTime()<s || r._dt.getTime()>e) return false;
+    if(status!=="todos" && r._bucket!==status) return false;
+    if(ufSel!=="todos" && (r[KEY.uf]??"").toString().trim()!==ufSel) return false;
+    return true;
+  });
+}
+
+function renderComparativo(){
+  const x1=parseDateOnlyInput(el("cmpXStart").value);
+  const x2=parseDateOnlyInput(el("cmpXEnd").value);
+  const y1=parseDateOnlyInput(el("cmpYStart").value);
+  const y2=parseDateOnlyInput(el("cmpYEnd").value);
+  const rx=getFilteredForPeriod(x1,x2);
+  const ry=getFilteredForPeriod(y1,y2);
+  renderCards("cmpStatsX", rx);
+  renderCards("cmpStatsY", ry);
+
+  const sx=statsFor(rx), sy=statsFor(ry);
+  const pctDelta = (a,b) => b ? ((a-b)/b)*100 : (a?Infinity:0);
+
+  el("cmpMeta").textContent = rx.length&&ry.length
+    ? `Período X: ${rx.length} linhas · Período Y: ${ry.length} linhas`
+    : "Defina os dois períodos para comparar.";
+
+  const deltas = [
+    {label:"Casais", vx:sx.casais, vy:sy.casais, fmt:v=>fmtNumBR(v,1,1)},
+    {label:"Vendas", vx:sx.vendas, vy:sy.vendas, fmt:v=>fmtNumBR(v,1,1)},
+    {label:"VGV Total", vx:sx.vgvTotal, vy:sy.vgvTotal, fmt:v=>fmtMoney(v)},
+    {label:"VGV Líquido", vx:sx.vgvAtivo, vy:sy.vgvAtivo, fmt:v=>fmtMoney(v)},
+    {label:"Eficiência", vx:sx.eficiencia*100, vy:sy.eficiencia*100, fmt:v=>fmtPctBR(v/100)},
+    {label:"Aproveitamento", vx:sx.aproveitamento*100, vy:sy.aproveitamento*100, fmt:v=>fmtPctBR(v/100)},
+    {label:"% Cancel.", vx:sx.pctCancel*100, vy:sy.pctCancel*100, fmt:v=>fmtPctBR(v/100)},
+    {label:"Ticket médio", vx:sx.ticketMedio, vy:sy.ticketMedio, fmt:v=>fmtMoney(v)},
+  ];
+
+  el("cmpDeltas").innerHTML = deltas.map(d=>{
+    const delta = pctDelta(d.vx, d.vy);
+    const cls = !isFinite(delta)?"neu":delta>0?"pos":delta<0?"neg":"neu";
+    const sign = delta>0?"+":"";
+    return `<div class="kpi-row">
+      <div class="kpi-top">
+        <span class="kpi-name">${d.label}</span>
+        <span class="kpi-delta ${cls}">${isFinite(delta)?sign+fmtNumBR(delta,1,1)+"%":"—"}</span>
+      </div>
+      <div class="kpi-sub">
+        <div>X: <b>${d.fmt(d.vx)}</b></div>
+        <div>Y: <b>${d.fmt(d.vy)}</b></div>
+        <div></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ═══════════════════════════════════════════════
+   PROFISSIONAIS (individual)
+═══════════════════════════════════════════════ */
+function renderProfissionaisSingle(){
+  const tipo = norm(el("profTipoSingle").value);
+  const nome = el("profNomeSingle").value;
+  if(!nome){ el("stats-single").innerHTML=""; el("profissionais-table").innerHTML=""; return; }
+  const rows = state.filtered.filter(r=>(r[tipo]??"").toString().trim()===nome);
+  renderCards("stats-single", rows);
+
+  const list = groupRanking(state.filtered, tipo);
+  const sorted = sortedList(list, "profissionais-table");
+  el("profissionais-table").innerHTML = `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>Nome</th>
+      <th class="num sortable" data-sort="casais" data-tid="profissionais-table">Casais ${sortInd("profissionais-table","casais")}</th>
+      <th class="num sortable" data-sort="vendas" data-tid="profissionais-table">Vendas ${sortInd("profissionais-table","vendas")}</th>
+      <th class="num sortable" data-sort="vgvTotal" data-tid="profissionais-table">VGV Total ${sortInd("profissionais-table","vgvTotal")}</th>
+      <th class="num sortable" data-sort="vgvAtivo" data-tid="profissionais-table">VGV Líquido ${sortInd("profissionais-table","vgvAtivo")}</th>
+      <th class="num sortable" data-sort="eficiencia" data-tid="profissionais-table">Eficiênc. ${sortInd("profissionais-table","eficiencia")}</th>
+      <th class="num sortable" data-sort="aproveitamento" data-tid="profissionais-table">Aproveit. ${sortInd("profissionais-table","aproveitamento")}</th>
+      <th class="num sortable" data-sort="pctCancel" data-tid="profissionais-table">% Canc. ${sortInd("profissionais-table","pctCancel")}</th>
+    </tr></thead>
+    <tbody>${sorted.map(it=>`<tr>
+      <td class="name">${it.name}</td>
+      <td class="num">${it.casais}</td>
+      <td class="num">${it.vendas}</td>
+      <td class="num">${fmtMoney(it.vgvTotal)}</td>
+      <td class="num">${fmtMoney(it.vgvAtivo)}</td>
+      <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
+      <td class="num"><span class="pill ${aprPill(it.aproveitamento)}">${fmtPctBR(it.aproveitamento)}</span></td>
+      <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
+    </tr>`).join("")}</tbody></table></div>`;
+
+  el("profissionais-table").querySelectorAll("[data-sort]").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      setSort("profissionais-table", th.dataset.sort);
+      refreshTab("profissionais");
+    });
+  });
+}
+
+function populateProfSingleNames(){
+  const tipo = norm(el("profTipoSingle").value);
+  const sel = el("profNomeSingle");
+  const nomes = new Set();
+  state.rows.forEach(r=>{ const n=(r[tipo]??"").toString().trim(); if(n) nomes.add(n); });
+  const sorted = [...nomes].sort((a,b)=>a.localeCompare(b));
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Selecione...</option>' + sorted.map(n=>`<option value="${n.replace(/"/g,"&quot;")}" ${n===current?"selected":""}>${n}</option>`).join("");
+}
+
+/* ═══════════════════════════════════════════════
+   POPULATE FILTROS
+═══════════════════════════════════════════════ */
+function populateFilters(){
+  const ufs = new Set();
+  const nomesPorTipo = {};
+  state.rows.forEach(r=>{
+    const uf = (r[KEY.uf]??"").toString().trim(); if(uf) ufs.add(uf);
+    ["promotor de marketing","liner","closer"].forEach(t=>{
+      const n=(r[norm(t)]??"").toString().trim(); if(n){ if(!nomesPorTipo[t]) nomesPorTipo[t]=new Set(); nomesPorTipo[t].add(n); }
+    });
+  });
+  const selUF = el("ufSelect");
+  selUF.innerHTML = '<option value="todos">Todas</option>' + [...ufs].sort().map(u=>`<option value="${u.replace(/"/g,"&quot;")}">${u}</option>`).join("");
+
+  populateProfNames();
+}
+
+function populateProfNames(){
+  const tipo = norm(el("profTipo").value);
+  const sel = el("profNome");
+  const nomes = new Set();
+  state.rows.forEach(r=>{ const n=(r[tipo]??"").toString().trim(); if(n) nomes.add(n); });
+  const sorted = [...nomes].sort((a,b)=>a.localeCompare(b));
+  const current = sel.value;
+  sel.innerHTML = '<option value="todos">Todos</option>' + sorted.map(n=>`<option value="${n.replace(/"/g,"&quot;")}" ${n===current?"selected":""}>${n}</option>`).join("");
+}
+
+/* ═══════════════════════════════════════════════
+   ABAS
+═══════════════════════════════════════════════ */
+function getActiveTab(){
+  const active = document.querySelector(".tab.active");
+  return active ? active.dataset.tab : "resumo";
+}
+
+function refreshTab(tab){
+  state.filtered = applyFilters(state.rows);
+  switch(tab){
+    case "resumo": renderCards("stats", state.filtered); break;
+    case "comparativo": break;
+    case "curva": renderCurva(state.filtered); renderSemana(state.filtered); break;
+    case "cancelamento": renderCancelamento(state.filtered); break;
+    case "equipes": renderEquipes(); break;
+    case "equipes-supervisores": renderSupervisores(); break;
+    case "individual-mes-mes": renderMM(); populateMMNames(); break;
+    case "desafios": break;
+    case "ranking-promotor": renderRanking("ranking-promotor", state.filtered, KEY.promotor); break;
+    case "ranking-liner": renderRanking("ranking-liner", state.filtered, KEY.liner); break;
+    case "ranking-closer": renderRanking("ranking-closer", state.filtered, KEY.closer); break;
+    case "perfil-renda": renderPerfilRenda(state.filtered); break;
+    case "profissionais": renderProfissionaisSingle(); populateProfSingleNames(); break;
+  }
+}
+
+function switchTab(tab){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+  const tabEl = document.querySelector(`.tab[data-tab="${tab}"]`);
+  if(tabEl) tabEl.classList.add("active");
+  const contentEl = el("tab-"+tab);
+  if(contentEl) contentEl.classList.add("active");
+  refreshTab(tab);
+}
+
+/* ═══════════════════════════════════════════════
+   EVENTOS
+═══════════════════════════════════════════════ */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click", ()=>switchTab(t.dataset.tab));
+});
+
+["statusSelect","profNome","ufSelect"].forEach(id=>{
+  el(id).addEventListener("change", ()=>refreshTab(getActiveTab()));
+});
+
+el("profTipo").addEventListener("change", ()=>{
+  populateProfNames();
+  refreshTab(getActiveTab());
+});
+
+["dateStart","dateEnd"].forEach(id=>{
+  el(id).addEventListener("change", ()=>refreshTab(getActiveTab()));
+});
+
+el("btnHoje").addEventListener("click", ()=>{
+  const today = toISO(new Date());
+  el("dateStart").value = today;
+  el("dateEnd").value = today;
+  refreshTab(getActiveTab());
+});
+el("btn30").addEventListener("click", ()=>{
+  const end = new Date();
+  const start = new Date(end);
+  start.setDate(start.getDate()-29);
+  el("dateStart").value = toISO(start);
+  el("dateEnd").value = toISO(end);
+  refreshTab(getActiveTab());
+});
+el("btnLimparPeriodo").addEventListener("click", ()=>{
+  el("dateStart").value = "";
+  el("dateEnd").value = "";
+  refreshTab(getActiveTab());
+});
+
+// Comparativo
+el("btnCmpXHoje").addEventListener("click", ()=>{ const d=toISO(new Date()); el("cmpXStart").value=d; el("cmpXEnd").value=d; renderComparativo(); });
+el("btnCmpX30").addEventListener("click", ()=>{ const e=new Date(); const s=new Date(e); s.setDate(s.getDate()-29); el("cmpXStart").value=toISO(s); el("cmpXEnd").value=toISO(e); renderComparativo(); });
+el("btnCmpYHoje").addEventListener("click", ()=>{ const d=toISO(new Date()); el("cmpYStart").value=d; el("cmpYEnd").value=d; renderComparativo(); });
+el("btnCmpY30").addEventListener("click", ()=>{ const e=new Date(); const s=new Date(e); s.setDate(s.getDate()-29); el("cmpYStart").value=toISO(s); el("cmpYEnd").value=toISO(e); renderComparativo(); });
+["cmpXStart","cmpXEnd","cmpYStart","cmpYEnd"].forEach(id=>{
+  el(id).addEventListener("change", ()=>renderComparativo());
+});
+
+// Equipes
+el("btnLimparEquipes").addEventListener("click", ()=>{
+  if(!confirm("Remover TODAS as configurações de equipe?")) return;
+  localStorage.removeItem(TEAM_KEY_V2);
+  refreshTab("equipes");
+});
+
+// Supervisores
+el("btnSalvarEquipeSup").addEventListener("click", ()=>{
+  const nome = el("supPromotorSelect").value;
+  const equipe = el("supEquipeSelect").value;
+  if(!nome){ alert("Selecione um promotor."); return; }
+  setTeamConfig(nome, {equipe, inativoInicio:null, inativoFim:null});
+  refreshTab("equipes-supervisores");
+});
+el("btnLimparEquipesSup").addEventListener("click", ()=>{
+  if(!confirm("Remover TODAS as configurações de equipe?")) return;
+  localStorage.removeItem(TEAM_KEY_V2);
+  refreshTab("equipes-supervisores");
+});
+
+// Individual mês/mês
+el("mmProfTipo").addEventListener("change", ()=>{ populateMMNames(); renderMM(); });
+el("mmProfNome").addEventListener("change", ()=>renderMM());
+el("mmBtnUlt3").addEventListener("click", ()=>{
+  const available = getAvailableMonths(state.rows.filter(r=>r._dt));
+  mmSelectedMonths = available.slice(-3);
+  renderMM();
+});
+el("mmBtnUlt6").addEventListener("click", ()=>{
+  const available = getAvailableMonths(state.rows.filter(r=>r._dt));
+  mmSelectedMonths = available.slice(-6);
+  renderMM();
+});
+el("mmBtnTodos").addEventListener("click", ()=>{
+  mmSelectedMonths = getAvailableMonths(state.rows.filter(r=>r._dt));
+  renderMM();
+});
+el("mmBtnLimpar").addEventListener("click", ()=>{
+  mmSelectedMonths = [];
+  renderMM();
+});
+
+// Desafios
+el("btnChSave").addEventListener("click", saveChallenge);
+el("btnChNew").addEventListener("click", ()=>{
+  challengeEditId = null;
+  el("challengeFormTitle").textContent = "Criar desafio";
+  el("chName").value = "";
+  el("chStart").value = "";
+  el("chEnd").value = "";
+  el("chMetric").value = "casais";
+  el("chProfTipo").value = "promotor de marketing";
+  el("chTeamsCount").value = "2";
+  renderChTeamsEditor();
+});
+el("btnChClearAll").addEventListener("click", ()=>{
+  if(!confirm("Apagar TODOS os desafios?")) return;
+  saveChallenges([]);
+  challengeEditId = null;
+  renderChallenges();
+});
+el("chTeamsCount").addEventListener("change", renderChTeamsEditor);
+el("chProfTipo").addEventListener("change", renderChTeamsEditor);
+
+// Profissionais single
+el("profTipoSingle").addEventListener("change", ()=>{ populateProfSingleNames(); renderProfissionaisSingle(); });
+el("profNomeSingle").addEventListener("change", renderProfissionaisSingle);
+
+/* ═══════════════════════════════════════════════
+   CARREGAR CSV
+═══════════════════════════════════════════════ */
+async function loadCSV(){
+  try{
+    const resp = await fetch("./dados.csv");
+    if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    const raw = parseDelimited(text, ";");
+    if(!raw.length) throw new Error("CSV está vazio.");
+    state.rows = buildObjects(raw);
+    el("loading").style.display = "none";
+    populateFilters();
+    renderChallenges();
+    switchTab("resumo");
+  }catch(e){
+    el("loading").style.display = "none";
+    const errEl = el("error");
+    errEl.style.display = "block";
+    errEl.textContent = `❌ Erro ao carregar: ${e.message}. Certifique-se de que o arquivo "dados.csv" está na mesma pasta.`;
+  }
+}
+
+loadCSV();
+</script>
+</body>
+</html>
