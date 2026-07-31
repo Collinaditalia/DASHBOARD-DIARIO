@@ -103,6 +103,9 @@
     .stat-value{font-size:2.15rem;font-weight:900;margin:0 0 8px;font-family:var(--mono);color:var(--accent2);}
     .stat-label{font-size:.95rem;color:var(--muted);font-weight:700;letter-spacing:0.2px;}
 
+    .stat-card.vgv-liquido::before{background:linear-gradient(90deg,#5CFFB0,#22D3EE);}
+    .stat-card.vgv-liquido .stat-value{color:#5CFFB0;}
+
     .note{
       background:rgba(124,92,255,0.1);border:1px solid rgba(124,92,255,0.22);
       border-radius:var(--radius2);padding:14px 16px;margin:14px 0;font-size:0.92rem;
@@ -684,6 +687,7 @@
         • Cotas ativas/canceladas = tokens na coluna "Status do contrato".<br>
         • <strong>VGV total = Σ(coluna G)</strong> (soma simples).<br>
         • VGV ativo/cancelado: rateio proporcional pelos tokens ATIVO/CANCELADO da linha.<br>
+        • <strong>VGV líquido = VGV total − VGV cancelado</strong> (vendas realizadas menos os cancelamentos).<br>
         • <strong>Eficiência = (Cotas ÷ Casais) × 100</strong>.<br>
         • <strong>Aproveitamento = (Clientes que compraram ÷ Total de clientes) × 100</strong> (independente da qtd. de cotas).<br>
         • <strong>Média de Casais/dia</strong> = total ÷ dias do período (inclusivo).
@@ -1327,10 +1331,12 @@ function statsFor(rows){
   const eff=casais?(q.total/casais):0;
   const clientesCompraram = rows.filter(r => (r._quotas?.total ?? 0) > 0).length;
   const aproveitamento = rows.length ? (clientesCompraram / rows.length) : 0;
+  const vgvLiquido = vgv.total - vgv.cancelado;
   return{
     totalLinhas:rows.length,noTour,casais,
     vendas:q.total,cotasCanceladas:q.cancelado,
     vgvTotal:vgv.total,vgvAtivo:vgv.ativo,vgvCancelado:vgv.cancelado,
+    vgvLiquido,
     eficiencia:eff,pctCancel:q.total?(q.cancelado/q.total):0,
     ticketMedio:q.total?(vgv.total/q.total):0,
     rendaMed:avgRenda(rows),mediaCasaisPeriodo:avgCasais(rows),
@@ -1351,6 +1357,7 @@ function renderCards(cid,rows){
     <div class="stat-card"><div class="stat-value">${s.cotasCanceladas}</div><div class="stat-label">Cotas canceladas</div></div>
     <div class="stat-card"><div class="stat-value">${fmtPctBR(s.pctCancelamentosVendas)}</div><div class="stat-label">% Cancelamentos (Canceladas ÷ Vendas)</div></div>
     <div class="stat-card"><div class="stat-value">${fmtMoney(s.vgvTotal)}</div><div class="stat-label">VGV total (Σ col G)</div></div>
+    <div class="stat-card vgv-liquido"><div class="stat-value">${fmtMoney(s.vgvLiquido)}</div><div class="stat-label">VGV líquido</div></div>
     <div class="stat-card"><div class="stat-value">${fmtPctBR(s.eficiencia)}</div><div class="stat-label">Eficiência</div></div>
     <div class="stat-card"><div class="stat-value">${fmtPctBR(s.aproveitamento)}</div><div class="stat-label">Aproveitamento</div></div>
     <div class="stat-card"><div class="stat-value">${fmtMoney(s.rendaMed)}</div><div class="stat-label">Renda média</div></div>
@@ -1366,7 +1373,7 @@ function groupRanking(rows,fieldKey){
   rows.forEach(r=>{ const n=(r[fieldKey]??"").toString().trim(); if(!n) return; if(!map.has(n)) map.set(n,[]); map.get(n).push(r); });
   return Array.from(map.entries()).map(([name,list])=>{
     const s=statsFor(list);
-    return{name,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed,aproveitamento:s.aproveitamento,clientesCompraram:s.clientesCompraram};
+    return{name,casais:s.casais,vendas:s.vendas,cotasCanceladas:s.cotasCanceladas,vgvTotal:s.vgvTotal,vgvLiquido:s.vgvLiquido,eficiencia:s.eficiencia,pctCancel:s.pctCancel,ticketMedio:s.ticketMedio,rendaMed:s.rendaMed,aproveitamento:s.aproveitamento,clientesCompraram:s.clientesCompraram};
   }).sort((a,b)=>(b.vendas-a.vendas)||(b.vgvTotal-a.vgvTotal)||a.name.localeCompare(b.name));
 }
 
@@ -1482,6 +1489,7 @@ function renderRanking(cid, rows, fieldKey){
       <th class="num sortable" data-sort="vendas" data-tid="${cid}">Vendas ${sortInd(cid,"vendas")}</th>
       <th class="num sortable" data-sort="cotasCanceladas" data-tid="${cid}">Cancel. ${sortInd(cid,"cotasCanceladas")}</th>
       <th class="num sortable" data-sort="vgvTotal" data-tid="${cid}">VGV ${sortInd(cid,"vgvTotal")}</th>
+      <th class="num sortable" data-sort="vgvLiquido" data-tid="${cid}">VGV Líq. ${sortInd(cid,"vgvLiquido")}</th>
       <th class="num sortable" data-sort="eficiencia" data-tid="${cid}">Eficiênc. ${sortInd(cid,"eficiencia")}</th>
       <th class="num sortable" data-sort="aproveitamento" data-tid="${cid}">Aproveit. ${sortInd(cid,"aproveitamento")}</th>
       <th class="num sortable" data-sort="pctCancel" data-tid="${cid}">% Canc. ${sortInd(cid,"pctCancel")}</th>
@@ -1498,6 +1506,7 @@ function renderRanking(cid, rows, fieldKey){
       <td class="num">${it.vendas}</td>
       <td class="num">${it.cotasCanceladas}</td>
       <td class="num">${fmtMoney(it.vgvTotal)}</td>
+      <td class="num">${fmtMoney(it.vgvLiquido)}</td>
       <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
       <td class="num"><span class="pill ${aprPill(it.aproveitamento)}">${fmtPctBR(it.aproveitamento)}</span></td>
       <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
@@ -1564,7 +1573,7 @@ function renderPerfilRenda(rows){
   RENDA_FAIXAS_ORDEM.forEach(f => map.set(f, []));
   rows.forEach(r => {
     const faixa = getRendaFaixa(r._renda ?? 0);
-    if(!map.has(faixa)) map.set(faixa, []); // fallback
+    if(!map.has(faixa)) map.set(faixa, []);
     map.get(faixa).push(r);
   });
 
@@ -1580,6 +1589,7 @@ function renderPerfilRenda(rows){
       aproveitamento,
       vendas: s.vendas,
       vgvTotal: s.vgvTotal,
+      vgvLiquido: s.vgvLiquido,
       eficiencia: s.eficiencia,
       ticketMedio: s.ticketMedio,
       rendaMed: s.rendaMed,
@@ -1589,7 +1599,6 @@ function renderPerfilRenda(rows){
     };
   });
 
-  // Ordenar pelas faixas definidas
   const ordemMap = {};
   RENDA_FAIXAS_ORDEM.forEach((f, i) => { ordemMap[f] = i; });
   list.sort((a, b) => (ordemMap[a.faixa] ?? 999) - (ordemMap[b.faixa] ?? 999));
@@ -1605,6 +1614,7 @@ function renderPerfilRenda(rows){
       <th class="num sortable" data-sort="casais" data-tid="perfil-renda">Casais ${sortInd("perfil-renda","casais")}</th>
       <th class="num sortable" data-sort="vendas" data-tid="perfil-renda">Vendas ${sortInd("perfil-renda","vendas")}</th>
       <th class="num sortable" data-sort="vgvTotal" data-tid="perfil-renda">VGV ${sortInd("perfil-renda","vgvTotal")}</th>
+      <th class="num sortable" data-sort="vgvLiquido" data-tid="perfil-renda">VGV Líq. ${sortInd("perfil-renda","vgvLiquido")}</th>
       <th class="num sortable" data-sort="eficiencia" data-tid="perfil-renda">Eficiênc. ${sortInd("perfil-renda","eficiencia")}</th>
       <th class="num sortable" data-sort="ticketMedio" data-tid="perfil-renda">Ticket méd. ${sortInd("perfil-renda","ticketMedio")}</th>
       <th class="num sortable" data-sort="pctCancel" data-tid="perfil-renda">% Canc. ${sortInd("perfil-renda","pctCancel")}</th>
@@ -1620,6 +1630,7 @@ function renderPerfilRenda(rows){
       <td class="num">${it.casais}</td>
       <td class="num">${it.vendas}</td>
       <td class="num">${fmtMoney(it.vgvTotal)}</td>
+      <td class="num">${fmtMoney(it.vgvLiquido)}</td>
       <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
       <td class="num">${fmtMoney(it.ticketMedio)}</td>
       <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
@@ -1770,6 +1781,7 @@ function renderCancelamento(rows){
     pct:d.cotasTotal?(d.canceladas/d.cotasTotal):0,
     vgvTotal:d.vgvTotal,
     vgvCancelado:d.vgvCancelado,
+    vgvLiquido:d.vgvTotal - d.vgvCancelado,
   })).sort((a,b)=>a.cotas-b.cotas);
 
   const labels = list.map(l=>`${l.cotas} cota(s)`);
@@ -1807,6 +1819,7 @@ function renderCancelamento(rows){
       <th class="num sortable" data-sort="pct" data-tid="cancelamento-table">% Canc. ${sortInd("cancelamento-table","pct")}</th>
       <th class="num sortable" data-sort="vgvTotal" data-tid="cancelamento-table">VGV Total ${sortInd("cancelamento-table","vgvTotal")}</th>
       <th class="num sortable" data-sort="vgvCancelado" data-tid="cancelamento-table">VGV Cancel. ${sortInd("cancelamento-table","vgvCancelado")}</th>
+      <th class="num sortable" data-sort="vgvLiquido" data-tid="cancelamento-table">VGV Líq. ${sortInd("cancelamento-table","vgvLiquido")}</th>
     </tr></thead>
     <tbody>${sorted.map(l=>`<tr>
       <td class="num">${l.cotas}</td>
@@ -1815,6 +1828,7 @@ function renderCancelamento(rows){
       <td class="num"><span class="pill ${canPill(l.pct)}">${fmtPctBR(l.pct)}</span></td>
       <td class="num">${fmtMoney(l.vgvTotal)}</td>
       <td class="num">${fmtMoney(l.vgvCancelado)}</td>
+      <td class="num">${fmtMoney(l.vgvLiquido)}</td>
     </tr>`).join("")}</tbody></table></div>`;
 
   el("cancelamento-table").querySelectorAll("[data-sort]").forEach(th=>{
@@ -1934,7 +1948,6 @@ function salvarEquipeRow(row){
       inativoFim: fim?.value || null,
     });
   }
-  // Re-render tags sem perder foco
   const prLeft = row.querySelector(".pr-left .pr-tag");
   if(prLeft){
     const tagClass = equipe==="Equipe Parque"?"parque":equipe==="Equipe Externa"?"externa":equipe==="Inativo"?"inativo":"none";
@@ -1964,6 +1977,7 @@ function renderSupervisores(){
     {label:"VGV total", p:sp.vgvTotal, e:se.vgvTotal, g:sg.vgvTotal, fmt:v=>fmtMoney(v)},
     {label:"VGV ativo", p:sp.vgvAtivo, e:se.vgvAtivo, g:sg.vgvAtivo, fmt:v=>fmtMoney(v)},
     {label:"VGV cancelado", p:sp.vgvCancelado, e:se.vgvCancelado, g:sg.vgvCancelado, fmt:v=>fmtMoney(v)},
+    {label:"VGV líquido", p:sp.vgvLiquido, e:se.vgvLiquido, g:sg.vgvLiquido, fmt:v=>fmtMoney(v)},
     {label:"Eficiência", p:sp.eficiencia, e:se.eficiencia, g:sg.eficiencia, fmt:v=>fmtPctBR(v)},
     {label:"Aproveitamento", p:sp.aproveitamento, e:se.aproveitamento, g:sg.aproveitamento, fmt:v=>fmtPctBR(v)},
     {label:"% Cancelamento", p:sp.pctCancel, e:se.pctCancel, g:sg.pctCancel, fmt:v=>fmtPctBR(v)},
@@ -1982,14 +1996,15 @@ function renderSupervisores(){
     </div>
   `).join("");
 
-  const rep = (label, valP, valE, total, clsP, clsE) => {
+  const rep = (label, valP, valE, total, clsP, clsE, fmtR) => {
     const pp = total ? (valP/total)*100 : 0;
     const pe = total ? (valE/total)*100 : 0;
+    const f = fmtR || (v => fmtNumBR(v,1,1));
     return `
     <div class="rep-card geral">
       <div class="rep-kpi-label">${label}</div>
       <div class="rep-kpi-row">
-        <span class="rep-kpi-val">${total?fmtNumBR(total,1,1):"—"}</span>
+        <span class="rep-kpi-val">${total?f(total):"—"}</span>
       </div>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:4px">
         <span class="rep-kpi-pct ${clsP}">🟣 ${fmtNumBR(pp,1,1)}%</span>
@@ -2007,7 +2022,8 @@ function renderSupervisores(){
   el("supRepGrid").innerHTML = `<div class="rep-grid">
     ${rep("Casais", sp.casais, se.casais, sg.casais, "parque", "externa")}
     ${rep("Vendas (cotas)", sp.vendas, se.vendas, sg.vendas, "parque", "externa")}
-    ${rep("VGV total", sp.vgvTotal, se.vgvTotal, sg.vgvTotal, "parque", "externa")}
+    ${rep("VGV total", sp.vgvTotal, se.vgvTotal, sg.vgvTotal, "parque", "externa", fmtMoney)}
+    ${rep("VGV líquido", sp.vgvLiquido, se.vgvLiquido, sg.vgvLiquido, "parque", "externa", fmtMoney)}
     ${rep("Clientes que compraram", sp.clientesCompraram, se.clientesCompraram, sg.clientesCompraram, "parque", "externa")}
   </div>`;
 
@@ -2185,6 +2201,7 @@ function renderMM(){
         <div class="mm-kpi"><span class="lab">Média Casais/dia</span><span class="val">${fmtNumBR(s.mediaCasaisPeriodo,1,1)}</span></div>
         <div class="mm-kpi"><span class="lab">Vendas</span><span class="val">${fmtNumBR(s.vendas,1,1)}</span></div>
         <div class="mm-kpi"><span class="lab">VGV</span><span class="val">${fmtMoney(s.vgvTotal)}</span></div>
+        <div class="mm-kpi"><span class="lab">VGV líquido</span><span class="val">${fmtMoney(s.vgvLiquido)}</span></div>
         <div class="mm-kpi"><span class="lab">Eficiência</span><span class="val"><span class="pill ${effPill(s.eficiencia)}">${fmtPctBR(s.eficiencia)}</span></span></div>
         <div class="mm-kpi"><span class="lab">Aproveitamento</span><span class="val"><span class="pill ${aprPill(s.aproveitamento)}">${fmtPctBR(s.aproveitamento)}</span></span></div>
         <div class="mm-kpi"><span class="lab">% Cancel.</span><span class="val"><span class="pill ${canPill(s.pctCancel)}">${fmtPctBR(s.pctCancel)}</span></span></div>
@@ -2401,6 +2418,7 @@ function renderChResults(results, metric){
       <th class="num">Casais</th>
       <th class="num">Vendas</th>
       <th class="num">VGV</th>
+      <th class="num">VGV Líq.</th>
       <th class="num">Eficiência</th>
       <th class="num">Aproveitamento</th>
     </tr></thead>
@@ -2411,6 +2429,7 @@ function renderChResults(results, metric){
       <td class="num">${r.st.casais}</td>
       <td class="num">${r.st.vendas}</td>
       <td class="num">${fmtMoney(r.st.vgvTotal)}</td>
+      <td class="num">${fmtMoney(r.st.vgvLiquido)}</td>
       <td class="num"><span class="pill ${effPill(r.st.eficiencia)}">${fmtPctBR(r.st.eficiencia)}</span></td>
       <td class="num"><span class="pill ${aprPill(r.st.aproveitamento)}">${fmtPctBR(r.st.aproveitamento)}</span></td>
     </tr>`).join("")}</tbody></table></div>`;
@@ -2464,6 +2483,7 @@ function renderComparativo(){
     {label:"Casais", vx:sx.casais, vy:sy.casais, fmt:v=>fmtNumBR(v,1,1)},
     {label:"Vendas", vx:sx.vendas, vy:sy.vendas, fmt:v=>fmtNumBR(v,1,1)},
     {label:"VGV", vx:sx.vgvTotal, vy:sy.vgvTotal, fmt:v=>fmtMoney(v)},
+    {label:"VGV líquido", vx:sx.vgvLiquido, vy:sy.vgvLiquido, fmt:v=>fmtMoney(v)},
     {label:"Eficiência", vx:sx.eficiencia*100, vy:sy.eficiencia*100, fmt:v=>fmtPctBR(v/100)},
     {label:"Aproveitamento", vx:sx.aproveitamento*100, vy:sy.aproveitamento*100, fmt:v=>fmtPctBR(v/100)},
     {label:"% Cancel.", vx:sx.pctCancel*100, vy:sy.pctCancel*100, fmt:v=>fmtPctBR(v/100)},
@@ -2506,6 +2526,7 @@ function renderProfissionaisSingle(){
       <th class="num sortable" data-sort="casais" data-tid="profissionais-table">Casais ${sortInd("profissionais-table","casais")}</th>
       <th class="num sortable" data-sort="vendas" data-tid="profissionais-table">Vendas ${sortInd("profissionais-table","vendas")}</th>
       <th class="num sortable" data-sort="vgvTotal" data-tid="profissionais-table">VGV ${sortInd("profissionais-table","vgvTotal")}</th>
+      <th class="num sortable" data-sort="vgvLiquido" data-tid="profissionais-table">VGV Líq. ${sortInd("profissionais-table","vgvLiquido")}</th>
       <th class="num sortable" data-sort="eficiencia" data-tid="profissionais-table">Eficiênc. ${sortInd("profissionais-table","eficiencia")}</th>
       <th class="num sortable" data-sort="aproveitamento" data-tid="profissionais-table">Aproveit. ${sortInd("profissionais-table","aproveitamento")}</th>
       <th class="num sortable" data-sort="pctCancel" data-tid="profissionais-table">% Canc. ${sortInd("profissionais-table","pctCancel")}</th>
@@ -2515,6 +2536,7 @@ function renderProfissionaisSingle(){
       <td class="num">${it.casais}</td>
       <td class="num">${it.vendas}</td>
       <td class="num">${fmtMoney(it.vgvTotal)}</td>
+      <td class="num">${fmtMoney(it.vgvLiquido)}</td>
       <td class="num"><span class="pill ${effPill(it.eficiencia)}">${fmtPctBR(it.eficiencia)}</span></td>
       <td class="num"><span class="pill ${aprPill(it.aproveitamento)}">${fmtPctBR(it.aproveitamento)}</span></td>
       <td class="num"><span class="pill ${canPill(it.pctCancel)}">${fmtPctBR(it.pctCancel)}</span></td>
